@@ -452,19 +452,19 @@
 <script>
 const API_URL = 'https://azisaiweekly-upnb.onrender.com/leaderboard/top14';
 
-// Countdown from 15 May 2025 JST, resets every 7 days
+// Base JST start = 2025-05-15T00:00:01+09:00 == 2025-05-14T15:00:01Z
+const baseStartUTC = new Date("2025-05-14T15:00:01Z"); // Z means UTC
+
 function updateCountdown() {
   const el = document.getElementById("countdown");
-  const now = new Date();
-  const baseStartJST = new Date("2025-05-15T00:00:01+09:00");
-  const jstNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
-  const timePassed = jstNow - baseStartJST;
-  const weekMs = 7 * 24 * 60 * 60 * 1000;
-  const weeksPassed = Math.floor(timePassed / weekMs);
-  const nextResetJST = new Date(baseStartJST.getTime() + (weeksPassed + 1) * weekMs);
-  const nextResetUTC = new Date(nextResetJST.toLocaleString("en-US", { timeZone: "UTC" }));
-  const diff = nextResetUTC - now;
+  const now = new Date(); // current UTC time
 
+  const weekMs = 7 * 24 * 60 * 60 * 1000;
+  const timePassed = now - baseStartUTC;
+  const weeksPassed = Math.floor(timePassed / weekMs);
+  const nextResetUTC = new Date(baseStartUTC.getTime() + (weeksPassed + 1) * weekMs);
+
+  const diff = nextResetUTC - now;
   if (diff <= 0) {
     el.textContent = "Ended";
     return;
@@ -476,22 +476,21 @@ function updateCountdown() {
   const s = Math.floor((diff / 1000) % 60);
   el.textContent = `${d}d ${h}h ${m}m ${s}s`;
 }
+
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
-// Load usernames with wager >= 5000 (already masked)
+// Load winners with wager >= 5000
 async function loadWinners() {
   const container = document.getElementById("usernames");
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
     const winners = data.filter(u => u.wagered >= 5000).map(u => u.username);
-    if (winners.length === 0) {
-      container.innerHTML = `<span style="color: #999;">No users yet</span>`;
-    } else {
-      container.innerHTML = winners.join("<br>");
-    }
-  } catch (e) {
+    container.innerHTML = winners.length
+      ? winners.join("<br>")
+      : `<span style="color:#999">No users yet</span>`;
+  } catch {
     container.textContent = "Failed to load users.";
   }
 }
