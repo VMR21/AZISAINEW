@@ -462,13 +462,15 @@ function updateCountdown() {
   if (!el) return;
 
   const now = new Date();
+
+  // Get this month in UTC
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth();
 
-  // Countdown to 00:00 JST on the 1st = 15:00 UTC of the last day of the current month
-  const target = new Date(Date.UTC(year, month + 1, 0, 15, 0, 0)); // Last day, 15:00 UTC
+  // Countdown to 00:01 JST on the 1st of NEXT month = 15:01 UTC on last day of current month
+  const countdownTarget = new Date(Date.UTC(year, month + 1, 0, 15, 1, 0)); // e.g. May 31st 15:01 UTC
 
-  const diff = target.getTime() - now.getTime();
+  const diff = countdownTarget.getTime() - now.getTime();
   if (diff <= 0) {
     el.textContent = "Ended";
     return;
@@ -483,6 +485,7 @@ function updateCountdown() {
 
 setInterval(updateCountdown, 1000);
 updateCountdown();
+
 
 async function loadLeaderboard() {
   const res = await fetch(API_URL);
