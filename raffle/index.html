@@ -736,7 +736,6 @@
          * The raffle period runs from Saturday 2 PM UTC to Friday 23:59:59 UTC.
          */
 function updateCountdown() {
-    const JST_OFFSET = 9 * 60 * 60 * 1000;
     const WEEK_DURATION_MS = (167 * 60 + 59) * 60 * 1000; // 167h 59m
     const BUFFER_MS = 12 * 60 * 60 * 1000; // 12h buffer
     const TOTAL_PERIOD_MS = WEEK_DURATION_MS + BUFFER_MS;
@@ -751,17 +750,19 @@ function updateCountdown() {
     const year = nowUtc.getUTCFullYear();
     const month = nowUtc.getUTCMonth();
 
-    // Raffle begins at 00:01 JST on 1st = 15:01 UTC on 0th
+    // Raffle starts at 00:01 JST on 1st = 15:01 UTC on 0th
     const raffleStart = new Date(Date.UTC(year, month, 0, 15, 1, 0));
     const raffleEnd = new Date(raffleStart.getTime() + WEEKS_PER_MONTH * TOTAL_PERIOD_MS);
 
+    // If current time is after this month's raffle period, show countdown to next month
     if (nowUtc >= raffleEnd) {
-        // After 4 weeks + buffer → show next month's start countdown
         const nextMonth = month === 11 ? 0 : month + 1;
         const nextYear = month === 11 ? year + 1 : year;
-        const nextRaffleStart = new Date(Date.UTC(nextYear, nextMonth, 0, 15, 1, 0)); // 00:01 JST on 1st
+        const nextRaffleStart = new Date(Date.UTC(nextYear, nextMonth, 0, 15, 1, 0));
 
-        const diff = nextRaffleStart.getTime() - nowUtc.getTime();
+        let diff = nextRaffleStart.getTime() - nowUtc.getTime();
+        if (diff < 0) diff = 0;
+
         const d = Math.floor(diff / 86400000);
         const h = Math.floor((diff % 86400000) / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
@@ -771,33 +772,38 @@ function updateCountdown() {
         return;
     }
 
-    // Inside current month’s 4-week window
+    // Inside the current month's raffle period
     for (let i = 0; i < WEEKS_PER_MONTH; i++) {
         const weekStart = new Date(raffleStart.getTime() + i * TOTAL_PERIOD_MS);
         const trackingEnd = new Date(weekStart.getTime() + WEEK_DURATION_MS);
         const bufferEnd = new Date(weekStart.getTime() + TOTAL_PERIOD_MS);
 
         if (nowUtc >= weekStart && nowUtc < trackingEnd) {
-            const diff = trackingEnd.getTime() - nowUtc.getTime();
+            // Inside active tracking period
+            const diff = trackingEnd - nowUtc;
             const d = Math.floor(diff / 86400000);
             const h = Math.floor((diff % 86400000) / 3600000);
             const m = Math.floor((diff % 3600000) / 60000);
             const s = Math.floor((diff % 60000) / 1000);
+
             countdownElement.textContent = `📊 Week ${i + 1} ends in: ${d}d ${h}h ${m}m ${s}s`;
             return;
         }
 
         if (nowUtc >= trackingEnd && nowUtc < bufferEnd) {
-            const diff = bufferEnd.getTime() - nowUtc.getTime();
+            // Inside 12-hour hosting buffer
+            const diff = bufferEnd - nowUtc;
             const d = Math.floor(diff / 86400000);
             const h = Math.floor((diff % 86400000) / 3600000);
             const m = Math.floor((diff % 3600000) / 60000);
             const s = Math.floor((diff % 60000) / 1000);
+
             countdownElement.textContent = `🕒 Week ${i + 1} raffle hosting! Week ${i + 2} starts in: ${d}d ${h}h ${m}m ${s}s`;
             return;
         }
     }
 }
+
 
 
         // Initialize countdown and fetch tickets when the page loads
