@@ -462,21 +462,24 @@ function updateCountdown() {
   if (!el) return;
 
   const now = new Date();
-
-  // Current year/month
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth();
 
-  // Countdown target = 15:00 UTC on the last day of this month
-  const target = new Date(Date.UTC(year, month + 1, 0, 15, 0, 0)); // e.g., June 30, 15:00 UTC
+  const start = new Date(Date.UTC(year, month, 0, 15, 0, 0)); // 0th = last day of previous month 15:00 UTC
+  const end = new Date(Date.UTC(year, month + 1, 0, 15, 0, 0)); // Last day of current month 15:00 UTC
 
-  // If we're PAST the target, set it for next month
-  if (now.getTime() >= target.getTime()) {
+  if (now < start) {
+    el.textContent = "Not started";
+    return;
+  }
+
+  if (now >= end) {
     el.textContent = "Ended";
     return;
   }
 
-  const diff = target.getTime() - now.getTime();
+  const diff = end - now;
+
   const d = Math.floor(diff / (1000 * 60 * 60 * 24));
   const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
   const m = Math.floor((diff / (1000 * 60)) % 60);
@@ -487,6 +490,7 @@ function updateCountdown() {
 
 setInterval(updateCountdown, 1000);
 updateCountdown();
+
 
 
 async function loadLeaderboard() {
