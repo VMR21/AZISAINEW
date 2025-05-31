@@ -731,65 +731,67 @@
             resultsDiv.textContent = result ? `Ticket #${ticket} belongs to: ${result.username}` : `Ticket #${ticket} not found.`;
         }
 
-        /**
-         * Updates the countdown timer for the weekly raffle.
-         * The raffle period runs from Saturday 2 PM UTC to Friday 23:59:59 UTC.
-         */
-function updateCountdown() {
-    const now = new Date();
-    const jstOffsetMs = 9 * 60 * 60 * 1000;
-    const nowJst = new Date(now.getTime() + jstOffsetMs);
+    function updateCountdown() {
+        const now = new Date(); // ← change this for testing if needed
+        const jstOffsetMs = 9 * 60 * 60 * 1000;
+        const nowJst = new Date(now.getTime() + jstOffsetMs);
 
-    const year = nowJst.getFullYear();
-    const month = nowJst.getMonth(); // 0-indexed (0 = January)
+        const year = nowJst.getFullYear();
+        const month = nowJst.getMonth();
 
-    const countdownElement = document.getElementById('countdown');
-    if (!countdownElement) return;
+        const countdownElement = document.getElementById('countdown');
+        if (!countdownElement) return;
 
-    const getDate = (d, h, m) => new Date(`${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}T${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00+09:00`);
+        const getDate = (d, h, m) =>
+            new Date(`${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}T${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00+09:00`);
 
-    const phaseTimes = [
-        { end: getDate(1, 0, 1), label: `🎯 Next raffle starts in:` },
-        { end: getDate(7, 23, 59), label: `📊 Week 1 ends in:` },
-        { end: getDate(8, 11, 59), label: `🕒 Week 1 raffle hosting! Week 2 starts in:` },
-        { end: getDate(14, 23, 59), label: `📊 Week 2 ends in:` },
-        { end: getDate(15, 11, 59), label: `🕒 Week 2 raffle hosting! Week 3 starts in:` },
-        { end: getDate(21, 23, 59), label: `📊 Week 3 ends in:` },
-        { end: getDate(22, 11, 59), label: `🕒 Week 3 raffle hosting! Week 4 starts in:` },
-        { end: getDate(28, 23, 59), label: `📊 Week 4 ends in:` },
-        { end: getDate(29, 11, 59), label: `🕒 Week 4 raffle hosting! Raffle month ends in:` }
-    ];
+        const phaseTimes = [
+            { end: getDate(1, 0, 1), label: `🎯 Next raffle starts in:` },
+            { end: getDate(7, 23, 59), label: `📊 Week 1 ends in:` },
+            { end: getDate(8, 11, 59), label: `🕒 Week 1 raffle hosting! Week 2 starts in:` },
+            { end: getDate(14, 23, 59), label: `📊 Week 2 ends in:` },
+            { end: getDate(15, 11, 59), label: `🕒 Week 2 raffle hosting! Week 3 starts in:` },
+            { end: getDate(21, 23, 59), label: `📊 Week 3 ends in:` },
+            { end: getDate(22, 11, 59), label: `🕒 Week 3 raffle hosting! Week 4 starts in:` },
+            { end: getDate(28, 23, 59), label: `📊 Week 4 ends in:` },
+            { end: getDate(29, 11, 59), label: `🕒 Week 4 raffle hosting! Raffle month ends in:` }
+        ];
 
-    let targetPhase = null;
-    for (let i = 0; i < phaseTimes.length; i++) {
-        if (nowJst < phaseTimes[i].end) {
-            targetPhase = phaseTimes[i];
-            break;
+        let targetPhase = null;
+        for (let i = 0; i < phaseTimes.length; i++) {
+            if (nowJst < phaseTimes[i].end) {
+                targetPhase = phaseTimes[i];
+                break;
+            }
         }
+
+        if (!targetPhase) {
+            const nextMonth = month === 11 ? 0 : month + 1;
+            const nextYear = month === 11 ? year + 1 : year;
+            const nextStart = new Date(Date.UTC(nextYear, nextMonth, 0, 15, 1, 0));
+            const diff = nextStart.getTime() - now.getTime();
+            countdownElement.textContent = formatCountdown(diff, `🎯 Next raffle starts in:`);
+            return;
+        }
+
+        const diff = targetPhase.end.getTime() - nowJst.getTime();
+        countdownElement.textContent = formatCountdown(diff, targetPhase.label);
     }
 
-    if (!targetPhase) {
-        // Handle next month safely
-        const nextMonth = month === 11 ? 0 : month + 1;
-        const nextYear = month === 11 ? year + 1 : year;
-        const nextStart = new Date(Date.UTC(nextYear, nextMonth, 0, 15, 1, 0)); // 00:01 JST = 15:01 UTC previous day
-        const diff = nextStart.getTime() - now.getTime(); // Compare using original UTC time
-        countdownElement.textContent = formatCountdown(diff, `🎯 Next raffle starts in:`);
-        return;
+    function formatCountdown(ms, label) {
+        if (ms < 0) ms = 0;
+        const d = Math.floor(ms / 86400000);
+        const h = Math.floor((ms % 86400000) / 3600000);
+        const m = Math.floor((ms % 3600000) / 60000);
+        const s = Math.floor((ms % 60000) / 1000);
+        return `${label} ${d}d ${h}h ${m}m ${s}s`;
     }
 
-    const diff = targetPhase.end.getTime() - nowJst.getTime();
-    countdownElement.textContent = formatCountdown(diff, targetPhase.label);
-}
+    window.addEventListener('DOMContentLoaded', () => {
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    });
 
-function formatCountdown(ms, label) {
-    if (ms < 0) ms = 0;
-    const d = Math.floor(ms / 86400000);
-    const h = Math.floor((ms % 86400000) / 3600000);
-    const m = Math.floor((ms % 3600000) / 60000);
-    const s = Math.floor((ms % 60000) / 1000);
-    return `${label} ${d}d ${h}h ${m}m ${s}s`;
-}
 
 
         // Load external JS files after your main script.
