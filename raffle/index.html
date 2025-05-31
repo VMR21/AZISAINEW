@@ -587,156 +587,163 @@
         </div>
     </div>
 
-    <script>
-        // Modal script (Leaderboard Rules renamed to Raffle Rules)
-        var modal = document.getElementById("rulesModal");
-        var btn = document.getElementById("rulesButton");
-        var span = document.getElementsByClassName("close")[0];
+<script>
+    // Modal script (Leaderboard Rules renamed to Raffle Rules)
+    var modal = document.getElementById("rulesModal");
+    // Removed btn variable as 'rulesButton' ID is not in HTML.
+    // If you add a button with id="rulesButton", uncomment the following line:
+    // var btn = document.getElementById("rulesButton");
+    var span = document.getElementsByClassName("close")[0];
 
-        // Check if elements exist before assigning events
-        if (btn) {
-            btn.onclick = function () {
-                modal.style.display = "block";
-                document.body.style.overflow = "hidden";
-                setTimeout(() => {
-                    modal.classList.add("show");
-                }, 10);
-            }
-        } else {
-            console.warn("Element with ID 'rulesButton' not found. Modal button might not work.");
+    // No need for btn check if there's no rulesButton in HTML.
+    // If you add a button with id="rulesButton", uncomment this block:
+    /*
+    if (btn) {
+        btn.onclick = function () {
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden";
+            setTimeout(() => {
+                modal.classList.add("show");
+            }, 10);
         }
+    } else {
+        console.warn("Element with ID 'rulesButton' not found. Modal button might not work.");
+    }
+    */
 
-        if (span) {
-            span.onclick = closeModal;
-        } else {
-            console.warn("Element with class 'close' for modal not found. Modal close might not work.");
+    if (span) {
+        span.onclick = closeModal;
+    } else {
+        console.warn("Element with class 'close' for modal not found. Modal close might not work.");
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            closeModal();
         }
+    }
 
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-
-        function closeModal() {
+    function closeModal() {
+        if (modal) { // Add a check for modal existence
             modal.classList.remove("show");
             setTimeout(() => {
                 modal.style.display = "none";
                 document.body.style.overflow = "auto";
             }, 500);
         }
+    }
 
-        // Raffle Specific JavaScript (integrated and adapted)
-        const API = 'https://azisairaffle.onrender.com/raffle/tickets'; // Raffle API
-        let tickets = []; // Array to store all fetched tickets
-        let currentIndex = 0; // Tracks the current index for displaying tickets
-        const step = 10; // Number of tickets to display per load
+    // Raffle Specific JavaScript (integrated and adapted)
+    const API = 'https://azisairaffle.onrender.com/raffle/tickets'; // Raffle API
+    let tickets = []; // Array to store all fetched tickets
+    let currentIndex = 0; // Tracks the current index for displaying tickets
+    const step = 10; // Number of tickets to display per load
 
-        /**
-         * Fetches tickets from the API and initializes the display.
-         */
-        async function fetchTickets() {
-            try {
-                const res = await fetch(API);
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                tickets = await res.json();
-                // Sort tickets by ticket number to ensure consistent display
-                tickets.sort((a, b) => a.ticket - b.ticket);
-                displayTickets(); // Display the initial set of tickets
-            } catch (error) {
-                console.error("Failed to fetch tickets:", error);
-                const resultsDiv = document.getElementById('results');
-                if (resultsDiv) { // Ensure resultsDiv exists before trying to update it
-                    resultsDiv.textContent = "Error loading tickets. Please try again later.";
-                }
+    /**
+     * Fetches tickets from the API and initializes the display.
+     */
+    async function fetchTickets() {
+        try {
+            const res = await fetch(API);
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
-        }
-
-        /**
-         * Displays a batch of tickets in the ticketContainer.
-         */
-        function displayTickets() {
-            const container = document.getElementById('ticketContainer');
-            const loadMoreButton = document.getElementById('loadMore');
-
-            if (!container) {
-                console.error("Element with ID 'ticketContainer' not found.");
-                return;
-            }
-
-            const slice = tickets.slice(currentIndex, currentIndex + step);
-
-            if (slice.length === 0 && currentIndex === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center w-full">No tickets available yet.</p>';
-                if (loadMoreButton) loadMoreButton.style.display = 'none';
-                return;
-            }
-
-            slice.forEach(t => {
-                const div = document.createElement('div');
-                div.style = 'padding: 10px; border: 1px solid rgba(74, 85, 104, 0.5); border-radius: 8px; background: rgba(74, 85, 104, 0.7); min-width: 100px; color: #e2e8f0; font-size: 0.9rem; font-weight: 600; text-align: center; flex-basis: calc(20% - 10px); box-sizing: border-box; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: transform 0.1s ease-in-out, background 0.2s ease;';
-                div.textContent = `#${t.ticket} - ${t.username}`;
-                container.appendChild(div);
-            });
-            currentIndex += step;
-
-            if (loadMoreButton) {
-                if (currentIndex >= tickets.length) {
-                    loadMoreButton.style.display = 'none';
-                } else {
-                    loadMoreButton.style.display = 'block';
-                }
-            }
-        }
-
-        /**
-         * Loads more tickets when the "Load More" button is clicked.
-         */
-        function loadMore() {
-            displayTickets();
-        }
-
-        /**
-         * Searches for tickets by username and displays the corresponding ticket numbers.
-         */
-        function searchByUser() {
-            const searchUser = document.getElementById('searchUser');
+            tickets = await res.json();
+            // Sort tickets by ticket number to ensure consistent display
+            tickets.sort((a, b) => a.ticket - b.ticket);
+            displayTickets(); // Display the initial set of tickets
+        } catch (error) {
+            console.error("Failed to fetch tickets:", error);
             const resultsDiv = document.getElementById('results');
-            if (!searchUser || !resultsDiv) return; // Add checks
-
-            const name = searchUser.value.trim();
-            if (!name) {
-                resultsDiv.textContent = 'Please enter a username to search.';
-                return;
+            if (resultsDiv) { // Ensure resultsDiv exists before trying to update it
+                resultsDiv.textContent = "Error loading tickets. Please try again later.";
             }
-            const results = tickets.filter(t => t.username.toLowerCase() === name.toLowerCase());
-            const output = results.map(t => `#${t.ticket}`).join(', ');
-            resultsDiv.textContent = output ? `Tickets for "${name}": ${output}` : `No tickets found for "${name}".`;
+        }
+    }
+
+    /**
+     * Displays a batch of tickets in the ticketContainer.
+     */
+    function displayTickets() {
+        const container = document.getElementById('ticketContainer');
+        const loadMoreButton = document.getElementById('loadMore');
+
+        if (!container) {
+            console.error("Element with ID 'ticketContainer' not found.");
+            return;
         }
 
-        /**
-         * Searches for a username by ticket number and displays the username.
-         */
-        function searchByTicket() {
-            const searchTicket = document.getElementById('searchTicket');
-            const resultsDiv = document.getElementById('results');
-            if (!searchTicket || !resultsDiv) return; // Add checks
+        const slice = tickets.slice(currentIndex, currentIndex + step);
 
-            const ticketInput = searchTicket.value;
-            if (!ticketInput) {
-                resultsDiv.textContent = 'Please enter a ticket number to search.';
-                return;
-            }
-            const ticket = parseInt(ticketInput);
-            if (isNaN(ticket)) {
-                resultsDiv.textContent = 'Invalid ticket number. Please enter a valid number.';
-                return;
-            }
-            const result = tickets.find(t => t.ticket === ticket);
-            resultsDiv.textContent = result ? `Ticket #${ticket} belongs to: ${result.username}` : `Ticket #${ticket} not found.`;
+        if (slice.length === 0 && currentIndex === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-center w-full">No tickets available yet.</p>';
+            if (loadMoreButton) loadMoreButton.style.display = 'none';
+            return;
         }
+
+        slice.forEach(t => {
+            const div = document.createElement('div');
+            div.style = 'padding: 10px; border: 1px solid rgba(74, 85, 104, 0.5); border-radius: 8px; background: rgba(74, 85, 104, 0.7); min-width: 100px; color: #e2e8f0; font-size: 0.9rem; font-weight: 600; text-align: center; flex-basis: calc(20% - 10px); box-sizing: border-box; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: transform 0.1s ease-in-out, background 0.2s ease;';
+            div.textContent = `#${t.ticket} - ${t.username}`;
+            container.appendChild(div);
+        });
+        currentIndex += step;
+
+        if (loadMoreButton) {
+            if (currentIndex >= tickets.length) {
+                loadMoreButton.style.display = 'none';
+            } else {
+                loadMoreButton.style.display = 'block';
+            }
+        }
+    }
+
+    /**
+     * Loads more tickets when the "Load More" button is clicked.
+     */
+    function loadMore() {
+        displayTickets();
+    }
+
+    /**
+     * Searches for tickets by username and displays the corresponding ticket numbers.
+     */
+    function searchByUser() {
+        const searchUser = document.getElementById('searchUser');
+        const resultsDiv = document.getElementById('results');
+        if (!searchUser || !resultsDiv) return; // Add checks
+
+        const name = searchUser.value.trim();
+        if (!name) {
+            resultsDiv.textContent = 'Please enter a username to search.';
+            return;
+        }
+        const results = tickets.filter(t => t.username.toLowerCase() === name.toLowerCase());
+        const output = results.map(t => `#${t.ticket}`).join(', ');
+        resultsDiv.textContent = output ? `Tickets for "${name}": ${output}` : `No tickets found for "${name}".`;
+    }
+
+    /**
+     * Searches for a username by ticket number and displays the username.
+     */
+    function searchByTicket() {
+        const searchTicket = document.getElementById('searchTicket');
+        const resultsDiv = document.getElementById('results');
+        if (!searchTicket || !resultsDiv) return; // Add checks
+
+        const ticketInput = searchTicket.value;
+        if (!ticketInput) {
+            resultsDiv.textContent = 'Please enter a ticket number to search.';
+            return;
+        }
+        const ticket = parseInt(ticketInput);
+        if (isNaN(ticket)) {
+            resultsDiv.textContent = 'Invalid ticket number. Please enter a valid number.';
+            return;
+        }
+        const result = tickets.find(t => t.ticket === ticket);
+        resultsDiv.textContent = result ? `Ticket #${ticket} belongs to: ${result.username}` : `Ticket #${ticket} not found.`
+    }
 
     function updateCountdown() {
         const now = new Date(); // ← change this for testing if needed
@@ -795,16 +802,12 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+        // Call fetchTickets when the DOM is fully loaded
+        fetchTickets();
         updateCountdown();
         setInterval(updateCountdown, 1000);
     });
-
-
-
-        // Load external JS files after your main script.
-        // If these files contain functions that your custom script relies on *before* DOMContentLoaded,
-        // you might need to adjust. Otherwise, this placement is standard.
-    </script>
+</script>
     <script src="/js/app.js"></script>
     <script src="/js/particles.js"></script>
     <script src="/js/toast.js"></script>
