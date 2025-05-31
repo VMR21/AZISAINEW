@@ -462,25 +462,20 @@ function updateCountdown() {
   if (!el) return;
 
   const now = new Date();
+  const nowUTC = now.getTime();
 
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth();
 
-  const startUTC = Date.UTC(year, month, 0, 15, 0, 0); // 15:00 UTC on last day of previous month
-  const endUTC = Date.UTC(year, month + 1, 0, 15, 0, 0); // 15:00 UTC on last day of current month
-  const nowUTC = now.getTime();
+  // End of current month at 15:00 UTC (00:00 JST on 1st of next month)
+  let targetUTC = Date.UTC(year, month + 1, 0, 15, 0, 0); // e.g., June 30 15:00 UTC
 
-  if (nowUTC < startUTC) {
-    el.textContent = "Not started";
-    return;
+  // If already past this month's deadline, switch to next month
+  if (nowUTC >= targetUTC) {
+    targetUTC = Date.UTC(year, month + 2, 0, 15, 0, 0); // e.g., July 31 15:00 UTC
   }
 
-  if (nowUTC >= endUTC) {
-    el.textContent = "Ended";
-    return;
-  }
-
-  const diff = endUTC - nowUTC;
+  const diff = targetUTC - nowUTC;
 
   const d = Math.floor(diff / (1000 * 60 * 60 * 24));
   const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -492,7 +487,6 @@ function updateCountdown() {
 
 setInterval(updateCountdown, 1000);
 updateCountdown();
-
 
 
 async function loadLeaderboard() {
