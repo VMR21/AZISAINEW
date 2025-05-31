@@ -459,14 +459,20 @@ const top3Glows = ['0 0 40px #C0C0C0', '0 0 40px #FFD700', '0 0 40px #CD7F32'];
 // Countdown logic (auto resets to 00:00 JST on last day of current month)
 function updateCountdown() {
   const el = document.getElementById("countdown");
+  if (!el) return;
+
   const now = new Date();
-
   const year = now.getUTCFullYear();
-  const month = now.getUTCMonth(); // 0-indexed
-  const lastDay = new Date(Date.UTC(year, month + 1, 0, 15, 0, 0)); // 00:00 JST = 15:00 UTC day before
+  const month = now.getUTCMonth();
 
-  const diff = lastDay - now;
-  if (diff <= 0) return el.textContent = "Ended";
+  // Countdown to 00:00 JST on the 1st = 15:00 UTC of the last day of the current month
+  const target = new Date(Date.UTC(year, month + 1, 0, 15, 0, 0)); // Last day, 15:00 UTC
+
+  const diff = target.getTime() - now.getTime();
+  if (diff <= 0) {
+    el.textContent = "Ended";
+    return;
+  }
 
   const d = Math.floor(diff / (1000 * 60 * 60 * 24));
   const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
