@@ -462,23 +462,25 @@ function updateCountdown() {
   if (!el) return;
 
   const now = new Date();
+
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth();
 
-  const start = new Date(Date.UTC(year, month, 0, 15, 0, 0)); // 0th = last day of previous month 15:00 UTC
-  const end = new Date(Date.UTC(year, month + 1, 0, 15, 0, 0)); // Last day of current month 15:00 UTC
+  const startUTC = Date.UTC(year, month, 0, 15, 0, 0); // 15:00 UTC on last day of previous month
+  const endUTC = Date.UTC(year, month + 1, 0, 15, 0, 0); // 15:00 UTC on last day of current month
+  const nowUTC = now.getTime();
 
-  if (now < start) {
+  if (nowUTC < startUTC) {
     el.textContent = "Not started";
     return;
   }
 
-  if (now >= end) {
+  if (nowUTC >= endUTC) {
     el.textContent = "Ended";
     return;
   }
 
-  const diff = end - now;
+  const diff = endUTC - nowUTC;
 
   const d = Math.floor(diff / (1000 * 60 * 60 * 24));
   const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
