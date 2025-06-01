@@ -288,9 +288,9 @@
       const tickets = raffleEntry ? raffleEntry.ticketCount : 0;
 
       resultBox.innerHTML = `
-        <span class="glow-text">Wager this month: <span style="color:#00e0ff;">$${wagered.toLocaleString()}</span></span>
-        <span class="glow-text">Leaderboard rank: <span style="color:#ffda77;">#${rank}</span></span>
-        <span class="glow-text">Raffle tickets: <span style="color:#a3ff77;">${tickets}</span></span>
+        <span class="glow-text">Wager For The Month: <span style="color:#00e0ff;">$${wagered.toLocaleString()}</span></span>
+        <span class="glow-text">Leaderboard Rank: <span style="color:#ffda77;">#${rank}</span></span>
+        <span class="glow-text">Weekly Raffle tickets: <span style="color:#a3ff77;">${tickets}</span></span>
       `;
     } catch (err) {
       resultBox.innerHTML = "<span style='color:red;'>Error fetching data. Try again later.</span>";
