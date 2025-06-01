@@ -589,13 +589,14 @@
       };
     };
 
-    // Touch drag
+    // Touch drag (mobile)
     dragHandle.ontouchstart = function (event) {
       const touch = event.touches[0];
       const startX = touch.clientX - player.offsetLeft;
       const startY = touch.clientY - player.offsetTop;
 
       function onTouchMove(event) {
+        event.preventDefault(); // ✅ prevent page from scrolling
         const touch = event.touches[0];
         player.style.left = touch.clientX - startX + 'px';
         player.style.top = touch.clientY - startY + 'px';
@@ -608,7 +609,7 @@
       };
     };
 
-    // Close and minimize
+    // Minimize / Restore
     closeBtn.onclick = function () {
       player.style.display = 'none';
       minimizedIcon.style.display = 'flex';
