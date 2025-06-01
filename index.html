@@ -564,42 +564,60 @@
 <script src="/js/toast.js"></script>
 
 <script>
-    window.onload = function () {
-        var player = document.getElementById('draggable-player');
-        var dragHandle = document.getElementById('drag-handle');
-        var closeBtn = document.getElementById('close-btn');
+  window.onload = function () {
+    const player = document.getElementById('draggable-player');
+    const dragHandle = document.getElementById('drag-handle');
+    const closeBtn = document.getElementById('close-btn');
+    const minimizedIcon = document.getElementById('minimized-icon');
+    const openBtn = document.getElementById('open-btn');
 
-        dragHandle.onmousedown = function (event) {
-            event.preventDefault();
-            var startX = event.clientX - player.offsetLeft;
-            var startY = event.clientY - player.offsetTop;
+    // Mouse drag
+    dragHandle.onmousedown = function (event) {
+      event.preventDefault();
+      const startX = event.clientX - player.offsetLeft;
+      const startY = event.clientY - player.offsetTop;
 
-            function onMouseMove(event) {
-                player.style.left = event.clientX - startX + 'px';
-                player.style.top = event.clientY - startY + 'px';
-            }
+      function onMouseMove(event) {
+        player.style.left = event.clientX - startX + 'px';
+        player.style.top = event.clientY - startY + 'px';
+      }
 
-            document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mousemove', onMouseMove);
 
-            document.onmouseup = function () {
-                document.removeEventListener('mousemove', onMouseMove);
-            };
-        };
-
-
-        var minimizedIcon = document.getElementById('minimized-icon');
-        var openBtn = document.getElementById('open-btn');
-
-        // Hide the player and show the minimized icon when close button is clicked
-        closeBtn.onclick = function () {
-            player.style.display = 'none';
-            minimizedIcon.style.display = 'flex'; // Show the minimized icon
-        };
-
-        // Add click event to the minimized icon to show the player again
-        openBtn.onclick = function () {
-            player.style.display = 'block';
-            minimizedIcon.style.display = 'none'; // Hide the minimized icon
-        };
+      document.onmouseup = function () {
+        document.removeEventListener('mousemove', onMouseMove);
+      };
     };
+
+    // Touch drag
+    dragHandle.ontouchstart = function (event) {
+      const touch = event.touches[0];
+      const startX = touch.clientX - player.offsetLeft;
+      const startY = touch.clientY - player.offsetTop;
+
+      function onTouchMove(event) {
+        const touch = event.touches[0];
+        player.style.left = touch.clientX - startX + 'px';
+        player.style.top = touch.clientY - startY + 'px';
+      }
+
+      document.addEventListener('touchmove', onTouchMove, { passive: false });
+
+      document.ontouchend = function () {
+        document.removeEventListener('touchmove', onTouchMove);
+      };
+    };
+
+    // Close and minimize
+    closeBtn.onclick = function () {
+      player.style.display = 'none';
+      minimizedIcon.style.display = 'flex';
+    };
+
+    openBtn.onclick = function () {
+      player.style.display = 'block';
+      minimizedIcon.style.display = 'none';
+    };
+  };
 </script>
+
