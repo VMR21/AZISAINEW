@@ -17,20 +17,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="/css/toast.css">
     <style>
-        .draggable {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            width: 350px;
-            height: 250px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            z-index: 1000;
-            background: white;
-            border: 2px solid #2775ca;
-            box-shadow: 0 0 100px rgba(39, 117, 202, 1);
-        }
+.draggable {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 350px;
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 8px;
+  z-index: 1000;
+  background: #0a1328;
+  border: 2px solid #2775ca;
+  box-shadow: 0 0 50px rgba(39, 117, 202, 0.9);
+}
+
 
         .controls {
             display: flex;
@@ -204,7 +204,7 @@
             <div id="drag-handle" class="drag-handle">&#x2630;</div>
             <button id="close-btn" class="close-btn">&times;</button>
         </div>
-<div style="padding: 20px; color: white; font-family: 'Orbitron', sans-serif; background: radial-gradient(circle at top left, #0f2c58, #000c1f); height: calc(100% - 40px);">
+<div style="padding: 18px 20px; font-family: 'Orbitron', sans-serif; color: white;">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
 
@@ -212,7 +212,8 @@
       color: #5ebeff;
       text-shadow: 0 0 5px #2775ca, 0 0 10px #2775ca, 0 0 20px #1b5aa0;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 14px;
+      margin-bottom: 4px;
     }
 
     .glow-box {
@@ -242,11 +243,15 @@
   </style>
 
   <label for="usernameInput" class="glow-text">Enter Username:</label>
-  <input type="text" id="usernameInput" placeholder="e.g. kcmrkcmr" style="width: 100%; padding: 8px; margin-top: 8px; border: none; border-radius: 4px; background-color: #0c1a2e; color: #5ebeff; box-shadow: 0 0 10px rgba(39, 117, 202, 0.5);">
+  <input type="text" id="usernameInput" placeholder="e.g. kcmrkcmr"
+    style="width: 100%; padding: 7px; margin-top: 6px; background-color: #0c1a2e; border: none; border-radius: 4px; color: #5ebeff; box-shadow: 0 0 10px rgba(39,117,202,0.5);">
 
-  <button onclick="fetchUserStats()" class="glow-box" style="margin-top: 12px; width: 100%; padding: 10px; background-color: #2775ca; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold;">Check Stats</button>
+  <button onclick="fetchUserStats()" class="glow-box"
+    style="margin-top: 12px; width: 100%; padding: 10px; background-color: #2775ca; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
+    Check Stats
+  </button>
 
-  <div id="resultBox" style="margin-top: 16px; font-size: 14px; color: #b0d9ff;"></div>
+  <div id="resultBox" style="margin-top: 14px; font-size: 13px; color: #b0d9ff; max-height: 150px; overflow-y: auto;"></div>
 </div>
 
 <script>
@@ -294,6 +299,7 @@
     }
   }
 </script>
+
 
     </div>
     <canvas id="particleCanvas"></canvas>
