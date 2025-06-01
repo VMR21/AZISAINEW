@@ -204,8 +204,97 @@
             <div id="drag-handle" class="drag-handle">&#x2630;</div>
             <button id="close-btn" class="close-btn">&times;</button>
         </div>
-        <iframe src="https://player.kick.com/AZISAI0721" frameborder="0" allow="autoplay; fullscreen" allowfullscreen>
-        </iframe>
+<div style="padding: 20px; color: white; font-family: 'Orbitron', sans-serif; background: radial-gradient(circle at top left, #0f2c58, #000c1f); height: calc(100% - 40px);">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
+    .glow-text {
+      color: #5ebeff;
+      text-shadow: 0 0 5px #2775ca, 0 0 10px #2775ca, 0 0 20px #1b5aa0;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .glow-box {
+      animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0% {
+        box-shadow: 0 0 10px rgba(94, 190, 255, 0.4), 0 0 20px rgba(94, 190, 255, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(94, 190, 255, 0.8), 0 0 40px rgba(94, 190, 255, 0.4);
+      }
+      100% {
+        box-shadow: 0 0 10px rgba(94, 190, 255, 0.4), 0 0 20px rgba(94, 190, 255, 0.2);
+      }
+    }
+
+    #resultBox span {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input, button {
+      font-family: 'Orbitron', sans-serif;
+    }
+  </style>
+
+  <label for="usernameInput" class="glow-text">Enter Username:</label>
+  <input type="text" id="usernameInput" placeholder="e.g. kcmrkcmr" style="width: 100%; padding: 8px; margin-top: 8px; border: none; border-radius: 4px; background-color: #0c1a2e; color: #5ebeff; box-shadow: 0 0 10px rgba(39, 117, 202, 0.5);">
+
+  <button onclick="fetchUserStats()" class="glow-box" style="margin-top: 12px; width: 100%; padding: 10px; background-color: #2775ca; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold;">Check Stats</button>
+
+  <div id="resultBox" style="margin-top: 16px; font-size: 14px; color: #b0d9ff;"></div>
+</div>
+
+<script>
+  async function fetchUserStats() {
+    const username = document.getElementById("usernameInput").value.trim();
+    const resultBox = document.getElementById("resultBox");
+
+    if (!username) {
+      resultBox.innerHTML = "<span style='color:red;'>Please enter a username.</span>";
+      return;
+    }
+
+    resultBox.innerHTML = "<span class='glow-text'>Fetching...</span>";
+
+    try {
+      const [leaderboardRes, raffleRes] = await Promise.all([
+        fetch("https://azisailbdata-q469.onrender.com/leaderboard"),
+        fetch("https://azisairaffle.onrender.com/raffle/ticketsnoast")
+      ]);
+
+      const leaderboardData = await leaderboardRes.json();
+      const raffleData = await raffleRes.json();
+
+      const lbEntry = leaderboardData.find(p => p.username.toLowerCase() === username.toLowerCase());
+      const raffleEntry = raffleData.find(p => p.username.toLowerCase() === username.toLowerCase());
+
+      if (!lbEntry) {
+        resultBox.innerHTML = `<span style="color:red;">Username not found in leaderboard.</span>`;
+        return;
+      }
+
+      const wagered = lbEntry.weightedWager;
+      const rank = lbEntry.rank;
+      const tickets = raffleEntry ? raffleEntry.ticketCount : 0;
+
+      resultBox.innerHTML = `
+        <span class="glow-text">Username: <span style="color:#9be4ff;">${username}</span></span>
+        <span class="glow-text">Wager this month: <span style="color:#00e0ff;">$${wagered.toLocaleString()}</span></span>
+        <span class="glow-text">Leaderboard rank: <span style="color:#ffda77;">#${rank}</span></span>
+        <span class="glow-text">Raffle tickets: <span style="color:#a3ff77;">${tickets}</span></span>
+      `;
+    } catch (err) {
+      resultBox.innerHTML = "<span style='color:red;'>Error fetching data. Try again later.</span>";
+      console.error(err);
+    }
+  }
+</script>
+
     </div>
     <canvas id="particleCanvas"></canvas>
     <div class="glow-container">
