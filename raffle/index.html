@@ -563,7 +563,7 @@
             Loading countdown...
         </div>
 
-        <a href="https://x.com/RATOR2050" target="_blank" class="live-stream-button">
+        <a href="https://x.com/RATOR205" target="_blank" class="live-stream-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                 <path
                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -789,86 +789,121 @@
             }
         }
 
-function updateCountdownAndWinnerButton() {
-    const now = new Date();
+        // Helper function to create a Date object at a specific day, hour, and minute in JST
+        function getJstDate(day, hour, minute) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth(); // 0-indexed month
 
-    // Create a UTC time object for accurate comparison with weekWindows
-    const nowUTC = new Date(Date.UTC(
-        now.getUTCFullYear(),
-        now.getUTCMonth(),
-        now.getUTCDate(),
-        now.getUTCHours(),
-        now.getUTCMinutes(),
-        now.getUTCSeconds()
-    ));
+            // JST is UTC+9. To get a specific JST time, we convert it to UTC.
+            // For example, 11 AM JST is 2 AM UTC (11 - 9).
+            const utcHour = hour - 9;
 
-    const year = nowUTC.getUTCFullYear();
-    const month = nowUTC.getUTCMonth();
-
-    const weekWindows = [
-        { week: 1, start: new Date(Date.UTC(year, month, 7, 15, 1)), end: new Date(Date.UTC(year, month, 8, 3, 1)) },
-        { week: 2, start: new Date(Date.UTC(year, month, 14, 15, 1)), end: new Date(Date.UTC(year, month, 15, 3, 1)) },
-        { week: 3, start: new Date(Date.UTC(year, month, 21, 15, 1)), end: new Date(Date.UTC(year, month, 22, 3, 1)) },
-        { week: 4, start: new Date(Date.UTC(year, month, 28, 15, 1)), end: new Date(Date.UTC(year, month + 1, 0, 15, 1)) }
-    ];
-
-    const countdownElement = document.getElementById('countdown');
-    const showWinnersBtn = document.getElementById('showWinnersBtn');
-    if (!countdownElement || !showWinnersBtn) return;
-
-    // ✅ Show/hide button based on UTC match
-    const showButton = weekWindows.some(w => nowUTC >= w.start && nowUTC <= w.end);
-    showWinnersBtn.style.display = showButton ? 'block' : 'none';
-
-    // 🔁 JST Countdown Logic
-    const jstOffset = 9 * 60 * 60 * 1000;
-    const nowJST = new Date(now.getTime() + jstOffset);
-
-    const getDate = (d, h, m) =>
-        new Date(`${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}T${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00+09:00`);
-
-    const phaseTimes = [
-        { end: getDate(1, 0, 1), label: `🎯 Next raffle starts in:` },
-        { end: getDate(7, 23, 59), label: `📊 Week 1 ends in:` },
-        { end: getDate(8, 11, 59), label: `🕒 Click on 'Show Winners' for Week 1 winners! Week 2 starts in:` },
-        { end: getDate(14, 23, 59), label: `📊 Week 2 ends in:` },
-        { end: getDate(15, 11, 59), label: `🕒 Click on 'Show Winners' for Week 2 winners! Week 3 starts in:` },
-        { end: getDate(21, 23, 59), label: `📊 Week 3 ends in:` },
-        { end: getDate(22, 11, 59), label: `🕒 Click on 'Show Winners' for Week 3 winners! Week 4 starts in:` },
-        { end: getDate(28, 23, 59), label: `📊 Week 4 ends in:` },
-        { end: getDate(29, 11, 59), label: `🕒 Click on 'Show Winners' for Week 4 winners! Raffle for this month ends in:` }
-    ];
-
-    let targetPhase = null;
-    for (let i = 0; i < phaseTimes.length; i++) {
-        if (nowJST < phaseTimes[i].end) {
-            targetPhase = phaseTimes[i];
-            break;
+            // Create a Date object in UTC
+            return new Date(Date.UTC(year, month, day, utcHour, minute, 0, 0));
         }
-    }
 
-    if (!targetPhase) {
-        const nextMonth = month === 11 ? 0 : month + 1;
-        const nextYear = month === 11 ? year + 1 : year;
-        const nextStart = new Date(Date.UTC(nextYear, nextMonth, 0, 15, 1, 0));
-        const diff = nextStart.getTime() - now.getTime();
-        countdownElement.textContent = formatCountdown(diff, `🎯 Next raffle starts in:`);
-        return;
-    }
+        function updateCountdownAndWinnerButton() {
+            const now = new Date(); // Current local time in milliseconds from epoch
 
-    const diff = targetPhase.end.getTime() - nowJST.getTime();
-    countdownElement.textContent = formatCountdown(diff, targetPhase.label);
-}
+            // Define your week windows using the new getJstDate helper
+            const year = now.getFullYear();
+            const month = now.getMonth();
 
-function formatCountdown(ms, label) {
-    if (ms < 0) ms = 0;
-    const d = Math.floor(ms / 86400000);
-    const h = Math.floor((ms % 86400000) / 3600000);
-    const m = Math.floor((ms % 3600000) / 60000);
-    const s = Math.floor((ms % 60000) / 1000);
-    return `${label} ${d}d ${h}h ${m}m ${s}s`;
-}
+            const weekWindows = [
+                // Week 1: Saturday 15:01 JST to Sunday 03:01 JST
+                { week: 1, start: getJstDate(8, 0, 1), end: getJstDate(8, 12, 1) },
+                // Week 2: Saturday 15:01 JST to Sunday 03:01 JST
+                { week: 2, start: getJstDate(15, 0, 1), end: getJstDate(15, 12, 1) },
+                // Week 3: Saturday 15:01 JST to Sunday 03:01 JST
+                { week: 3, start: getJstDate(22, 0, 1), end: getJstDate(22, 12, 1) },
+                // Week 4: Saturday 15:01 JST to Sunday 03:01 JST
+                {
+                    week: 4,
+                    start: getJstDate(29, 0, 1),
+                    end: getJstDate(month === 11 ? new Date(year + 1, 0, 1).getDate() : new Date(year, month + 1, 0).getDate(), 0, 1) // Handles month end
+                }
+            ];
 
+            const countdownElement = document.getElementById('countdown');
+            const showWinnersBtn = document.getElementById('showWinnersBtn');
+            if (!countdownElement || !showWinnersBtn) return;
+
+            let showButton = false;
+
+            // Check if current UTC time is within any of the defined JST week windows (converted to UTC)
+            for (const window of weekWindows) {
+                if (now.getTime() >= window.start.getTime() && now.getTime() <= window.end.getTime()) {
+                    showButton = true;
+                    break;
+                }
+            }
+
+            if (showButton) {
+                showWinnersBtn.style.display = 'block'; // Show the button
+            } else {
+                showWinnersBtn.style.display = 'none'; // Hide the button
+            }
+
+            // Countdown logic, now comparing 'now' (which is local time, but its getTime() is UTC)
+            // with JST target times (which are converted to UTC by getJstDate)
+            const phaseTimes = [
+                { end: getJstDate(1, 0, 1), label: `🎯 Next raffle starts in:` },
+                { end: getJstDate(7, 23, 59), label: `📊 Week 1 ends in:` },
+                { end: getJstDate(8, 11, 59), label: `🕒 Click on 'Show Winners' for Week 1 winners! Week 2 starts in:` },
+                { end: getJstDate(14, 23, 59), label: `📊 Week 2 ends in:` },
+                { end: getJstDate(15, 11, 59), label: `🕒 Click on 'Show Winners' for Week 2 winners! Week 3 starts in:` },
+                { end: getJstDate(21, 23, 59), label: `📊 Week 3 ends in:` },
+                { end: getJstDate(22, 11, 59), label: `🕒 Click on 'Show Winners' for Week 3 winners! Week 4 starts in:` },
+                { end: getJstDate(28, 23, 59), label: `📊 Week 4 ends in:` },
+                { end: getJstDate(29, 11, 59), label: `🕒 Click on 'Show Winners' for Week 4 winners! Raffle for this month ends in:` }
+            ];
+
+            let targetPhase = null;
+            for (let i = 0; i < phaseTimes.length; i++) {
+                // Compare 'now' (which is effectively UTC milliseconds) with the UTC representation of JST phase ends
+                if (now.getTime() < phaseTimes[i].end.getTime()) {
+                    targetPhase = phaseTimes[i];
+                    break;
+                }
+            }
+
+            if (!targetPhase) {
+                const nextMonth = month === 11 ? 0 : month + 1;
+                const nextYear = month === 11 ? year + 1 : year;
+                // Next raffle starts on the 1st of the next month at 00:01 JST (which is previous day 15:01 UTC)
+                const nextStartJST = new Date(year, month + 1, 1, 0, 1); // This creates it in local time
+                const nextStartUTC = new Date(Date.UTC(nextYear, nextMonth, 1, 0 - 9, 1)); // Correct UTC for JST 00:01
+                const diff = nextStartUTC.getTime() - now.getTime();
+                countdownElement.textContent = formatCountdown(diff, `🎯 Next raffle starts in:`);
+                return;
+            }
+
+            const diff = targetPhase.end.getTime() - now.getTime();
+            countdownElement.textContent = formatCountdown(diff, targetPhase.label);
+        }
+
+        function formatCountdown(ms, label) {
+            if (ms < 0) ms = 0;
+            const d = Math.floor(ms / 86400000);
+            const h = Math.floor((ms % 86400000) / 3600000);
+            const m = Math.floor((ms % 3600000) / 60000);
+            const s = Math.floor((ms % 60000) / 1000);
+            return `${label} ${d}d ${h}h ${m}m ${s}s`;
+        }
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchTickets();
+            updateCountdownAndWinnerButton();
+            setInterval(updateCountdownAndWinnerButton, 1000);
+
+            // Attach event listener to the new button
+            const showWinnersBtn = document.getElementById('showWinnersBtn');
+            if (showWinnersBtn) {
+                showWinnersBtn.addEventListener('click', showWinners);
+            }
+        });
     </script>
     <script src="/js/app.js"></script>
     <script src="/js/particles.js"></script>
