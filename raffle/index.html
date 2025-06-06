@@ -789,107 +789,86 @@
             }
         }
 
-        function updateCountdownAndWinnerButton() {
-            const now = new Date(); // Current local time
-            // Define your week windows in UTC to avoid timezone issues with `new Date()`
-            // Note: month is 0-indexed for Date.UTC, so June is 5, July is 6.
-            const year = now.getFullYear(); // Use current year
-            const month = now.getMonth(); // Use current month (0-indexed)
+function updateCountdownAndWinnerButton() {
+    const now = new Date();
 
-            // Adjusted weekWindows to use Date.UTC for consistent comparisons
-            const weekWindows = [
-                { week: 1, start: new Date(Date.UTC(year, month, 7, 15, 1)), end: new Date(Date.UTC(year, month, 8, 3, 1)) },
-                { week: 2, start: new Date(Date.UTC(year, month, 14, 15, 1)), end: new Date(Date.UTC(year, month, 15, 3, 1)) },
-                { week: 3, start: new Date(Date.UTC(year, month, 21, 15, 1)), end: new Date(Date.UTC(year, month, 22, 3, 1)) },
-                {
-                    week: 4,
-                    start: new Date(Date.UTC(year, month, 28, 15, 1)),
-                    end: new Date(Date.UTC(year, month + 1, 0, 15, 1))
-                }
-            ];
+    // Create a UTC time object for accurate comparison with weekWindows
+    const nowUTC = new Date(Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate(),
+        now.getUTCHours(),
+        now.getUTCMinutes(),
+        now.getUTCSeconds()
+    ));
 
+    const year = nowUTC.getUTCFullYear();
+    const month = nowUTC.getUTCMonth();
 
-            const countdownElement = document.getElementById('countdown');
-            const showWinnersBtn = document.getElementById('showWinnersBtn');
-            if (!countdownElement || !showWinnersBtn) return;
+    const weekWindows = [
+        { week: 1, start: new Date(Date.UTC(year, month, 7, 15, 1)), end: new Date(Date.UTC(year, month, 8, 3, 1)) },
+        { week: 2, start: new Date(Date.UTC(year, month, 14, 15, 1)), end: new Date(Date.UTC(year, month, 15, 3, 1)) },
+        { week: 3, start: new Date(Date.UTC(year, month, 21, 15, 1)), end: new Date(Date.UTC(year, month, 22, 3, 1)) },
+        { week: 4, start: new Date(Date.UTC(year, month, 28, 15, 1)), end: new Date(Date.UTC(year, month + 1, 0, 15, 1)) }
+    ];
 
-            let showButton = false;
+    const countdownElement = document.getElementById('countdown');
+    const showWinnersBtn = document.getElementById('showWinnersBtn');
+    if (!countdownElement || !showWinnersBtn) return;
 
-            // Check if current time is within any of the defined week windows
-            for (const window of weekWindows) {
-                if (now >= window.start && now <= window.end) {
-                    showButton = true;
-                    break;
-                }
-            }
+    // ✅ Show/hide button based on UTC match
+    const showButton = weekWindows.some(w => nowUTC >= w.start && nowUTC <= w.end);
+    showWinnersBtn.style.display = showButton ? 'block' : 'none';
 
-            if (showButton) {
-                showWinnersBtn.style.display = 'block'; // Show the button
-            } else {
-                showWinnersBtn.style.display = 'none'; // Hide the button
-            }
+    // 🔁 JST Countdown Logic
+    const jstOffset = 9 * 60 * 60 * 1000;
+    const nowJST = new Date(now.getTime() + jstOffset);
 
-            // Countdown logic (retained from your original code)
-            const jstOffsetMs = 9 * 60 * 60 * 1000;
-            const nowJst = new Date(now.getTime() + jstOffsetMs);
+    const getDate = (d, h, m) =>
+        new Date(`${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}T${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00+09:00`);
 
-            const getDate = (d, h, m) =>
-                new Date(`${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}T${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00+09:00`);
+    const phaseTimes = [
+        { end: getDate(1, 0, 1), label: `🎯 Next raffle starts in:` },
+        { end: getDate(7, 23, 59), label: `📊 Week 1 ends in:` },
+        { end: getDate(8, 11, 59), label: `🕒 Click on 'Show Winners' for Week 1 winners! Week 2 starts in:` },
+        { end: getDate(14, 23, 59), label: `📊 Week 2 ends in:` },
+        { end: getDate(15, 11, 59), label: `🕒 Click on 'Show Winners' for Week 2 winners! Week 3 starts in:` },
+        { end: getDate(21, 23, 59), label: `📊 Week 3 ends in:` },
+        { end: getDate(22, 11, 59), label: `🕒 Click on 'Show Winners' for Week 3 winners! Week 4 starts in:` },
+        { end: getDate(28, 23, 59), label: `📊 Week 4 ends in:` },
+        { end: getDate(29, 11, 59), label: `🕒 Click on 'Show Winners' for Week 4 winners! Raffle for this month ends in:` }
+    ];
 
-            const phaseTimes = [
-                { end: getDate(1, 0, 1), label: `🎯 Next raffle starts in:` },
-                { end: getDate(7, 23, 59), label: `📊 Week 1 ends in:` },
-                { end: getDate(8, 11, 59), label: `🕒 Click on 'Show Winners' for Week 1 winners! Week 2 starts in:` },
-                { end: getDate(14, 23, 59), label: `📊 Week 2 ends in:` },
-                { end: getDate(15, 11, 59), label: `🕒 Click on 'Show Winners' for Week 2 winners! Week 3 starts in:` },
-                { end: getDate(21, 23, 59), label: `📊 Week 3 ends in:` },
-                { end: getDate(22, 11, 59), label: `🕒Click on 'Show Winners' for Week 3 winners! Week 4 starts in:` },
-                { end: getDate(28, 23, 59), label: `📊 Week 4 ends in:` },
-                { end: getDate(29, 11, 59), label: `🕒 Click on 'Show Winners' for Week 4 winners! Raffle for this month ends in:` }
-            ];
-
-            let targetPhase = null;
-            for (let i = 0; i < phaseTimes.length; i++) {
-                if (nowJst < phaseTimes[i].end) {
-                    targetPhase = phaseTimes[i];
-                    break;
-                }
-            }
-
-            if (!targetPhase) {
-                const nextMonth = month === 11 ? 0 : month + 1;
-                const nextYear = month === 11 ? year + 1 : year;
-                const nextStart = new Date(Date.UTC(nextYear, nextMonth, 0, 15, 1, 0)); // Adjusted to UTC
-                const diff = nextStart.getTime() - now.getTime(); // Use 'now' (local time) for diff calc with UTC target
-                countdownElement.textContent = formatCountdown(diff, `🎯 Next raffle starts in:`);
-                return;
-            }
-
-            const diff = targetPhase.end.getTime() - nowJst.getTime();
-            countdownElement.textContent = formatCountdown(diff, targetPhase.label);
+    let targetPhase = null;
+    for (let i = 0; i < phaseTimes.length; i++) {
+        if (nowJST < phaseTimes[i].end) {
+            targetPhase = phaseTimes[i];
+            break;
         }
+    }
 
-        function formatCountdown(ms, label) {
-            if (ms < 0) ms = 0;
-            const d = Math.floor(ms / 86400000);
-            const h = Math.floor((ms % 86400000) / 3600000);
-            const m = Math.floor((ms % 3600000) / 60000);
-            const s = Math.floor((ms % 60000) / 1000);
-            return `${label} ${d}d ${h}h ${m}m ${s}s`;
-        }
+    if (!targetPhase) {
+        const nextMonth = month === 11 ? 0 : month + 1;
+        const nextYear = month === 11 ? year + 1 : year;
+        const nextStart = new Date(Date.UTC(nextYear, nextMonth, 0, 15, 1, 0));
+        const diff = nextStart.getTime() - now.getTime();
+        countdownElement.textContent = formatCountdown(diff, `🎯 Next raffle starts in:`);
+        return;
+    }
 
+    const diff = targetPhase.end.getTime() - nowJST.getTime();
+    countdownElement.textContent = formatCountdown(diff, targetPhase.label);
+}
 
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchTickets();
-            updateCountdownAndWinnerButton();
-            setInterval(updateCountdownAndWinnerButton, 1000);
+function formatCountdown(ms, label) {
+    if (ms < 0) ms = 0;
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor((ms % 86400000) / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    return `${label} ${d}d ${h}h ${m}m ${s}s`;
+}
 
-            // Attach event listener to the new button
-            const showWinnersBtn = document.getElementById('showWinnersBtn');
-            if (showWinnersBtn) {
-                showWinnersBtn.addEventListener('click', showWinners);
-            }
-        });
     </script>
     <script src="/js/app.js"></script>
     <script src="/js/particles.js"></script>
