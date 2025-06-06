@@ -509,10 +509,6 @@
         <div id="ticketContainer"></div>
         <button id="loadMore" onclick="loadMore()">Load More</button>
     </div>
-        <div id="winnersResult" class="results-display" style="margin-top: 20px;"></div>
-<button id="generateWinnersBtn" class="live-stream-button" style="margin-top: 20px; display: none;" onclick="promptPasswordAndGenerate()">
-    🎉 Generate Winners
-</button>
 
 
 
@@ -736,70 +732,9 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
     });
-const WINNERS_API = "https://YOUR-BACKEND-HOST/winners"; // replace with your real URL
+<script>
+</script>
 
-function isInResultWindow() {
-    const now = new Date();
-    const JST = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-    const year = JST.getFullYear();
-    const month = JST.getMonth();
-    const getDate = (d, h, m) => new Date(year, month, d, h, m, 0);
-
-    const windows = [
-        { start: getDate(7, 23, 59), end: getDate(8, 11, 59) },
-        { start: getDate(14, 23, 59), end: getDate(15, 11, 59) },
-        { start: getDate(21, 23, 59), end: getDate(22, 11, 59) },
-        { start: getDate(28, 23, 59), end: getDate(29, 11, 59) }
-    ];
-
-    return windows.some(({ start, end }) => JST >= start && JST <= end);
-}
-
-function showWinners(winners) {
-    const div = document.getElementById("winnersResult");
-    if (!div) return;
-    div.innerHTML = winners.map((w, i) =>
-        `🥇 Winner ${i + 1}: ${w.username} (#${w.ticket})`
-    ).join("<br>");
-}
-
-async function fetchWinners() {
-    try {
-        const res = await fetch(WINNERS_API);
-        if (res.ok) {
-            const winners = await res.json();
-            if (winners.length > 0) showWinners(winners);
-        }
-    } catch (err) {
-        console.error("Error fetching winners:", err);
-    }
-}
-
-function promptPasswordAndGenerate() {
-    const pass = prompt("Enter admin password:");
-    if (!pass) return;
-    fetch(WINNERS_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: pass })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.error) return alert(data.error);
-        showWinners(data);
-    })
-    .catch(err => {
-        alert("Failed to generate winners.");
-        console.error(err);
-    });
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-    fetchWinners();
-    if (isInResultWindow()) {
-        document.getElementById("generateWinnersBtn").style.display = "inline-block";
-    }
-});
 
 </script>
     <script src="/js/app.js"></script>
