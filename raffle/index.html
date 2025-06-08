@@ -352,15 +352,15 @@
         }
 
         #ticketContainer>div {
-            padding: 10px;
+            padding: 6px;
             border: 1px solid rgba(74, 85, 104, 0.5);
             /* Transparent border */
             border-radius: 8px;
             background: rgba(74, 85, 104, 0.7);
             /* Transparent card background */
-            min-width: 100px;
+            min-width: 80px;
             color: #e2e8f0;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
             text-align: center;
             flex-basis: calc(20% - 10px);
@@ -429,53 +429,38 @@
             /* Use button's text color for icon */
         }
 
-        /* New style for the "Show Winners" button */
-        .show-winners-button {
-            margin-top: 20px;
-            padding: 15px 30px;
-            background-color: #008CBA;
-            /* Blue color */
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
+        /* Styles for the weekly winner boxes */
+        .weekly-winner-box {
+            background-color: rgba(45, 55, 72, 0.8);
+            padding: 15px;
             border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 100%;
         }
 
-        .show-winners-button:hover {
-            background-color: #007B9E;
-            transform: translateY(-2px);
-        }
-
-        .show-winners-button:active {
-            transform: translateY(0);
-        }
-
-        /* Styles for the winners modal */
-        #winnersModal .modal-body {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        #winnersModal ul {
-            list-style: none;
-            padding: 0;
+        .weekly-winner-box h3 {
+            color: #4299e1;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        #winnersModal li {
-            background-color: rgba(74, 85, 104, 0.7);
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 6px;
+        .weekly-winner-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .weekly-winner-box li span {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        #winnersModal li span {
+            background-color: rgba(74, 85, 104, 0.7);
+            padding: 7px;
+            margin-bottom: 8px;
+            border-radius: 6px;
             font-weight: 600;
         }
     </style>
@@ -505,18 +490,6 @@
         </div>
     </div>
 
-    <div id="winnersModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Past Winners</h2>
-                <span class="close" onclick="closeModal('winnersModal')">×</span>
-            </div>
-            <div class="modal-body">
-                <ul id="winnersList">
-                    </ul>
-            </div>
-        </div>
-    </div>
 
     <canvas id="particleCanvas"></canvas>
     <div class="glow-container">
@@ -563,7 +536,7 @@
             Loading countdown...
         </div>
 
-        <a href="https://x.com/RATOR205" target="_blank" class="live-stream-button">
+        <a href="/raffle" target="_blank" class="live-stream-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                 <path
                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -571,7 +544,45 @@
             Cashable for $100 each, Three winners each week - RooHats, Rooclothes, Rooshorts.
         </a>
 
-        <button id="showWinnersBtn" class="show-winners-button" style="display: none;">Show Winners</button>
+        <div id="weeklyWinnersContainer" class="raffle-container" style="margin-top: 30px;">
+            <h2 class="text-3xl font-extrabold mb-4 text-center" style="color: #ffffff;">
+                🏆 Weekly Raffle Winners
+            </h2>
+            <div id="winnersDisplay" style="width: 100%;">
+                <div class="weekly-winner-box">
+                    <h3>Week 1 Winners</h3>
+                    <ul>
+                        <li><span style="color: #e2e8f0;">user_one</span></li>
+                        <li><span style="color: #e2e8f0;">user_two</span></li>
+                        <li><span style="color: #e2e8f0;">user_three</span></li>
+                    </ul>
+                </div>
+                <div class="weekly-winner-box">
+                    <h3>Week 2 Winners</h3>
+                    <ul>
+                        <li><span style="color: #e2e8f0;">user_four</span></li>
+                        <li><span style="color: #e2e8f0;">user_five</span></li>
+                        <li><span style="color: #e2e8f0;">user_six</span></li>
+                    </ul>
+                </div>
+                <div class="weekly-winner-box">
+                    <h3>Week 3 Winners</h3>
+                    <ul>
+                        <li><span style="color: #e2e8f0;">user_seven</span></li>
+                        <li><span style="color: #e2e8f0;">user_eight</span></li>
+                        <li><span style="color: #e2e8f0;">user_nine</span></li>
+                    </ul>
+                </div>
+                <div class="weekly-winner-box">
+                    <h3>Week 4 Winners</h3>
+                    <ul>
+                        <li><span style="color: #e2e8f0;">user_ten</span></li>
+                        <li><span style="color: #e2e8f0;">user_eleven</span></li>
+                        <li><span style="color: #e2e8f0;">user_twelve</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
         <div class="raffle-search-section">
             <div class="raffle-input-group">
@@ -620,18 +631,14 @@
 
         window.onclick = function (event) {
             const rulesModal = document.getElementById("rulesModal");
-            const winnersModal = document.getElementById("winnersModal");
             if (event.target == rulesModal) {
                 closeModal('rulesModal');
-            }
-            if (event.target == winnersModal) {
-                closeModal('winnersModal');
             }
         }
 
         // Raffle Specific JavaScript (integrated and adapted)
         const API = 'https://azisairaffle.onrender.com/raffle/tickets'; // Raffle API
-        const WINNERS_API = 'https://azisairaffle.onrender.com/winners'; // Winners API
+        const WINNERS_API = 'https://c95c813f-63f5-41d3-9fc8-a2a51ad7d9be-00-3or5p644l6uqn.sisko.replit.dev:5000/winners'; // Winners API
         let tickets = []; // Array to store all fetched tickets
         let currentIndex = 0; // Tracks the current index for displaying tickets
         const step = 10; // Number of tickets to display per load
@@ -755,41 +762,8 @@
         }
 
         /**
-         * Fetches and displays past winners in a modal.
+         * Helper function to create a Date object at a specific day, hour, and minute in JST
          */
-        async function showWinners() {
-            try {
-                const res = await fetch(WINNERS_API);
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                let winners = await res.json();
-
-                // Sort winners numerically by ticket number
-                winners.sort((a, b) => a.ticket - b.ticket);
-
-                const winnersList = document.getElementById('winnersList');
-                if (!winnersList) return;
-                winnersList.innerHTML = ''; // Clear previous winners
-
-                if (winners.length === 0) {
-                    winnersList.innerHTML = '<li>No winners announced yet.</li>';
-                } else {
-                    winners.forEach(winner => {
-                        const listItem = document.createElement('li');
-                        const maskedUser = maskUsername(winner.username);
-                        listItem.innerHTML = `<span>Ticket: #${winner.ticket}</span><span>User: ${maskedUser}</span>`;
-                        winnersList.appendChild(listItem);
-                    });
-                }
-                openModal('winnersModal');
-            } catch (error) {
-                console.error("Failed to fetch winners:", error);
-                alert("Error loading winners. Please try again later.");
-            }
-        }
-
-        // Helper function to create a Date object at a specific day, hour, and minute in JST
         function getJstDate(day, hour, minute) {
             const now = new Date();
             const year = now.getFullYear();
@@ -826,37 +800,20 @@
             ];
 
             const countdownElement = document.getElementById('countdown');
-            const showWinnersBtn = document.getElementById('showWinnersBtn');
-            if (!countdownElement || !showWinnersBtn) return;
-
-            let showButton = false;
-
-            // Check if current UTC time is within any of the defined JST week windows (converted to UTC)
-            for (const window of weekWindows) {
-                if (now.getTime() >= window.start.getTime() && now.getTime() <= window.end.getTime()) {
-                    showButton = true;
-                    break;
-                }
-            }
-
-            if (showButton) {
-                showWinnersBtn.style.display = 'block'; // Show the button
-            } else {
-                showWinnersBtn.style.display = 'none'; // Hide the button
-            }
+            if (!countdownElement) return;
 
             // Countdown logic, now comparing 'now' (which is local time, but its getTime() is UTC)
             // with JST target times (which are converted to UTC by getJstDate)
             const phaseTimes = [
                 { end: getJstDate(1, 0, 1), label: `🎯 Next raffle starts in:` },
                 { end: getJstDate(7, 23, 59), label: `📊 Week 1 ends in:` },
-                { end: getJstDate(8, 11, 59), label: `🕒 Click on 'Show Winners' for Week 1 winners! Week 2 starts in:` },
+                { end: getJstDate(8, 11, 59), label: `🕒 Check the "Weekly Raffle Winners" section below for Week 1 winners! Week 2 starts in:` },
                 { end: getJstDate(14, 23, 59), label: `📊 Week 2 ends in:` },
-                { end: getJstDate(15, 11, 59), label: `🕒 Click on 'Show Winners' for Week 2 winners! Week 3 starts in:` },
+                { end: getJstDate(15, 11, 59), label: `🕒 Check the "Weekly Raffle Winners" section below for Week 2 winners! Week 3 starts in:` },
                 { end: getJstDate(21, 23, 59), label: `📊 Week 3 ends in:` },
-                { end: getJstDate(22, 11, 59), label: `🕒 Click on 'Show Winners' for Week 3 winners! Week 4 starts in:` },
+                { end: getJstDate(22, 11, 59), label: `🕒 Check the "Weekly Raffle Winners" section below for Week 3 winners! Week 4 starts in:` },
                 { end: getJstDate(28, 23, 59), label: `📊 Week 4 ends in:` },
-                { end: getJstDate(29, 11, 59), label: `🕒 Click on 'Show Winners' for Week 4 winners! Raffle for this month ends in:` }
+                { end: getJstDate(29, 11, 59), label: `🕒 Check the "Weekly Raffle Winners" section below for Week 4 winners! Raffle for this month ends in:` }
             ];
 
             let targetPhase = null;
@@ -875,40 +832,171 @@
                 const nextStartJST = new Date(year, month + 1, 1, 0, 1); // This creates it in local time
                 const nextStartUTC = new Date(Date.UTC(nextYear, nextMonth, 1, 0 - 9, 1)); // Correct UTC for JST 00:01
                 const diff = nextStartUTC.getTime() - now.getTime();
-                countdownElement.textContent = formatCountdown(diff, `🎯 Next raffle starts in:`);
-                return;
+                if (diff < 0) { // If next month's start has already passed this hour
+                    countdownElement.textContent = "Raffle ended for this month. Stay tuned for next month's raffle!";
+                } else {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    countdownElement.textContent = `🎯 Next raffle starts in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                }
+            } else {
+                const diff = targetPhase.end.getTime() - now.getTime();
+                if (diff < 0) {
+                    countdownElement.textContent = "Time has passed for this phase. Refreshing...";
+                } else {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    countdownElement.textContent = `${targetPhase.label} ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                }
             }
-
-            const diff = targetPhase.end.getTime() - now.getTime();
-            countdownElement.textContent = formatCountdown(diff, targetPhase.label);
-        }
-
-        function formatCountdown(ms, label) {
-            if (ms < 0) ms = 0;
-            const d = Math.floor(ms / 86400000);
-            const h = Math.floor((ms % 86400000) / 3600000);
-            const m = Math.floor((ms % 3600000) / 60000);
-            const s = Math.floor((ms % 60000) / 1000);
-            return `${label} ${d}d ${h}h ${m}m ${s}s`;
         }
 
 
-        window.addEventListener('DOMContentLoaded', () => {
+        // Function to fetch and display weekly winners
+        async function displayWeeklyWinners() {
+            try {
+                const res = await fetch(WINNERS_API); // WINNERS_API is already defined
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                let weeklyData = await res.json();
+
+                const winnersDisplayDiv = document.getElementById('winnersDisplay');
+                if (!winnersDisplayDiv) {
+                    console.error("Element with ID 'winnersDisplay' not found.");
+                    return;
+                }
+                winnersDisplayDiv.innerHTML = ''; // Clear previous content
+
+                if (weeklyData.length === 0) {
+                    winnersDisplayDiv.innerHTML = '<p class="text-gray-500 text-center w-full">No weekly winners announced yet.</p>';
+                    return;
+                }
+
+                // Sort by week number in ascending order
+                weeklyData.sort((a, b) => a.week - b.week);
+
+                weeklyData.forEach(weekEntry => {
+                    const weekBox = document.createElement('div');
+                    weekBox.className = 'weekly-winner-box'; // Add a class for styling
+
+                    const weekTitle = document.createElement('h3');
+                    weekTitle.textContent = `Week ${weekEntry.week} Winners`;
+                    weekBox.appendChild(weekTitle);
+
+                    const winnersList = document.createElement('ul');
+
+                    if (weekEntry.winners && weekEntry.winners.length > 0) {
+                        // Sort winners within the week by ticket number (this sort can remain even if not displayed)
+                        weekEntry.winners.sort((a, b) => a.ticket - b.ticket);
+                        weekEntry.winners.forEach(winner => {
+                            const listItem = document.createElement('li');
+                            // --- MODIFIED LINE BELOW ---
+                            listItem.innerHTML = `<span style="color: #e2e8f0;">@${maskUsername(winner.username)}</span>`;
+                            winnersList.appendChild(listItem);
+                        });
+                    } else {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<span style="color: #a0aec0;">Winners for this week will be announced soon!</span>`;
+                        winnersList.appendChild(listItem);
+                    }
+                    weekBox.appendChild(winnersList);
+                    winnersDisplayDiv.appendChild(weekBox);
+                });
+            } catch (error) {
+                console.error("Failed to fetch weekly winners:", error);
+                const winnersDisplayDiv = document.getElementById('winnersDisplay');
+                if (winnersDisplayDiv) {
+                    winnersDisplayDiv.innerHTML = '<p class="text-red-400 text-center w-full">Error loading weekly winners. Please try again later.</p>';
+                }
+            }
+        }
+
+
+        // Initial calls
+        document.addEventListener('DOMContentLoaded', () => {
             fetchTickets();
             updateCountdownAndWinnerButton();
-            setInterval(updateCountdownAndWinnerButton, 1000);
-
-            // Attach event listener to the new button
-            const showWinnersBtn = document.getElementById('showWinnersBtn');
-            if (showWinnersBtn) {
-                showWinnersBtn.addEventListener('click', showWinners);
-            }
+            displayWeeklyWinners(); // Call the new function to display winners
+            setInterval(updateCountdownAndWinnerButton, 1000); // Update countdown every second
         });
-    </script>
-    <script src="/js/app.js"></script>
-    <script src="/js/particles.js"></script>
-    <script src="/js/toast.js"></script>
 
+        // Particle effect script (unchanged, for completeness)
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        canvas.width = window.innerWidth;
+        canvas.height = document.body.scrollHeight; // Set canvas height to content height
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = document.body.scrollHeight;
+            createParticles();
+        });
+
+        class Particle {
+            constructor(x, y, size, speedX, speedY, color) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.speedX = speedX;
+                this.speedY = speedY;
+                this.color = color;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.size > 0.2) this.size -= 0.1;
+                if (this.y > canvas.height + 50 || this.y < -50 || this.x > canvas.width + 50 || this.x < -50) {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 5 + 1;
+                    this.speedX = Math.random() * 3 - 1.5;
+                    this.speedY = Math.random() * 3 - 1.5;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height,
+                    Math.random() * 5 + 1,
+                    Math.random() * 3 - 1.5,
+                    Math.random() * 3 - 1.5,
+                    'rgba(255, 255, 255, 0.8)'
+                ));
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        createParticles();
+        animateParticles();
+    </script>
 </body>
 
 </html>
