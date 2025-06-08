@@ -896,7 +896,7 @@
                         weekEntry.winners.forEach(winner => {
                             const listItem = document.createElement('li');
                             // --- MODIFIED LINE BELOW ---
-                            listItem.innerHTML = `<span style="color: #e2e8f0;">@${maskUsername(winner.username)}</span>`;
+                            listItem.innerHTML = `<span style="color: #e2e8f0;">${maskUsername(winner.username)}</span>`;
                             winnersList.appendChild(listItem);
                         });
                     } else {
