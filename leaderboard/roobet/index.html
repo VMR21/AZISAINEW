@@ -381,7 +381,6 @@ const rewards = [2000, 4000, 2000, 1000, 1000]; // Only first 10 rewarded
 
 const top3Glows = ['0 0 40px #C0C0C0', '0 0 40px #FFD700', '0 0 40px #CD7F32'];
 
-// Countdown logic (auto resets to 00:00 JST on last day of current month)
 function updateCountdown() {
   const el = document.getElementById("countdown");
   if (!el) return;
@@ -390,14 +389,21 @@ function updateCountdown() {
   const nowUTC = now.getTime();
 
   const year = now.getUTCFullYear();
-  const month = now.getUTCMonth();
+  const month = now.getUTCMonth(); // 0-based (June = 5)
 
-  // End of current month at 15:00 UTC (00:00 JST on 1st of next month)
-  let targetUTC = Date.UTC(year, month + 1, 0, 15, 0, 0); // e.g., June 30 15:00 UTC
+  let targetUTC;
 
-  // If already past this month's deadline, switch to next month
-  if (nowUTC >= targetUTC) {
-    targetUTC = Date.UTC(year, month + 2, 0, 15, 0, 0); // e.g., July 31 15:00 UTC
+  // Special rule: If it's June 2025, extend to July 31st 15:00 UTC
+  if (year === 2025 && month === 5) {
+    targetUTC = Date.UTC(2025, 6, 31, 15, 0, 0); // July 31, 2025 15:00 UTC
+  } else {
+    // Regular: End of current month at 15:00 UTC
+    targetUTC = Date.UTC(year, month + 1, 0, 15, 0, 0);
+
+    // If already past this month's deadline, move to end of next month
+    if (nowUTC >= targetUTC) {
+      targetUTC = Date.UTC(year, month + 2, 0, 15, 0, 0);
+    }
   }
 
   const diff = targetUTC - nowUTC;
@@ -412,6 +418,7 @@ function updateCountdown() {
 
 setInterval(updateCountdown, 1000);
 updateCountdown();
+
 
 
 async function loadLeaderboard() {
