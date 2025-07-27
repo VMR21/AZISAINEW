@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
-<html lang="ja"> <!-- Default language set to Japanese -->
+<html lang="en">
 
 <head>
-    <title data-i18n="pageTitle">AZISAI | ルーベット リーダーボード</title>
+    <title>あじさい公式</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" data-i18n="metaDescription" content="コードAZISAI07219のルーベット限定賭けレース！">
+    <meta name="description" content="Exclusive wager races on Roobet for code AZISAI07219!">
     <meta property="og:image"
         content="https://i.ibb.co/4nVwRPbj/Screenshot-2025-05-14-093458.png">
     <link rel="icon" type="image/jpg" href="/assets/logo.png">
@@ -16,20 +17,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="/css/toast.css">
     <style>
-        /* Existing styles */
-        .draggable {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            width: 350px;
-            max-height: 325px;
-            overflow-y: auto;
-            border-radius: 8px;
-            z-index: 1000;
-            background: #0a1328;
-            border: 2px solid #2775ca;
-            box-shadow: 0 0 50px rgba(39, 117, 202, 0.9);
-        }
+.draggable {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 350px;
+  max-height: 325px;
+  overflow-y: auto;
+  border-radius: 8px;
+  z-index: 1000;
+  background: #0a1328;
+  border: 2px solid #2775ca;
+  box-shadow: 0 0 50px rgba(39, 117, 202, 0.9);
+}
+
 
         .controls {
             display: flex;
@@ -191,90 +192,18 @@
                 display: none;
             }
         }
-
-        /* Countdown timer styles */
-        #countdown {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #ffffff;
-            text-shadow: 0 0 10px #00eaff, 0 0 20px #00eaff, 0 0 40px #00eaff;
-        }
-
-        @media (max-width: 768px) {
-            #countdown {
-                font-size: 2rem;
-            }
-        }
-
-        /* Language toggle buttons */
-        .language-toggle {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 10px;
-        }
-
-        .lang-button {
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #555;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-
-        .lang-button:hover {
-            background-color: #555;
-            border-color: #777;
-        }
-
-        .lang-button.active {
-            background-color: #007bff;
-            border-color: #007bff;
-            font-weight: bold;
-        }
-
-        /* Styles for social media cards */
-        .social-media-cards {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-
-        .social-media-cards .card {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            color: white;
-            font-weight: 500;
-            transition: transform 0.2s;
-        }
-
-        .social-media-cards .card:hover {
-            transform: translateY(-3px);
-        }
-
-        .social-media-cards .icon {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-        }
     </style>
 </head>
-<body>
-    <div style="background-color: #0e0e2c; color: #4fc3f7; font-weight: bold; text-align: center; padding: 12px 16px; font-size: 18px; border: 2px solid #4fc3f7; margin: 20px; border-radius: 8px;">
-        📢 <span data-i18n="newXAccount">新Xアカウント開設！</span><br>
-        <span data-i18n="clippingAndEvent">切り抜き＆イベント告知専用</span> 👉
-        <a href="https://x.com/azisaikirinuki" target="_blank" style="color: #ffffff; text-decoration: underline;">@azisaikirinuki</a>
-    </div>
+<div style="background-color: #0e0e2c; color: #4fc3f7; font-weight: bold; text-align: center; padding: 12px 16px; font-size: 18px; border: 2px solid #4fc3f7; margin: 20px; border-radius: 8px;">
+  📢 新Xアカウント開設！<br>
+  切り抜き＆イベント告知専用 👉  
+  <a href="https://x.com/azisaikirinuki" target="_blank" style="color: #ffffff; text-decoration: underline;">@azisaikirinuki</a>
+</div>
 
+
+
+
+<body>
     <div id="toast">
         <span id="message"></span>
     </div>
@@ -283,107 +212,101 @@
             <div id="drag-handle" class="drag-handle">&#x2630;</div>
             <button id="close-btn" class="close-btn">&times;</button>
         </div>
-        <div style="padding: 18px 20px; font-family: 'Orbitron', sans-serif; color: white;">
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+<div style="padding: 18px 20px; font-family: 'Orbitron', sans-serif; color: white;">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
 
-                .glow-text {
-                    color: #5ebeff;
-                    text-shadow: 0 0 5px #2775ca, 0 0 10px #2775ca, 0 0 20px #1b5aa0;
-                    font-weight: 700;
-                    font-size: 14px;
-                    margin-bottom: 4px;
-                }
+    .glow-text {
+      color: #5ebeff;
+      text-shadow: 0 0 5px #2775ca, 0 0 10px #2775ca, 0 0 20px #1b5aa0;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
 
-                .glow-box {
-                    animation: pulse-glow 2s infinite;
-                }
+    .glow-box {
+      animation: pulse-glow 2s infinite;
+    }
 
-                @keyframes pulse-glow {
-                    0% {
-                        box-shadow: 0 0 10px rgba(94, 190, 255, 0.4), 0 0 20px rgba(94, 190, 255, 0.2);
-                    }
+    @keyframes pulse-glow {
+      0% {
+        box-shadow: 0 0 10px rgba(94, 190, 255, 0.4), 0 0 20px rgba(94, 190, 255, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(94, 190, 255, 0.8), 0 0 40px rgba(94, 190, 255, 0.4);
+      }
+      100% {
+        box-shadow: 0 0 10px rgba(94, 190, 255, 0.4), 0 0 20px rgba(94, 190, 255, 0.2);
+      }
+    }
 
-                    50% {
-                        box-shadow: 0 0 20px rgba(94, 190, 255, 0.8), 0 0 40px rgba(94, 190, 255, 0.4);
-                    }
+    #resultBox span {
+      display: block;
+      margin-bottom: 6px;
+    }
 
-                    100% {
-                        box-shadow: 0 0 10px rgba(94, 190, 255, 0.4), 0 0 20px rgba(94, 190, 255, 0.2);
-                    }
-                }
+    input, button {
+      font-family: 'Orbitron', sans-serif;
+    }
+  </style>
 
-                #resultBox span {
-                    display: block;
-                    margin-bottom: 6px;
-                }
+  <label for="usernameInput" class="glow-text">Enter Username:</label>
+  <input type="text" id="usernameInput" placeholder="Roobet Username"
+    style="width: 100%; padding: 7px; margin-top: 6px; background-color: #0c1a2e; border: none; border-radius: 4px; color: #5ebeff; box-shadow: 0 0 10px rgba(39,117,202,0.5);">
 
-                input,
-                button {
-                    font-family: 'Orbitron', sans-serif;
-                }
-            </style>
+  <button onclick="fetchUserStats()" class="glow-box"
+    style="margin-top: 12px; width: 100%; padding: 10px; background-color: #2775ca; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
+    Check Stats
+  </button>
 
-            <label for="usernameInput" class="glow-text" data-i18n="enterUsername">Enter Username:</label>
-            <input type="text" id="usernameInput" data-i18n="usernamePlaceholder" placeholder="Roobet Username"
-                style="width: 100%; padding: 7px; margin-top: 6px; background-color: #0c1a2e; border: none; border-radius: 4px; color: #5ebeff; box-shadow: 0 0 10px rgba(39,117,202,0.5);">
+  <div id="resultBox" style="margin-top: 14px; font-size: 13px; color: #b0d9ff; max-height: 150px; overflow-y: auto;"></div>
+</div>
 
-            <button onclick="fetchUserStats()" class="glow-box" data-i18n="checkStatsButton"
-                style="margin-top: 12px; width: 100%; padding: 10px; background-color: #2775ca; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
-                Check Stats
-            </button>
+<script>
+  async function fetchUserStats() {
+    const username = document.getElementById("usernameInput").value.trim();
+    const resultBox = document.getElementById("resultBox");
 
-            <div id="resultBox" style="margin-top: 14px; font-size: 13px; color: #b0d9ff; max-height: 150px; overflow-y: auto;"></div>
-        </div>
+    if (!username) {
+      resultBox.innerHTML = "<span style='color:red;'>Please enter a username.</span>";
+      return;
+    }
 
-        <script>
-            async function fetchUserStats() {
-                const username = document.getElementById("usernameInput").value.trim();
-                const resultBox = document.getElementById("resultBox");
+    resultBox.innerHTML = "<span class='glow-text'>Fetching...</span>";
 
-                if (!username) {
-                    resultBox.innerHTML = `<span style='color:red;' data-i18n="enterUsernameError">Please enter a username.</span>`;
-                    applyTranslations(); // Apply translation to error message
-                    return;
-                }
+    try {
+      const [leaderboardRes, raffleRes] = await Promise.all([
+        fetch("https://azisailbdata-q469.onrender.com/leaderboard"),
+        fetch("https://azisairaffle.onrender.com/raffle/ticketsnoast")
+      ]);
 
-                resultBox.innerHTML = `<span class='glow-text' data-i18n="fetching">Fetching...</span>`;
-                applyTranslations(); // Apply translation to fetching message
+      const leaderboardData = await leaderboardRes.json();
+      const raffleData = await raffleRes.json();
 
-                try {
-                    const [leaderboardRes, raffleRes] = await Promise.all([
-                        fetch("https://azisailbdata-q469.onrender.com/leaderboard"),
-                        fetch("https://azisairaffle.onrender.com/raffle/ticketsnoast")
-                    ]);
+      const lbEntry = leaderboardData.find(p => p.username.toLowerCase() === username.toLowerCase());
+      const raffleEntry = raffleData.find(p => p.username.toLowerCase() === username.toLowerCase());
 
-                    const leaderboardData = await leaderboardRes.json();
-                    const raffleData = await raffleRes.json();
+      if (!lbEntry) {
+        resultBox.innerHTML = `<span style="color:red;">Username not found in leaderboard.</span>`;
+        return;
+      }
 
-                    const lbEntry = leaderboardData.find(p => p.username.toLowerCase() === username.toLowerCase());
-                    const raffleEntry = raffleData.find(p => p.username.toLowerCase() === username.toLowerCase());
+      const wagered = lbEntry.weightedWager;
+      const rank = lbEntry.rank;
+      const tickets = raffleEntry ? raffleEntry.ticketCount : 0;
 
-                    if (!lbEntry) {
-                        resultBox.innerHTML = `<span style="color:red;" data-i18n="usernameNotFound">Username not found in leaderboard.</span>`;
-                        applyTranslations(); // Apply translation to error message
-                        return;
-                    }
+      resultBox.innerHTML = `
+        <span class="glow-text">Wager For The Month: <span style="color:#00e0ff;">$${wagered.toLocaleString()}</span></span>
+        <span class="glow-text">Leaderboard Rank: <span style="color:#ffda77;">#${rank}</span></span>
+      `;
+    } catch (err) {
+      resultBox.innerHTML = "<span style='color:red;'>Error fetching data. Try again later.</span>";
+      console.error(err);
+    }
+  }
+</script>
 
-                    const wagered = lbEntry.weightedWager;
-                    const rank = lbEntry.rank;
-                    const tickets = raffleEntry ? raffleEntry.ticketCount : 0; // tickets variable is defined but not used.
 
-                    resultBox.innerHTML = `
-                        <span class="glow-text" data-i18n="wagerForMonth">Wager For The Month: <span style="color:#00e0ff;">$${wagered.toLocaleString()}</span></span>
-                        <span class="glow-text" data-i18n="leaderboardRank">Leaderboard Rank: <span style="color:#ffda77;">#${rank}</span></span>
-                    `;
-                    applyTranslations(); // Apply translation to results
-                } catch (err) {
-                    resultBox.innerHTML = `<span style='color:red;' data-i18n="fetchError">Error fetching data. Try again later.</span>`;
-                    applyTranslations(); // Apply translation to error message
-                    console.error(err);
-                }
-            }
-        </script>
     </div>
     <canvas id="particleCanvas"></canvas>
     <div class="glow-container">
@@ -397,432 +320,205 @@
     <header>
         <nav>
             <div class="logo-title">
-                <img src="/assets/logo.png" alt="サイトロゴ" class="logo">
+                <img src="/assets/logo.png" alt="Site logo" class="logo">
                 <h1 class="title">AZISAI</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="/leaderboard/roobet" data-i18n="leaderboardsLink">LEADERBOARDS</a></li>
+                
+                <li><a href="/leaderboard/roobet">LEADERBOARDS</a></li>
             </ul>
         </nav>
     </header>
     <br>
     <br>
-    <!-- Language toggle buttons added here -->
-    <div class="language-toggle">
-        <button class="lang-button" data-lang="en">English</button>
-        <button class="lang-button active" data-lang="ja">日本語</button>
-    </div>
     <div data-v-1d580398="" data-v-e4097664="" id="appContent">
-        <div data-v-1d580398="">
-            <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
-                <span data-v-1d580398="" class="title" data-i18n="competeTitle">COMPETE ON OUR LEADERBOARDs!</span>
-                <div class="toggle-images" style="margin-top: 20px;">
-                    <div class="image-wrapper">
-                        <img class="game-image clash-image" id="clashImage2" src="/assets/roobet.png"
-                            style="cursor: pointer;opacity: 1;" onclick="window.location.href='/leaderboard/roobet'">
-                        <div class="label">
-                            <!-- Replaced $ 10,000 with data-i18n for translation -->
-                            <div data-v-1d580398="" class="price-wrapper glow" style="font-size: 26px;" data-i18n="wagerAmountDisplay"></div>
+        <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
+            <span data-v-1d580398="" class="title">COMPETE ON OUR LEADERBOARDs!</span>
+            <div class="toggle-images" style="margin-top: 20px;">
+                <div class="image-wrapper">
+                    <img class="game-image clash-image" id="clashImage2" src="/assets/roobet.png"
+                        style="cursor: pointer;opacity: 1;" onclick="window.location.href='/leaderboard/roobet'">
+                    <div class="label">
+                        <div data-v-1d580398="" class="price-wrapper glow" style="font-size: 26px;">
+                            $ 10,000
                         </div>
                     </div>
                 </div>
             </div>
-            <div data-v-1d580398="" class="row text" style="margin-top: 80px;">
-                <!-- <span data-v-1d580398="" class="title">SUPPORT ME!</span> -->
-            </div>
-            <div class="card-container">
-                <a href="https://roobet.com/?ref=azisai07219" class="card-link" target="_blank">
-                    <div class="MuiBox-root css-1o7r9kk">
-                        <div class="MuiBox-root css-1t0wa4v"><img src="/assets/roobet.png" alt=""></div>
-                        <div class="code-container MuiBox-root css-0"><svg
-                                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1rmbjih" focusable="false"
-                                aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardDoubleArrowRightIcon">
-                                <path d="M6.41 6 5 7.41 9.58 12 5 16.59 6.41 18l6-6z"></path>
-                                <path d="m13 6-1.41 1.41L16.17 12l-4.58 4.59L13 18l6-6z"></path>
-                            </svg>
-                            <p class="MuiTypography-root MuiTypography-body1 css-8a8e2m-MuiTypography-root"
-                                style="font-size: 24px;" data-i18n="codeLabel">Code</p>
-                            <p class="MuiTypography-root MuiTypography-body1 code css-rmwyl-MuiTypography-root">
-                                AZISAI07219
-                            </p>
-                            <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1m8kjhh" focusable="false"
-                                aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardDoubleArrowLeftIcon">
-                                <path d="M17.59 18 19 16.59 14.42 12 19 7.41 17.59 6l-6 6z"></path>
-                                <path d="m11 18 1.41-1.41L7.83 12l4.58-4.59L11 6l-6 6z"></path>
-                            </svg>
-                        </div>
-                        <div class="MuiBox-root css-18dqm7l">
-                            <div class="description MuiBox-root css-0"><svg
-                                        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1ywrbwt" focusable="false"
-                                        aria-hidden="true" viewBox="0 0 24 24" data-testid="CheckCircleOutlineIcon">
-                                        <path
-                                            d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
-                                        </path>
-                                    </svg>
-                                <!-- Replaced "10,000$ MONTHLY LEADERBOARD" with data-i18n for translation -->
-                                <p class="MuiTypography-root MuiTypography-body1 css-8a8e2m-MuiTypography-root" data-i18n="monthlyLeaderboardText">
-                                </p>
-                            </div>
-                            <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 16px;">
-                                <a
-                                    class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root"
-                                    tabindex="0" href="https://roobet.com/?ref=azisai07219" target="_blank" data-i18n="signUpButton">
-                                    Sign up
-                                    <span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span>
-                                </a>
-
-                                <a
-                                    class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root"
-                                    tabindex="0" href="/leaderboard/roobet" target="_blank" data-i18n="leaderboardButton">
-                                    Leaderboard
-                                    <span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
-                <span data-v-1d580398="" class="title" data-i18n="ourSocialsTitle">Our Socials!</span>
-            </div>
-            <div class="social-media-cards">
-                <a href="https://kick.com/azisai0721" target="_blank" class="card kick">
-                    <img src="/assets/kick.png" alt="Kick Logo" class="icon" />
-                    <span>@Azisai0721</span>
-                </a>
-                <a href="https://x.com/azisaikirinuki" target="_blank" class="card discord">
-                    <img src="/assets/x.png" alt="X Logo" class="icon" />
-                    <span>@azisaikirinuki</span>
-                </a>
-                <a href="https://youtube.com/@azisai-onkazi-kirinuki" target="_blank" class="card youtube">
-                    <img src="/assets/youtube.png" alt="YouTube Logo" class="icon" />
-                    <span>@azisai-onkazi-kirinuki</span>
-                </a>
-                <a href="https://discord.gg/azisai" target="_blank" class="card discord">
-                    <img src="/assets/discord.png" alt="Discord Logo" class="icon" />
-                    <span>@azisai</span>
-                </a>
-            </div>
         </div>
-    </div>
+        <div data-v-1d580398="" class="row text" style="margin-top: 80px;">
+            <!-- <span data-v-1d580398="" class="title">SUPPORT ME!</span> -->
+        </div>
+        <div class="card-container">
+            <a href="https://roobet.com/?ref=azisai07219" class="card-link" target="_blank">
+                <div class="MuiBox-root css-1o7r9kk">
+                    <div class="MuiBox-root css-1t0wa4v"><img src="/assets/roobet.png" alt=""></div>
+                    <div class="code-container MuiBox-root css-0"><svg
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1rmbjih" focusable="false"
+                            aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardDoubleArrowRightIcon">
+                            <path d="M6.41 6 5 7.41 9.58 12 5 16.59 6.41 18l6-6z"></path>
+                            <path d="m13 6-1.41 1.41L16.17 12l-4.58 4.59L13 18l6-6z"></path>
+                        </svg>
+                        <p class="MuiTypography-root MuiTypography-body1 css-8a8e2m-MuiTypography-root"
+                            style="font-size: 24px;">Code</p>
+                        <p class="MuiTypography-root MuiTypography-body1 code css-rmwyl-MuiTypography-root">
+                            AZISAI07219
+                        </p>
+                        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1m8kjhh" focusable="false"
+                            aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardDoubleArrowLeftIcon">
+                            <path d="M17.59 18 19 16.59 14.42 12 19 7.41 17.59 6l-6 6z"></path>
+                            <path d="m11 18 1.41-1.41L7.83 12l4.58-4.59L11 6l-6 6z"></path>
+                        </svg>
+                    </div>
+                    <div class="MuiBox-root css-18dqm7l">
+                        <div class="description MuiBox-root css-0"><svg
+                                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1ywrbwt" focusable="false"
+                                aria-hidden="true" viewBox="0 0 24 24" data-testid="CheckCircleOutlineIcon">
+                                <path
+                                    d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
+                                </path>
+                            </svg>
+                            <p class="MuiTypography-root MuiTypography-body1 css-8a8e2m-MuiTypography-root">
+                                10,000$ MONTHLY LEADERBOARD
+                            </p>
+                        </div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 16px;">
+  <a
+    class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root"
+    tabindex="0" href="https://roobet.com/?ref=azisai07219" target="_blank">
+    Sign up
+    <span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span>
+  </a>
 
-    <script src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-        crossorigin="anonymous"></script>
+  <a
+    class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root"
+    tabindex="0" href="/leaderboard/roobet" target="_blank">
+    Leaderboard
+    <span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span>
+  </a>
+</div>
+</div>
+  </a>
+</div>
+            </a>
+        </div>
+        <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
+            <span data-v-1d580398="" class="title">Our Socials!</span>
+        </div>
+<style>
+  .social-media-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  .social-media-cards .card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: transform 0.2s;
+  }
+
+  .social-media-cards .card:hover {
+    transform: translateY(-3px);
+  }
+
+  .social-media-cards .icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+</style>
+
+<div class="social-media-cards">
+    <a href="https://kick.com/azisai0721" target="_blank" class="card kick">
+        <img src="/assets/kick.png" alt="Kick Logo" class="icon" />
+        <span>@Azisai0721</span>
+    </a>
+    <a href="https://x.com/azisaikirinuki" target="_blank" class="card discord">
+        <img src="/assets/x.png" alt="X Logo" class="icon" />
+        <span>@azisaikirinuki</span>
+    </a>
+    <a href="https://youtube.com/@azisai-onkazi-kirinuki" target="_blank" class="card youtube">
+        <img src="/assets/youtube.png" alt="YouTube Logo" class="icon" />
+        <span>@azisai-onkazi-kirinuki</span>
+    </a>
+    <a href="https://discord.gg/azisai" target="_blank" class="card discord">
+        <img src="/assets/discord.png" alt="Discord Logo" class="icon" />
+        <span>@azisai</span>
+    </a>
+</div>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"93f5c327eff14c77","version":"2025.4.0-1-g37f21b1","r":1,"token":"6a289e34095c4e319f5a765107c772ad","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
 </body>
-<script>
-    // Get the modals and buttons
-    var rulesModal = document.getElementById("rulesModal");
-    var rulesButton = document.getElementById("rulesButton");
-    var rewardsModal = document.getElementById("rewardsModal");
-    var showRewardsButton = document.getElementById("showRewardsButton");
-
-    // Get all close buttons
-    var closeButtons = document.querySelectorAll(".close");
-
-    // Language buttons
-    const langButtons = document.querySelectorAll('.lang-button');
-
-    // Translation content
-    const translations = {
-        ja: {
-            pageTitle: "AZISAI | ルーベット リーダーボード",
-            metaDescription: "コードAZISAI07219のルーベット限定賭けレース！",
-            homeLink: "ホーム",
-            mainTitleWager: "賭け金報酬", // Japanese translation for WAGER
-            leaderboardTitlePart1: "月間コード",
-            leaderboardTitlePart2: "報酬！", // Updated Japanese translation for "REWARDS!"
-            subtitlePart1: "コード",
-            subtitlePart2: "でのルーベットでのすべてのベットがスコアにカウントされます。",
-            updateFrequency: "リーダーボードは15分ごとに更新されます。",
-            warningMessage: "賭けの悪用はリーダーボードからの削除につながります。",
-            rulesButton: "ルール",
-            showRewardsButton: "報酬を見る",
-            endingIn: "終了まで",
-            rulesModalTitle: "リーダーボードのルール",
-            rulesText1: "このリーダーボードではRTPによってカウント率が変化します:",
-            rule1: "- RTP97％以下のゲームは賭け額の100％が適応",
-            rule2: "- RTP97～98％のゲームは賭け額の50％が適応",
-            rule3: "- RTP98％以上のゲームは賭け額の10％が適応",
-            rulesText2: "<strong>※</strong> Diceは適応外 ",
-            rewardsModalTitle: "賭け報酬",
-            wager2M: "$2,000,000以上",
-            wager1M: "$1,000,000以上",
-            wager500K: "$500,000以上",
-            wager300K: "$300,000以上",
-            wager100K: "$100,000以上",
-            wagerLess100K: "$100,000未満",
-            rewardsNote: "<i>報酬は合計加重ベット額に基づいています。</i>",
-            wageredLabel: "賭け額: ",
-            enterUsername: "ユーザー名を入力:",
-            usernamePlaceholder: "Roobet ユーザー名",
-            checkStatsButton: "統計を確認",
-            enterUsernameError: "ユーザー名を入力してください。",
-            fetching: "取得中...",
-            usernameNotFound: "リーダーボードにユーザー名が見つかりません。",
-            fetchError: "データの取得中にエラーが発生しました。後でもう一度お試しください。",
-            wagerForMonth: "今月の賭け額:",
-            leaderboardRank: "リーダーボードランク:",
-            newXAccount: "📢 新Xアカウント開設！",
-            clippingAndEvent: "切り抜き＆イベント告知専用",
-            leaderboardsLink: "リーダーボード",
-            competeTitle: "私たちのリーダーボードで競争しよう！",
-            codeLabel: "コード",
-            // Updated translation for the monthly leaderboard text
-            monthlyLeaderboardText: "月間賭け報酬",
-            signUpButton: "登録",
-            leaderboardButton: "リーダーボード",
-            ourSocialsTitle: "私たちのソーシャル！",
-            // New translation key for the wager amount display
-            wagerAmountDisplay: "賭け"
-        },
-        en: {
-            pageTitle: "AZISAI | Roobet Leaderboard",
-            metaDescription: "Exclusive wager races on Roobet for code AZISAI07219!",
-            homeLink: "HOME",
-            mainTitleWager: "WAGER REWARDS", // English translation for WAGER
-            leaderboardTitlePart1: "MONTHLY CODE",
-            leaderboardTitlePart2: "REWARDS!", // Updated English translation for "REWARDS!"
-            subtitlePart1: "Every",
-            subtitlePart2: "on Roobet under Code counts towards your score.",
-            updateFrequency: "The leaderboard updates every 15 minutes.",
-            warningMessage: "Wager abuse will result in a removal from the leaderboard.",
-            rulesButton: "RULES",
-            showRewardsButton: "SHOW REWARDS",
-            endingIn: "ENDING IN",
-            rulesModalTitle: "Leaderboard Rules",
-            rulesText1: "In this leaderboard, the count rate changes based on RTP:",
-            rule1: "- Games with RTP below 97% apply 100% of wager",
-            rule2: "- Games with RTP between 97-98% apply 50% of wager",
-            rule3: "- Games with RTP above 98% apply 10% of wager",
-            rulesText2: "<strong>※</strong> Dice is not applicable",
-            rewardsModalTitle: "Wager Rewards",
-            wager2M: "$2,000,000 or more",
-            wager1M: "$1,000,000 or more",
-            wager500K: "$500,000 or more",
-            wager300K: "$300,000 or more",
-            wager100K: "$100,000 or more",
-            wagerLess100K: "Less than $100,000",
-            rewardsNote: "<i>Rewards are based on your total weighted wager.</i>",
-            wageredLabel: "Wagered: ",
-            enterUsername: "Enter Username:",
-            usernamePlaceholder: "Roobet Username",
-            checkStatsButton: "Check Stats",
-            enterUsernameError: "Please enter a username.",
-            fetching: "Fetching...",
-            usernameNotFound: "Username not found in leaderboard.",
-            fetchError: "Error fetching data. Try again later.",
-            wagerForMonth: "Wager For The Month:",
-            leaderboardRank: "Leaderboard Rank:",
-            newXAccount: "📢 New X Account Opened!",
-            clippingAndEvent: "For clipping & event announcements only",
-            leaderboardsLink: "LEADERBOARDS",
-            competeTitle: "COMPETE ON OUR LEADERBOARDs!",
-            codeLabel: "Code",
-            // Updated translation for the monthly leaderboard text
-            monthlyLeaderboardText: "MONTHLY WAGER REWARDS",
-            signUpButton: "Sign up",
-            leaderboardButton: "Leaderboard",
-            ourSocialsTitle: "Our Socials!",
-            // New translation key for the wager amount display
-            wagerAmountDisplay: "WAGER"
-        }
-    };
-
-    let currentLang = 'ja'; // Default language
-
-    // Function to apply translations
-    function applyTranslations() {
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            if (translations[currentLang] && translations[currentLang][key]) {
-                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                    element.placeholder = translations[currentLang][key];
-                } else if (element.tagName === 'META' && element.name === 'description') {
-                    element.content = translations[currentLang][key];
-                } else {
-                    element.innerHTML = translations[currentLang][key];
-                }
-            }
-        });
-        // Update the html lang attribute
-        document.documentElement.lang = currentLang;
-    }
-
-    // Function to open a modal - Simplified for instant display
-    function openModal(modalElement) {
-        modalElement.style.display = "block";
-        document.body.style.overflow = "hidden"; // Prevent scrolling behind modal
-    }
-
-    // Function to close a modal - Simplified for instant display
-    function closeModal(modalElement) {
-        modalElement.style.display = "none";
-        document.body.style.overflow = "auto"; // Re-enable scrolling
-    }
-
-    // Event listeners for opening modals (if rulesModal and rewardsModal are added later)
-    // These will only work if the modals themselves are present in the HTML.
-    // As they are not in the provided snippet, these lines might cause errors if not handled.
-    // For now, I'll comment them out or assume they will be added.
-    /*
-    if (rulesButton) {
-        rulesButton.onclick = function () {
-            openModal(rulesModal);
-        }
-    }
-
-    if (showRewardsButton) {
-        showRewardsButton.onclick = function () {
-            openModal(rewardsModal);
-        }
-    }
-    */
-
-    // Event listeners for closing modals using the 'x' button
-    closeButtons.forEach(function (span) {
-        span.onclick = function () {
-            const modalId = this.getAttribute('data-modal-id');
-            const modalElement = document.getElementById(modalId);
-            if (modalElement) {
-                closeModal(modalElement);
-            }
-        };
-    });
-
-    // Event listener for closing modals when clicking outside
-    window.onclick = function (event) {
-        if (rulesModal && event.target == rulesModal) {
-            closeModal(rulesModal);
-        }
-        if (rewardsModal && event.target == rewardsModal) {
-            closeModal(rewardsModal);
-        }
-    }
-
-    // Language button click handler
-    langButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            langButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            currentLang = button.dataset.lang;
-            applyTranslations();
-            // Re-load leaderboard to update "Wagered:" label if necessary
-            // Assuming loadLeaderboard() is defined elsewhere and needs to be re-run for dynamic content.
-            if (typeof loadLeaderboard === 'function') {
-                loadLeaderboard();
-            }
-        });
-    });
-
-    // Set initial active button based on currentLang
-    document.addEventListener('DOMContentLoaded', () => {
-        applyTranslations();
-        const initialLangButton = document.querySelector(`.lang-button[data-lang="${currentLang}"]`);
-        if (initialLangButton) {
-            initialLangButton.classList.add('active');
-        }
-    });
-
-</script>
 <script src="/js/app.js"></script>
 <script src="/js/particles.js"></script>
 <script src="/js/toast.js"></script>
+
 <script>
-    const API_URL = 'https://azisailbdata-q469.onrender.com/leaderboard/top14';
-    const roobetLogo = '/assets/roobetlogo.png';
+  window.onload = function () {
+    const player = document.getElementById('draggable-player');
+    const dragHandle = document.getElementById('drag-handle');
+    const closeBtn = document.getElementById('close-btn');
+    const minimizedIcon = document.getElementById('minimized-icon');
+    const openBtn = document.getElementById('open-btn');
 
-    // Define the reward tiers based on wager amount
-    const wagerRewards = [
-        { wager: 2000000, reward: 10000 },
-        { wager: 1000000, reward: 4000 },
-        { wager: 500000, reward: 2000 },
-        { wager: 300000, reward: 1200 },
-        { wager: 100000, reward: 500 }
-    ];
+    // Mouse drag
+    dragHandle.onmousedown = function (event) {
+      event.preventDefault();
+      const startX = event.clientX - player.offsetLeft;
+      const startY = event.clientY - player.offsetTop;
 
-    const top3Glows = ['0 0 40px #C0C0C0', '0 0 40px #FFD700', '0 0 40px #CD7F32'];
+      function onMouseMove(event) {
+        player.style.left = event.clientX - startX + 'px';
+        player.style.top = event.clientY - startY + 'px';
+      }
 
-    // Function to calculate reward based on wager
-    function getRewardByWager(wager) {
-        for (const tier of wagerRewards) {
-            if (wager >= tier.wager) {
-                return tier.reward;
-            }
-        }
-        return 0; // No reward if wager is below all tiers
-    }
+      document.addEventListener('mousemove', onMouseMove);
 
-    function updateCountdown() {
-        const el = document.getElementById("countdown");
-        if (!el) return;
+      document.onmouseup = function () {
+        document.removeEventListener('mousemove', onMouseMove);
+      };
+    };
 
-        const now = new Date();
-        const nowUTC = now.getTime();
+    // Touch drag (mobile)
+    dragHandle.ontouchstart = function (event) {
+      const touch = event.touches[0];
+      const startX = touch.clientX - player.offsetLeft;
+      const startY = touch.clientY - player.offsetTop;
 
-        const year = now.getUTCFullYear();
-        const month = now.getUTCMonth(); // 0-based (June = 5)
+      function onTouchMove(event) {
+        event.preventDefault(); // ✅ prevent page from scrolling
+        const touch = event.touches[0];
+        player.style.left = touch.clientX - startX + 'px';
+        player.style.top = touch.clientY - startY + 'px';
+      }
 
-        let targetUTC;
+      document.addEventListener('touchmove', onTouchMove, { passive: false });
 
-        // Special rule: If it's June 2025, extend to July 31st 15:00 UTC
-        if (year === 2025 && month === 5) {
-            targetUTC = Date.UTC(2025, 6, 31, 15, 0, 0); // July 31, 2025 15:00 UTC
-        } else {
-            // Regular: End of current month at 15:00 UTC
-            targetUTC = Date.UTC(year, month + 1, 0, 15, 0, 0);
+      document.ontouchend = function () {
+        document.removeEventListener('touchmove', onTouchMove);
+      };
+    };
 
-            // If already past this month's deadline, move to end of next month
-            if (nowUTC >= targetUTC) {
-                targetUTC = Date.UTC(year, month + 2, 0, 15, 0, 0);
-            }
-        }
+    // Minimize / Restore
+    closeBtn.onclick = function () {
+      player.style.display = 'none';
+      minimizedIcon.style.display = 'flex';
+    };
 
-        const diff = targetUTC - nowUTC;
-
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const m = Math.floor((diff / (1000 * 60)) % 60);
-        const s = Math.floor((diff / 1000) % 60);
-
-        el.textContent = `${d}d ${h}h ${m}m ${s}s`;
-    }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-
-    async function loadLeaderboard() {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-
-        const top3Container = document.querySelector(".css-gqrafh"); // This element is not in the provided HTML.
-        const rowsContainer = document.getElementById("leaderboard-rows"); // This element is not in the provided HTML.
-
-        // Clear previous data - these elements might not exist based on the provided HTML snippet
-        if (top3Container) top3Container.innerHTML = '';
-        if (rowsContainer) rowsContainer.innerHTML = '';
-
-        data.forEach((entry, index) => {
-            const place = index + 1;
-            const weightedWager = Number(entry.weightedWager);
-            // Calculate reward based on the weighted wager
-            const reward = getRewardByWager(weightedWager);
-            const formattedReward = `$ ${reward.toLocaleString()}`;
-            const formattedWagered = `$ ${weightedWager.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            const username = entry.username;
-
-            if (index < 3) {
-                // Assuming elements for top 3 exist in the original full HTML
-                // This part of the code is incomplete in the user's provided snippet.
-                const card = document.createElement('div');
-                card.className = 'css-jehefp';
-                // ... rest of the top 3 card creation
-            }
-            // ... rest of the leaderboard row creation
-        });
-    }
-
-    // Call loadLeaderboard on initial load
-    document.addEventListener('DOMContentLoaded', loadLeaderboard);
+    openBtn.onclick = function () {
+      player.style.display = 'block';
+      minimizedIcon.style.display = 'none';
+    };
+  };
 </script>
-</html>
+
