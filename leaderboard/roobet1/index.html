@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja"> <!-- Default language set to Japanese -->
 
 <head>
-    <title>AZISAI | Roobet Leaderboard</title>
+    <title data-i18n="pageTitle">AZISAI | ルーベット リーダーボード</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Exclusive wager races on Roobet for code AZISAI07219!">
+    <meta name="description" data-i18n="metaDescription" content="コードAZISAI07219のルーベット限定賭けレース！">
     <meta property="og:image"
         content="https://ws.bma.gg/api/screenshot?url=https%3A%2F%2FErnTmz.gg%2Fleaderboard%2Froobet&w=1280&h=720&z=1&d=0&f=false&darkMode=false">
     <link rel="icon" type="image/jpg" href="/assets/logo.png">
@@ -209,6 +209,35 @@
             background: #4CAF50;
         }
 
+        /* Language toggle buttons */
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .lang-button {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .lang-button:hover {
+            background-color: #555;
+            border-color: #777;
+        }
+
+        .lang-button.active {
+            background-color: #007bff;
+            border-color: #007bff;
+            font-weight: bold;
+        }
+
         /* Coin animations (from original) */
         @keyframes float {
             0% {
@@ -294,17 +323,17 @@
     <div id="rulesModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Leaderboard Rules</h2>
+                <h2 class="modal-title" data-i18n="rulesModalTitle">リーダーボードのルール</h2>
                 <span class="close" data-modal-id="rulesModal">&times;</span>
             </div>
             <div class="modal-body">
-                <p>このリーダーボードではRTPによってカウント率が変化します:</p>
+                <p data-i18n="rulesText1">このリーダーボードではRTPによってカウント率が変化します:</p>
                 <ul>
-                    <li>- RTP97％以下のゲームは賭け額の100％が適応</li>
-                    <li>- RTP97～98％のゲームは賭け額の50％が適応</li>
-                    <li>- RTP98％以上のゲームは賭け額の10％が適応</li>
+                    <li data-i18n="rule1">- RTP97％以下のゲームは賭け額の100％が適応</li>
+                    <li data-i18n="rule2">- RTP97～98％のゲームは賭け額の50％が適応</li>
+                    <li data-i18n="rule3">- RTP98％以上のゲームは賭け額の10％が適応</li>
                 </ul>
-                <p><strong>※</strong> Diceは適応外 </p>
+                <p data-i18n="rulesText2"><strong>※</strong> Diceは適応外 </p>
             </div>
         </div>
     </div>
@@ -313,35 +342,35 @@
     <div id="rewardsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Wager Rewards</h2>
+                <h2 class="modal-title" data-i18n="rewardsModalTitle">賭け報酬</h2>
                 <span class="close" data-modal-id="rewardsModal">&times;</span>
             </div>
             <div class="modal-body">
                 <div class="reward-item">
-                    <span class="reward-wager">$2,000,000 or more</span>
+                    <span class="reward-wager" data-i18n="wager2M">$2,000,000以上</span>
                     <span class="reward-value">$10,000</span>
                 </div>
                 <div class="reward-item">
-                    <span class="reward-wager">$1,000,000 or more</span>
+                    <span class="reward-wager" data-i18n="wager1M">$1,000,000以上</span>
                     <span class="reward-value">$4,000</span>
                 </div>
                 <div class="reward-item">
-                    <span class="reward-wager">$500,000 or more</span>
+                    <span class="reward-wager" data-i18n="wager500K">$500,000以上</span>
                     <span class="reward-value">$2,000</span>
                 </div>
                 <div class="reward-item">
-                    <span class="reward-wager">$300,000 or more</span>
+                    <span class="reward-wager" data-i18n="wager300K">$300,000以上</span>
                     <span class="reward-value">$1,200</span>
                 </div>
                 <div class="reward-item">
-                    <span class="reward-wager">$100,000 or more</span>
+                    <span class="reward-wager" data-i18n="wager100K">$100,000以上</span>
                     <span class="reward-value">$500</span>
                 </div>
                 <div class="reward-item">
-                    <span class="reward-wager">Less than $100,000</span>
+                    <span class="reward-wager" data-i18n="wagerLess100K">$100,000未満</span>
                     <span class="reward-value">$0</span>
                 </div>
-                <p style="margin-top: 20px; text-align: center;"><i>Rewards are based on your total weighted wager.</i></p>
+                <p style="margin-top: 20px; text-align: center;" data-i18n="rewardsNote"><i>報酬は合計加重ベット額に基づいています。</i></p>
             </div>
         </div>
     </div>
@@ -358,11 +387,11 @@
     <header>
         <nav>
             <div class="logo-title">
-                <img src="/assets/logo.png" alt="Site logo" class="logo">
+                <img src="/assets/logo.png" alt="サイトロゴ" class="logo">
                 <h1 class="title">AZISAI</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="/">HOME</a></li>
+                <li><a href="/" data-i18n="homeLink">ホーム</a></li>
             </ul>
         </nav>
     </header>
@@ -376,15 +405,15 @@
             <div data-v-1d580398="" class="row text">
                 <span data-v-1d580398="" class="title">
                     <div data-v-1d580398="" class="price-wrapper glow">
-                        WAGER
-                    </div> MONTHLY CODE <span class="glow">AZISAI07219</span> REWARDS!
+                        賭ける
+                    </div> <span data-i18n="leaderboardTitlePart1">月間コード</span> <span class="glow">AZISAI07219</span> <span data-i18n="leaderboardTitlePart2">報酬！</span>
                 </span>
-                <span data-v-1d580398="" class="subtitle" style="color: #FFF;">Every <b>BET</b> on Roobet under Code
-                    <b>AZISAI07219</b>
-                    counts towards your score. <br>
-                    <i>The leaderboard updates every 15 minutes.</i><br>
-                    <div class="warning-message">
-                        Wager abuse will result in a removal from the leaderboard.
+                <span data-v-1d580398="" class="subtitle" style="color: #FFF;">
+                    <span data-i18n="subtitlePart1">コード</span>
+                    <b>AZISAI07219</b><span data-i18n="subtitlePart2">でのルーベットでのすべてのベットがスコアにカウントされます。</span><br>
+                    <i data-i18n="updateFrequency">リーダーボードは15分ごとに更新されます。</i><br>
+                    <div class="warning-message" data-i18n="warningMessage">
+                        賭けの悪用はリーダーボードからの削除につながります。
                     </div>
                     <div style="display: flex; justify-content: center; flex-wrap: wrap;">
                         <button id="rulesButton" class="prev-lb-btn">
@@ -396,7 +425,7 @@
                                 <line x1="16" y1="17" x2="8" y2="17"></line>
                                 <polyline points="10 9 9 9 8 9"></polyline>
                             </svg>
-                            RULES
+                            <span data-i18n="rulesButton">ルール</span>
                         </button>
                         <button id="showRewardsButton" class="prev-lb-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -404,8 +433,13 @@
                                 <path d="M2 17l10 5 10-5"></path>
                                 <path d="M2 12l10 5 10-5"></path>
                             </svg>
-                            SHOW REWARDS
+                            <span data-i18n="showRewardsButton">報酬を見る</span>
                         </button>
+                    </div>
+                    <!-- Language Toggle Buttons -->
+                    <div class="language-toggle">
+                        <button class="lang-button active" data-lang="ja">日本語</button>
+                        <button class="lang-button" data-lang="en">English</button>
                     </div>
                 </span>
                 <div class="css-esk2ah">
@@ -418,7 +452,7 @@
                         <!-- Countdown Timer -->
                         <div class="countdown">
                             <div>
-                                <span class="title"><span class="glow" style="color: #FFF">ENDING</span> IN </span>
+                                <span class="title"><span class="glow" style="color: #FFF" data-i18n="endingIn">終了まで</span> </span>
                                 <span class="subtitle" id="countdown">X Days XX:XX:XX</span>
                             </div>
                         </div>
@@ -444,6 +478,91 @@
 
     // Get all close buttons
     var closeButtons = document.querySelectorAll(".close");
+
+    // Language buttons
+    const langButtons = document.querySelectorAll('.lang-button');
+
+    // Translation content
+    const translations = {
+        ja: {
+            pageTitle: "AZISAI | ルーベット リーダーボード",
+            metaDescription: "コードAZISAI07219のルーベット限定賭けレース！",
+            homeLink: "ホーム",
+            leaderboardTitlePart1: "月間コード",
+            leaderboardTitlePart2: "リーダーボード！",
+            subtitlePart1: "コード",
+            subtitlePart2: "でのルーベットでのすべてのベットがスコアにカウントされます。",
+            updateFrequency: "リーダーボードは15分ごとに更新されます。",
+            warningMessage: "賭けの悪用はリーダーボードからの削除につながります。",
+            rulesButton: "ルール",
+            showRewardsButton: "報酬を見る",
+            endingIn: "終了まで",
+            rulesModalTitle: "リーダーボードのルール",
+            rulesText1: "このリーダーボードではRTPによってカウント率が変化します:",
+            rule1: "- RTP97％以下のゲームは賭け額の100％が適応",
+            rule2: "- RTP97～98％のゲームは賭け額の50％が適応",
+            rule3: "- RTP98％以上のゲームは賭け額の10％が適応",
+            rulesText2: "<strong>※</strong> Diceは適応外 ",
+            rewardsModalTitle: "賭け報酬",
+            wager2M: "$2,000,000以上",
+            wager1M: "$1,000,000以上",
+            wager500K: "$500,000以上",
+            wager300K: "$300,000以上",
+            wager100K: "$100,000以上",
+            wagerLess100K: "$100,000未満",
+            rewardsNote: "<i>報酬は合計加重ベット額に基づいています。</i>",
+            wageredLabel: "賭け額: " // Added for leaderboard rows
+        },
+        en: {
+            pageTitle: "AZISAI | Roobet Leaderboard",
+            metaDescription: "Exclusive wager races on Roobet for code AZISAI07219!",
+            homeLink: "HOME",
+            leaderboardTitlePart1: "MONTHLY CODE",
+            leaderboardTitlePart2: "Leaderboard!",
+            subtitlePart1: "Every",
+            subtitlePart2: "on Roobet under Code counts towards your score.",
+            updateFrequency: "The leaderboard updates every 15 minutes.",
+            warningMessage: "Wager abuse will result in a removal from the leaderboard.",
+            rulesButton: "RULES",
+            showRewardsButton: "SHOW REWARDS",
+            endingIn: "ENDING IN",
+            rulesModalTitle: "Leaderboard Rules",
+            rulesText1: "In this leaderboard, the count rate changes based on RTP:",
+            rule1: "- Games with RTP below 97% apply 100% of wager",
+            rule2: "- Games with RTP between 97-98% apply 50% of wager",
+            rule3: "- Games with RTP above 98% apply 10% of wager",
+            rulesText2: "<strong>※</strong> Dice is not applicable",
+            rewardsModalTitle: "Wager Rewards",
+            wager2M: "$2,000,000 or more",
+            wager1M: "$1,000,000 or more",
+            wager500K: "$500,000 or more",
+            wager300K: "$300,000 or more",
+            wager100K: "$100,000 or more",
+            wagerLess100K: "Less than $100,000",
+            rewardsNote: "<i>Rewards are based on your total weighted wager.</i>",
+            wageredLabel: "Wagered: " // Added for leaderboard rows
+        }
+    };
+
+    let currentLang = 'ja'; // Default language
+
+    // Function to apply translations
+    function applyTranslations() {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[currentLang][key]) {
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.placeholder = translations[currentLang][key];
+                } else if (element.tagName === 'META' && element.name === 'description') {
+                    element.content = translations[currentLang][key];
+                } else {
+                    element.innerHTML = translations[currentLang][key];
+                }
+            }
+        });
+        // Update the html lang attribute
+        document.documentElement.lang = currentLang;
+    }
 
     // Function to open a modal - Simplified for instant display
     function openModal(modalElement) {
@@ -486,6 +605,22 @@
             closeModal(rewardsModal);
         }
     }
+
+    // Language button click handler
+    langButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            langButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            currentLang = button.dataset.lang;
+            applyTranslations();
+            // Re-load leaderboard to update "Wagered:" label if necessary
+            loadLeaderboard();
+        });
+    });
+
+    // Apply translations on initial load
+    document.addEventListener('DOMContentLoaded', applyTranslations);
+
 
 </script>
 <script src="/js/app.js"></script>
@@ -589,7 +724,7 @@
                 card.innerHTML = `
                     <img src="${roobetLogo}" style="width: 96px; height: auto; border-radius: 12px;">
                     <div class="css-hca0vm"><span class="css-15a1lq3" style="font-weight:bold;">${username}</span></div>
-                    <div class="css-7ahevu ejrykqo0"><span class="css-1vqddgv">Wagered: </span>
+                    <div class="css-7ahevu ejrykqo0"><span class="css-1vqddgv" data-i18n="wageredLabel">賭け額: </span>
                         <span class="css-18icuxn"><div class="css-1y0ox2o"><span class="css-114dvlx">${formattedWagered}</span></div></span>
                     </div>
                     <span class="css-v4675v"><div class="css-1y0ox2o"><span class="css-114dvlx glow">${formattedReward}</span></div></span>`;
@@ -613,6 +748,8 @@
                 rowsContainer.appendChild(row);
             }
         });
+        // Re-apply translations after leaderboard data is loaded/updated
+        applyTranslations();
     }
     loadLeaderboard();
 </script>
