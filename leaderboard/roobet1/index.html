@@ -40,7 +40,7 @@
             }
         }
 
-        /* Base Modal Styles */
+        /* Base Modal Styles - Removed opacity and transition for instant display */
         .modal {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
@@ -51,16 +51,16 @@
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
             background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
-            opacity: 0; /* Start invisible for transition */
-            transition: opacity 0.5s ease; /* Smooth fade-in/out */
+            /* Removed: opacity: 0; */
+            /* Removed: transition: opacity 0.5s ease; */
         }
 
-        /* Show modal state */
+        /* Show modal state - No longer needed for opacity, only for display */
         .modal.show {
-            opacity: 1;
+            /* opacity: 1; - No longer needed here */
         }
 
-        /* Modal Content Box */
+        /* Modal Content Box - Removed transform and transition for instant display */
         .modal-content {
             background: linear-gradient(135deg, #1f2937, #111827); /* Gradient background */
             margin: 10% auto; /* 10% from the top and centered horizontally */
@@ -70,14 +70,14 @@
             width: 80%; /* Width of the modal */
             max-width: 600px; /* Maximum width */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Deep shadow */
-            transform: translateY(-20px); /* Start slightly above for animation */
-            transition: transform 0.5s ease; /* Smooth slide-in */
+            /* Removed: transform: translateY(-20px); */
+            /* Removed: transition: transform 0.5s ease; */
             position: relative;
         }
 
-        /* Modal content slide-in effect */
+        /* Modal content slide-in effect - No longer needed */
         .modal.show .modal-content {
-            transform: translateY(0);
+            /* transform: translateY(0); - No longer needed here */
         }
 
         /* Modal Header */
@@ -467,22 +467,17 @@
     // Get all close buttons
     var closeButtons = document.querySelectorAll(".close");
 
-    // Function to open a modal
+    // Function to open a modal - Simplified for instant display
     function openModal(modalElement) {
         modalElement.style.display = "block";
         document.body.style.overflow = "hidden"; // Prevent scrolling behind modal
-        setTimeout(() => {
-            modalElement.classList.add("show");
-        }, 10); // Small delay for transition to apply
+        // Removed setTimeout and classList.add("show") as animations are removed from CSS
     }
 
-    // Function to close a modal
+    // Function to close a modal - Simplified for instant display
     function closeModal(modalElement) {
-        modalElement.classList.remove("show");
-        setTimeout(() => {
-            modalElement.style.display = "none";
-            document.body.style.overflow = "auto"; // Re-enable scrolling
-        }, 500); // Match CSS transition duration
+        modalElement.style.display = "none";
+        document.body.style.overflow = "auto"; // Re-enable scrolling
     }
 
     // Event listeners for opening modals
