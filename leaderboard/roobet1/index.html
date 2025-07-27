@@ -51,13 +51,6 @@
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
             background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
-            /* Removed: opacity: 0; */
-            /* Removed: transition: opacity 0.5s ease; */
-        }
-
-        /* Show modal state - No longer needed for opacity, only for display */
-        .modal.show {
-            /* opacity: 1; - No longer needed here */
         }
 
         /* Modal Content Box - Removed transform and transition for instant display */
@@ -70,14 +63,7 @@
             width: 80%; /* Width of the modal */
             max-width: 600px; /* Maximum width */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Deep shadow */
-            /* Removed: transform: translateY(-20px); */
-            /* Removed: transition: transform 0.5s ease; */
             position: relative;
-        }
-
-        /* Modal content slide-in effect - No longer needed */
-        .modal.show .modal-content {
-            /* transform: translateY(0); - No longer needed here */
         }
 
         /* Modal Header */
@@ -127,33 +113,35 @@
             padding-left: 20px;
         }
 
-        /* Reward Table Specific Styles */
-        .rewards-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            color: #d1d5db;
+        /* New styles for text-based rewards display */
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s ease;
+        }
+
+        .reward-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .reward-wager {
+            font-weight: bold;
+            color: #fff;
+            flex: 1; /* Allows wager text to take up available space */
             text-align: left;
         }
 
-        .rewards-table th,
-        .rewards-table td {
-            padding: 10px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .rewards-table th {
-            background-color: rgba(255, 255, 255, 0.05);
+        .reward-value {
             font-weight: bold;
-            color: #fff;
-        }
-
-        .rewards-table tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        .rewards-table tr:hover {
-            background-color: rgba(255, 255, 255, 0.08);
+            color: #4CAF50; /* Green color for rewards */
+            text-align: right;
+            min-width: 80px; /* Ensure reward value has enough space */
         }
 
         /* Button Styles (reused for both RULES and SHOW REWARDS) */
@@ -325,45 +313,35 @@
     <div id="rewardsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Wager Rewards Table</h2>
+                <h2 class="modal-title">Wager Rewards</h2>
                 <span class="close" data-modal-id="rewardsModal">&times;</span>
             </div>
             <div class="modal-body">
-                <table class="rewards-table">
-                    <thead>
-                        <tr>
-                            <th>Wager Amount</th>
-                            <th>Reward</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>$2,000,000 or more</td>
-                            <td>$10,000</td>
-                        </tr>
-                        <tr>
-                            <td>$1,000,000 or more</td>
-                            <td>$4,000</td>
-                        </tr>
-                        <tr>
-                            <td>$500,000 or more</td>
-                            <td>$2,000</td>
-                        </tr>
-                        <tr>
-                            <td>$300,000 or more</td>
-                            <td>$1,200</td>
-                        </tr>
-                        <tr>
-                            <td>$100,000 or more</td>
-                            <td>$500</td>
-                        </tr>
-                        <tr>
-                            <td>Less than $100,000</td>
-                            <td>$0</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p style="margin-top: 20px;"><i>Rewards are based on your total weighted wager.</i></p>
+                <div class="reward-item">
+                    <span class="reward-wager">$2,000,000 or more</span>
+                    <span class="reward-value">$10,000</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager">$1,000,000 or more</span>
+                    <span class="reward-value">$4,000</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager">$500,000 or more</span>
+                    <span class="reward-value">$2,000</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager">$300,000 or more</span>
+                    <span class="reward-value">$1,200</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager">$100,000 or more</span>
+                    <span class="reward-value">$500</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager">Less than $100,000</span>
+                    <span class="reward-value">$0</span>
+                </div>
+                <p style="margin-top: 20px; text-align: center;"><i>Rewards are based on your total weighted wager.</i></p>
             </div>
         </div>
     </div>
@@ -471,7 +449,6 @@
     function openModal(modalElement) {
         modalElement.style.display = "block";
         document.body.style.overflow = "hidden"; // Prevent scrolling behind modal
-        // Removed setTimeout and classList.add("show") as animations are removed from CSS
     }
 
     // Function to close a modal - Simplified for instant display
