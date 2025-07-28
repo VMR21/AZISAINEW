@@ -389,6 +389,8 @@
     <p class="MuiTypography-root MuiTypography-body1 css-8a8e2m-MuiTypography-root">
       Weekly Wager Bonus
     </p>
+    <div id="weekly-bonus-timer" class="MuiTypography-root MuiTypography-body1 css-8a8e2m-MuiTypography-root"
+      style="text-align: center; font-size: 16px; margin-top: 4px;"></div>
   </div>
 
   <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 16px;">
@@ -400,17 +402,14 @@
       href="/leaderboard/roobet" target="_blank">
       Leaderboard
     </a>
-<a href="javascript:void(0)"
-   onclick="document.getElementById('weekly-modal').style.display='block'"
-   class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root">
-  Weekly Wager Bonus
-</a>
-
-        </div>
-      </div>
-    </div>
-  </a>
+    <a href="javascript:void(0)"
+      onclick="document.getElementById('weekly-modal').style.display='block'"
+      class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root">
+      Weekly Wager Bonus
+    </a>
+  </div>
 </div>
+
 
 <!-- MODAL -->
 <div id="weekly-modal" style="display:none; padding: 20px; background: #111; color: #fff; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; box-shadow: 0 0 25px #00ff99, 0 0 35px #00ff99; position: relative; font-family: Arial, sans-serif;">
@@ -439,29 +438,32 @@ function updateCountdown() {
 
   const isStartCountdown = range === "Next rewards on 1st";
 
-  function tick() {
-    const now = new Date();
-    const diff = countdownTarget - now;
+function tick() {
+  const now = new Date();
+  const diff = countdownTarget - now;
 
-    if (diff <= 0) {
-      document.getElementById("weekly-countdown").textContent = isStartCountdown
-        ? "Rewards available now!"
-        : "Reward period ended";
-      return;
-    }
+  const bonusEl = document.getElementById("weekly-bonus-timer");
 
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
+  if (diff <= 0) {
+    const finalText = isStartCountdown
+      ? "Rewards available now!"
+      : "Reward period ended";
 
-    const label = isStartCountdown ? "🕒 Starts in" : "⏳ Ends in";
-    document.getElementById("weekly-countdown").textContent =
-      `${label}: ${d}d ${h}h ${m}m ${s}s`;
+    document.getElementById("weekly-countdown").textContent = finalText;
+    if (bonusEl) bonusEl.textContent = finalText;
+    return;
   }
 
-  tick();
-  setInterval(tick, 1000);
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+
+  const label = isStartCountdown ? "🕒 Starts in" : "⏳ Ends in";
+  const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
+
+  document.getElementById("weekly-countdown").textContent = text;
+  if (bonusEl) bonusEl.textContent = text;
 }
 
 
