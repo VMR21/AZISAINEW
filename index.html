@@ -366,22 +366,43 @@
         </svg>
       </div>
 
-      <div class="MuiBox-root css-18dqm7l">
-        <div class="description">
-          <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" focusable="false"
-            aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8z"></path>
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
-          </svg>
-          <p>$10,000 MONTHLY LEADERBOARD</p>
-        </div>
+<div class="MuiBox-root css-18dqm7l">
+  <div class="description MuiBox-root css-0">
+    <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1ywrbwt" focusable="false"
+      aria-hidden="true" viewBox="0 0 24 24" data-testid="CheckCircleOutlineIcon">
+      <path
+        d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
+      </path>
+    </svg>
+    <p class="MuiTypography-root MuiTypography-body1 css-8a8e2m-MuiTypography-root">
+      $10,000 MONTHLY LEADERBOARD
+    </p>
+  </div>
 
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 16px;">
-          <a class="MuiButton-root" href="https://roobet.com/?ref=azisai07219" target="_blank">Sign up</a>
-          <a class="MuiButton-root" href="/leaderboard/roobet" target="_blank">Leaderboard</a>
-          <button class="MuiButton-root" onclick="document.getElementById('weekly-modal').style.display='block'">
-            Weekly Wager Bonus
-          </button>
+  <div class="description MuiBox-root css-0">
+    <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1ywrbwt" focusable="false"
+      aria-hidden="true" viewBox="0 0 24 24" data-testid="CheckCircleOutlineIcon">
+      <path
+        d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
+      </path>
+    </svg>
+    <p class="MuiTypography-root MuiTypography-body1 css-8a8e2m-MuiTypography-root">
+      Weekly Wager Bonus
+    </p>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 16px;">
+    <a class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root"
+      href="https://roobet.com/?ref=azisai07219" target="_blank">
+      Sign up
+    </a>
+    <a class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root"
+      href="/leaderboard/roobet" target="_blank">
+      Leaderboard
+    </a>
+    <button onclick="document.getElementById('weekly-modal').style.display='block'" class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root signup-button css-sbgg6k-MuiButtonBase-root-MuiButton-root">
+      Weekly Wager Bonus
+    </button>
         </div>
       </div>
     </div>
@@ -392,7 +413,7 @@
 <div id="weekly-modal" style="display:none; padding: 20px; background: #111; color: #fff; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; box-shadow: 0 0 25px #00ff99, 0 0 35px #00ff99; position: relative; font-family: Arial, sans-serif;">
   <button onclick="document.getElementById('weekly-modal').style.display='none'" style="position:absolute; top:10px; right:16px; background:transparent; color:#00ffcc; border:none; font-size:20px; cursor:pointer;">✖</button>
 
-  <h2 style="color: #00ff99; text-shadow: 0 0 10px #00ff99;">♻️ Weekly Resurrection Bonus</h2>
+  <h2 style="color: #00ff99; text-shadow: 0 0 10px #00ff99;">Weekly Resurrection Bonus</h2>
   <p style="margin: 4px 0;">💰 $10 for $1000 wagered</p>
   <p style="margin: 4px 0;">🤑 $50 for $5000 wagered</p>
 
@@ -466,7 +487,7 @@ function updateCountdown() {
 
 async function fetchWinners() {
   try {
-    const res1000 = await fetch('https://c95c813f-63f5-41d3-9fc8-a2a51ad7d9be-00-3or5p644l6uqn.sisko.replit.dev:5000/1000');
+    const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
     const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
 
     const names1000 = await res1000.json();
