@@ -389,18 +389,20 @@
 </div>
 
 <!-- MODAL -->
-<div id="weekly-modal" style="display:none; padding: 20px; background: #111; color: #fff; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; box-shadow: 0 0 25px #00ff99, 0 0 35px #00ff99;">
+<div id="weekly-modal" style="display:none; padding: 20px; background: #111; color: #fff; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; box-shadow: 0 0 25px #00ff99, 0 0 35px #00ff99; position: relative; font-family: Arial, sans-serif;">
+  <button onclick="document.getElementById('weekly-modal').style.display='none'" style="position:absolute; top:10px; right:16px; background:transparent; color:#00ffcc; border:none; font-size:20px; cursor:pointer;">✖</button>
+
   <h2 style="color: #00ff99; text-shadow: 0 0 10px #00ff99;">♻️ Weekly Resurrection Bonus</h2>
-  <p>💰 $10 for $1000 wagered</p>
-  <p>💸 $50 for $5000 wagered</p>
+  <p style="margin: 4px 0;">💰 $10 for $1000 wagered</p>
+  <p style="margin: 4px 0;">🤑 $50 for $5000 wagered</p>
 
   <div id="weekly-range" style="margin-top: 10px; font-weight: bold; color: #00ffcc; text-shadow: 0 0 5px #00ffcc;"></div>
-  <div id="weekly-countdown" style="font-size: 20px; margin: 10px 0; color: #ffffff; text-shadow: 0 0 6px #00ffcc;"></div>
+  <div id="weekly-countdown" style="font-size: 18px; margin: 10px 0; color: #ffffff;"></div>
 
   <div id="reward-names" style="margin-top: 16px; text-align: left;">
-    <h3 style="color: #00ffaa; text-shadow: 0 0 5px #00ffaa;">🎉 $10 Winners</h3>
+    <h3 style="color: #00ffaa;">🎉 $10 Winners</h3>
     <ul id="names-1000" style="padding-left: 20px;"></ul>
-    <h3 style="color: #00ffaa; text-shadow: 0 0 5px #00ffaa;">🎊 $50 Winners</h3>
+    <h3 style="color: #00ffaa;">🎊 $50 Winners</h3>
     <ul id="names-5000" style="padding-left: 20px;"></ul>
   </div>
 </div>
@@ -425,7 +427,10 @@ function getPeriodAndEndDate() {
   else if (date <= 14)            { startDay = 8; endDay = 14; }
   else if (date <= 21)            { startDay = 15; endDay = 21; }
   else if (date <= 28)            { startDay = 22; endDay = 28; }
-  else return { range: "Next rewards on 1st", countdownTarget: null };
+  else {
+    const nextMonthStart = new Date(Date.UTC(year, month + 1, 1, 0, 0, 0) - 9 * 3600000);
+    return { range: "Next rewards on 1st", countdownTarget: nextMonthStart };
+  }
 
   const countdownTarget = new Date(Date.UTC(year, month, endDay + 1, 0, 0, 0) - 9 * 3600000);
   return { range: `Period: ${startDay}–${endDay} JST`, countdownTarget };
@@ -447,6 +452,7 @@ function updateCountdown() {
       document.getElementById("weekly-countdown").textContent = "Reward period ended";
       return;
     }
+
     const d = Math.floor(diff / (1000 * 60 * 60 * 24));
     const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
     const m = Math.floor((diff / (1000 * 60)) % 60);
@@ -462,30 +468,33 @@ async function fetchWinners() {
   try {
     const res1000 = await fetch('https://c95c813f-63f5-41d3-9fc8-a2a51ad7d9be-00-3or5p644l6uqn.sisko.replit.dev:5000/1000');
     const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
+
     const names1000 = await res1000.json();
     const names5000 = await res5000.json();
 
     const ul1000 = document.getElementById("names-1000");
     const ul5000 = document.getElementById("names-5000");
+
     ul1000.innerHTML = "";
     ul5000.innerHTML = "";
 
-    names1000.forEach(name => {
+    names1000.forEach(obj => {
       const li = document.createElement("li");
-      li.textContent = name;
+      li.textContent = obj.name || obj.username || String(obj);
       ul1000.appendChild(li);
     });
 
-    names5000.forEach(name => {
+    names5000.forEach(obj => {
       const li = document.createElement("li");
-      li.textContent = name;
+      li.textContent = obj.name || obj.username || String(obj);
       ul5000.appendChild(li);
     });
   } catch (err) {
-    console.error("Error fetching names:", err);
+    console.error("Error fetching winners:", err);
   }
 }
 
+// INIT
 updateCountdown();
 fetchWinners();
 </script>
