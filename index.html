@@ -2,10 +2,11 @@
 <html lang="ja">
 
 <head>
-    <title>あじさい公式</title>
+    <title data-lang-en="Ajisai Official" data-lang-ja="あじさい公式">あじさい公式</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Exclusive wager races on Roobet for code AZISAI07219!">
+    <meta name="description" data-lang-en="Exclusive wager races on Roobet for code AZISAI07219!"
+        data-lang-ja="コードAZISAI07219でRoobetでの限定賭けレース！">
     <meta property="og:image" content="https://i.ibb.co/4nVwRPbj/Screenshot-2025-05-14-093458.png">
     <link rel="icon" type="image/jpg" href="/assets/logo.png">
     <link rel="stylesheet" type="text/css" href="/css/app.css">
@@ -285,16 +286,18 @@
         </div>
 
         <script>
+            // This function is outside the main language switch but needs to be aware of the current language
             async function fetchUserStats() {
                 const username = document.getElementById("usernameInput").value.trim();
                 const resultBox = document.getElementById("resultBox");
+                const currentLang = document.documentElement.lang; // Get current language
 
                 if (!username) {
-                    resultBox.innerHTML = "<span style='color:red;' data-lang-en='Please enter a username.' data-lang-ja='ユーザー名を入力してください。'>ユーザー名を入力してください。</span>";
+                    resultBox.innerHTML = `<span style='color:red;'>${currentLang === 'en' ? 'Please enter a username.' : 'ユーザー名を入力してください。'}</span>`;
                     return;
                 }
 
-                resultBox.innerHTML = "<span class='glow-text' data-lang-en='Fetching...' data-lang-ja='取得中...'>取得中...</span>";
+                resultBox.innerHTML = `<span class='glow-text'>${currentLang === 'en' ? 'Fetching...' : '取得中...'}</span>`;
 
                 try {
                     const [leaderboardRes, raffleRes] = await Promise.all([
@@ -309,7 +312,7 @@
                     const raffleEntry = raffleData.find(p => p.username.toLowerCase() === username.toLowerCase());
 
                     if (!lbEntry) {
-                        resultBox.innerHTML = `<span style="color:red;" data-lang-en="Username not found in leaderboard." data-lang-ja="リーダーボードにユーザー名が見つかりません。">リーダーボードにユーザー名が見つかりません。</span>`;
+                        resultBox.innerHTML = `<span style="color:red;">${currentLang === 'en' ? 'Username not found in leaderboard.' : 'リーダーボードにユーザー名が見つかりません。'}</span>`;
                         return;
                     }
 
@@ -317,9 +320,8 @@
                     const rank = lbEntry.rank;
                     const tickets = raffleEntry ? raffleEntry.ticketCount : 0;
 
-                    const lang = document.documentElement.lang;
                     let wagerText, rankText;
-                    if (lang === 'en') {
+                    if (currentLang === 'en') {
                         wagerText = `Wager For The Month: <span style="color:#00e0ff;">$${wagered.toLocaleString()}</span>`;
                         rankText = `Leaderboard Rank: <span style="color:#ffda77;">#${rank}</span>`;
                     } else { // Japanese
@@ -327,19 +329,16 @@
                         rankText = `リーダーボードの順位: <span style="color:#ffda77;">#${rank}</span>`;
                     }
 
-
                     resultBox.innerHTML = `
-            <span class="glow-text">${wagerText}</span>
-            <span class="glow-text">${rankText}</span>
-          `;
+                        <span class="glow-text">${wagerText}</span>
+                        <span class="glow-text">${rankText}</span>
+                    `;
                 } catch (err) {
-                    resultBox.innerHTML = "<span style='color:red;' data-lang-en='Error fetching data. Try again later.' data-lang-ja='データの取得中にエラーが発生しました。後でもう一度お試しください。'>データの取得中にエラーが発生しました。後でもう一度お試しください。</span>";
+                    resultBox.innerHTML = `<span style='color:red;'>${currentLang === 'en' ? 'Error fetching data. Try again later.' : 'データの取得中にエラーが発生しました。後でもう一度お試しください。'}</span>`;
                     console.error(err);
                 }
             }
         </script>
-
-
     </div>
     <canvas id="particleCanvas"></canvas>
     <div class="glow-container">
@@ -357,7 +356,6 @@
                 <h1 class="title">AZISAI</h1>
             </div>
             <ul class="nav-links">
-
                 <li><a href="/leaderboard/roobet" data-lang-en="LEADERBOARDS"
                         data-lang-ja="リーダーボード">リーダーボード</a></li>
             </ul>
@@ -381,10 +379,12 @@
                 </div>
             </div>
         </div>
+
         <div class="language-buttons">
-            <button id="lang-en" class="active">English</button>
+            <button id="lang-en">English</button>
             <button id="lang-ja">日本語</button>
         </div>
+
         <div data-v-1d580398="" class="row text" style="margin-top: 80px;">
             <div class="card-container">
                 <a href="https://roobet.com/?ref=azisai07219" class="card-link" target="_blank">
@@ -428,12 +428,14 @@
                                     data-lang-ja="週間賭け金ボーナス">週間賭け金ボーナス</p>
                             </div>
 
-                            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:16px;">
+                            <div
+                                style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:16px;">
                                 <a class="MuiButton-root signup-button" href="https://roobet.com/?ref=azisai07219"
                                     target="_blank" data-lang-en="Sign up" data-lang-ja="登録">登録</a>
                                 <a class="MuiButton-root signup-button" href="/leaderboard/roobet" target="_blank"
                                     data-lang-en="Leaderboard" data-lang-ja="リーダーボード">リーダーボード</a>
-                                <a href="javascript:void(0)" onclick="document.getElementById('weekly-modal').style.display='block'"
+                                <a href="javascript:void(0)"
+                                    onclick="document.getElementById('weekly-modal').style.display='block'"
                                     class="MuiButton-root signup-button" data-lang-en="Weekly Wager Bonus"
                                     data-lang-ja="週間賭け金ボーナス">週間賭け金ボーナス</a>
                             </div>
@@ -499,7 +501,6 @@
                     }
                 }
 
-
                 function updateCountdown() {
                     const { range, countdownTarget } = getPeriodAndEndDate();
                     const lang = document.documentElement.lang;
@@ -510,7 +511,7 @@
                         const now = new Date();
                         const diff = countdownTarget - now;
                         const el = document.getElementById("weekly-countdown");
-                        const box = document.getElementById("weekly-bonus-timer");
+                        const box = document.getElementById("weekly-bonus-timer"); // This ID does not exist in your HTML, consider if it's needed
 
                         if (diff <= 0) {
                             const msg = isStartCountdown ? (lang === 'en' ? "Rewards available now!" : "報酬が利用可能です！") : (lang === 'en' ? "Reward period ended" : "報酬期間が終了しました");
@@ -562,6 +563,7 @@
                     }
                 }
 
+                // Initial calls (will be re-called by setLanguage for consistency)
                 updateCountdown();
                 fetchWinners();
             </script>
@@ -569,10 +571,6 @@
                 <span data-v-1d580398="" class="title" data-lang-en="Our Socials!"
                     data-lang-ja="私たちのソーシャルメディア！">私たちのソーシャルメディア！</span>
             </div>
-
-
-
-
 
             <style>
                 .social-media-cards {
@@ -626,7 +624,8 @@
                 </a>
             </div>
 
-            <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+            <script defer
+                src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
                 integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
                 data-cf-beacon='{"rayId":"93f5c327eff14c77","version":"2025.4.0-1-g37f21b1","r":1,"token":"6a289e34095c4e319f5a765107c772ad","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}'
                 crossorigin="anonymous"></script>
@@ -640,63 +639,75 @@
         const player = document.getElementById('draggable-player');
         const dragHandle = document.getElementById('drag-handle');
         const closeBtn = document.getElementById('close-btn');
-        const minimizedIcon = document.getElementById('minimized-icon');
-        const openBtn = document.getElementById('open-btn');
+        const minimizedIcon = document.getElementById('minimized-icon'); // This ID does not exist in your HTML, likely for a future feature
+        const openBtn = document.getElementById('open-btn'); // This ID does not exist in your HTML, likely for a future feature
 
         // Mouse drag
-        dragHandle.onmousedown = function (event) {
-            event.preventDefault();
-            const startX = event.clientX - player.offsetLeft;
-            const startY = event.clientY - player.offsetTop;
+        if (dragHandle && player) {
+            dragHandle.onmousedown = function (event) {
+                event.preventDefault();
+                const startX = event.clientX - player.offsetLeft;
+                const startY = event.clientY - player.offsetTop;
 
-            function onMouseMove(event) {
-                player.style.left = event.clientX - startX + 'px';
-                player.style.top = event.clientY - startY + 'px';
-            }
+                function onMouseMove(event) {
+                    player.style.left = event.clientX - startX + 'px';
+                    player.style.top = event.clientY - startY + 'px';
+                }
 
-            document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mousemove', onMouseMove);
 
-            document.onmouseup = function () {
-                document.removeEventListener('mousemove', onMouseMove);
+                document.onmouseup = function () {
+                    document.removeEventListener('mousemove', onMouseMove);
+                };
             };
-        };
+        }
+
 
         // Touch drag (mobile)
-        dragHandle.ontouchstart = function (event) {
-            const touch = event.touches[0];
-            const startX = touch.clientX - player.offsetLeft;
-            const startY = touch.clientY - player.offsetTop;
-
-            function onTouchMove(event) {
-                event.preventDefault(); // ✅ prevent page from scrolling
+        if (dragHandle && player) {
+            dragHandle.ontouchstart = function (event) {
                 const touch = event.touches[0];
-                player.style.left = touch.clientX - startX + 'px';
-                player.style.top = touch.clientY - startY + 'px';
-            }
+                const startX = touch.clientX - player.offsetLeft;
+                const startY = touch.clientY - player.offsetTop;
 
-            document.addEventListener('touchmove', onTouchMove, { passive: false });
+                function onTouchMove(event) {
+                    event.preventDefault(); // ✅ prevent page from scrolling
+                    const touch = event.touches[0];
+                    player.style.left = touch.clientX - startX + 'px';
+                    player.style.top = touch.clientY - startY + 'px';
+                }
 
-            document.ontouchend = function () {
-                document.removeEventListener('touchmove', onTouchMove);
+                document.addEventListener('touchmove', onTouchMove, { passive: false });
+
+                document.ontouchend = function () {
+                    document.removeEventListener('touchmove', onTouchMove);
+                };
             };
-        };
+        }
 
         // Minimize / Restore
-        closeBtn.onclick = function () {
-            player.style.display = 'none';
-            minimizedIcon.style.display = 'flex';
-        };
+        if (closeBtn && player && minimizedIcon) { // Check if elements exist
+            closeBtn.onclick = function () {
+                player.style.display = 'none';
+                minimizedIcon.style.display = 'flex';
+            };
+        }
 
-        openBtn.onclick = function () {
-            player.style.display = 'block';
-            minimizedIcon.style.display = 'none';
-        };
+        if (openBtn && player && minimizedIcon) { // Check if elements exist
+            openBtn.onclick = function () {
+                player.style.display = 'block';
+                minimizedIcon.style.display = 'none';
+            };
+        }
+
 
         const englishButton = document.getElementById('lang-en');
         const japaneseButton = document.getElementById('lang-ja');
 
         function setLanguage(lang) {
-            document.documentElement.lang = lang;
+            document.documentElement.lang = lang; // Set the HTML lang attribute
+
+            // Update all elements with data-lang attributes
             document.querySelectorAll('[data-lang-en], [data-lang-ja]').forEach(element => {
                 if (lang === 'en' && element.dataset.langEn) {
                     element.textContent = element.dataset.langEn;
@@ -705,20 +716,40 @@
                 }
             });
 
-            // Update button active state
-            englishButton.classList.remove('active');
-            japaneseButton.classList.remove('active');
-            if (lang === 'en') {
-                englishButton.classList.add('active');
-            } else {
-                japaneseButton.classList.add('active');
+            // Update placeholder for username input
+            const usernameInput = document.getElementById('usernameInput');
+            if (usernameInput) {
+                usernameInput.placeholder = lang === 'en' ? 'Roobet Username' : 'Roobetユーザー名';
             }
-            updateCountdown(); // Update countdown text based on new language
-            fetchUserStats(); // Update user stats text if already fetched
+
+
+            // Update button active state
+            if (englishButton) englishButton.classList.remove('active');
+            if (japaneseButton) japaneseButton.classList.remove('active');
+
+            if (lang === 'en') {
+                if (englishButton) englishButton.classList.add('active');
+            } else {
+                if (japaneseButton) japaneseButton.classList.add('active');
+            }
+
+            // Re-run functions that display dynamic content that needs language awareness
+            updateCountdown();
+            // Call fetchUserStats only if the resultBox has content (i.e., stats were already fetched)
+            const resultBox = document.getElementById("resultBox");
+            if (resultBox && resultBox.children.length > 0) {
+                fetchUserStats();
+            }
         }
 
-        englishButton.addEventListener('click', () => setLanguage('en'));
-        japaneseButton.addEventListener('click', () => setLanguage('ja'));
+        // Add event listeners for language buttons
+        if (englishButton) {
+            englishButton.addEventListener('click', () => setLanguage('en'));
+        }
+        if (japaneseButton) {
+            japaneseButton.addEventListener('click', () => setLanguage('ja'));
+        }
+
 
         // Set Japanese as default on load
         setLanguage('ja');
