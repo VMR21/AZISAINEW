@@ -2,7 +2,7 @@
 <html lang="ja">
 
 <head>
-    <title data-lang-en="Ajisai Official" data-lang-ja="あじさい公式">あじさい公式</title>
+    <title data-lang-en="Azisai Official" data-lang-ja="あじさい公式">あじさい公式</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" data-lang-en="Exclusive wager races on Roobet for code AZISAI07219!"
@@ -68,7 +68,7 @@
         }
 
         .minimized-icon {
-            display: flex;
+            display: none; /* Changed this from flex to none so it's hidden by default */
             align-items: center;
             justify-content: center;
             position: fixed;
@@ -340,6 +340,9 @@
             }
         </script>
     </div>
+
+    <div id="minimized-icon" class="minimized-icon">
+        <button id="open-btn" class="open-btn">📊</button> </div>
     <canvas id="particleCanvas"></canvas>
     <div class="glow-container">
         <div class="left-glow"></div>
@@ -639,8 +642,8 @@
         const player = document.getElementById('draggable-player');
         const dragHandle = document.getElementById('drag-handle');
         const closeBtn = document.getElementById('close-btn');
-        const minimizedIcon = document.getElementById('minimized-icon'); // This ID does not exist in your HTML, likely for a future feature
-        const openBtn = document.getElementById('open-btn'); // This ID does not exist in your HTML, likely for a future feature
+        const minimizedIcon = document.getElementById('minimized-icon'); // Now this will find an element
+        const openBtn = document.getElementById('open-btn');             // Now this will find an element
 
         // Mouse drag
         if (dragHandle && player) {
@@ -689,7 +692,7 @@
         if (closeBtn && player && minimizedIcon) { // Check if elements exist
             closeBtn.onclick = function () {
                 player.style.display = 'none';
-                minimizedIcon.style.display = 'flex';
+                minimizedIcon.style.display = 'flex'; // Use flex to center the icon
             };
         }
 
