@@ -510,29 +510,31 @@
                     document.getElementById("weekly-range").textContent = range[lang];
                     const isStartCountdown = lang === 'en' ? range.en === "Next rewards on 1st" : range.ja === "次回報酬は1日";
 
-                    function tick() {
-                        const now = new Date();
-                        const diff = countdownTarget - now;
-                        const el = document.getElementById("weekly-countdown");
-                        const box = document.getElementById("weekly-bonus-timer"); // This ID does not exist in your HTML, consider if it's needed
+function tick() {
+    const lang = document.documentElement.lang; // ✅ move this inside tick
+    const now = new Date();
+    const diff = countdownTarget - now;
+    const el = document.getElementById("weekly-countdown");
+    const box = document.getElementById("weekly-bonus-timer");
 
-                        if (diff <= 0) {
-                            const msg = isStartCountdown ? (lang === 'en' ? "Rewards available now!" : "報酬が利用可能です！") : (lang === 'en' ? "Reward period ended" : "報酬期間が終了しました");
-                            el.textContent = msg;
-                            if (box) box.textContent = msg;
-                            return;
-                        }
+    if (diff <= 0) {
+        const msg = isStartCountdown ? (lang === 'en' ? "Rewards available now!" : "報酬が利用可能です！") : (lang === 'en' ? "Reward period ended" : "報酬期間が終了しました");
+        el.textContent = msg;
+        if (box) box.textContent = msg;
+        return;
+    }
 
-                        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                        const m = Math.floor((diff / (1000 * 60)) % 60);
-                        const s = Math.floor((diff / 1000) % 60);
-                        const label = isStartCountdown ? (lang === 'en' ? "🕒 Starts in" : "🕒 開始まで") : (lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで");
-                        const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+    const label = isStartCountdown ? (lang === 'en' ? "🕒 Starts in" : "🕒 開始まで") : (lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで");
 
-                        el.textContent = text;
-                        if (box) box.textContent = text;
-                    }
+    const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
+    el.textContent = text;
+    if (box) box.textContent = text;
+}
+
 
                     tick();
                     setInterval(tick, 1000);
