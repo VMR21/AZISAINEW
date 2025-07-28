@@ -403,14 +403,117 @@
 </div>
 
 <!-- Modal -->
-<div id="bonusModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color: rgba(0,0,0,0.7);">
-  <div style="background-color: #1a1a1a; margin: 10% auto; padding: 30px; border: 2px solid #00C4FF; width: 90%; max-width: 400px; border-radius: 10px; text-align: center; color: white; font-family: 'Bai Jamjuree', sans-serif;">
-    <h2 style="color: #00FF90;">💵 Weekly Resurrection Bonus</h2>
-    <p style="margin-top: 10px;">$1000 wager ➜ You get <strong>$10</strong></p>
-    <p>$5000 wager ➜ You get <strong>$50</strong></p>
-    <button onclick="document.getElementById('bonusModal').style.display='none'" style="margin-top: 20px; padding: 8px 16px; background: #00C4FF; border: none; color: white; border-radius: 6px; cursor: pointer;">Close</button>
+<div id="weekly-modal" style="padding: 20px; background: #111; color: #fff; border-radius: 12px; max-width: 400px; margin: auto; text-align: center;">
+  <h2>♻️ Weekly Resurrection Bonus</h2>
+  <p style="margin: 4px 0;">💰 $10 for $1000 wagered</p>
+  <p style="margin: 4px 0;">💸 $50 for $5000 wagered</p>
+
+  <div id="weekly-range" style="margin-top: 10px; font-weight: bold;"></div>
+  <div id="weekly-countdown" style="font-size: 20px; margin: 10px 0;"></div>
+
+  <div id="reward-names" style="margin-top: 16px; text-align: left;">
+    <h3>🎉 $10 Winners</h3>
+    <ul id="names-1000"></ul>
+    <h3>🎊 $50 Winners</h3>
+    <ul id="names-5000"></ul>
   </div>
 </div>
+
+<script>
+// Get JST time
+function getJSTNow() {
+  const now = new Date();
+  const jstOffset = 9 * 60; // JST = UTC+9
+  const localOffset = now.getTimezoneOffset();
+  return new Date(now.getTime() + (jstOffset + localOffset) * 60000);
+}
+
+function getPeriodAndEndDate() {
+  const now = getJSTNow();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const date = now.getDate();
+
+  let startDay, endDay;
+  if (date >= 1 && date <= 7) {
+    startDay = 1; endDay = 7;
+  } else if (date >= 8 && date <= 14) {
+    startDay = 8; endDay = 14;
+  } else if (date >= 15 && date <= 21) {
+    startDay = 15; endDay = 21;
+  } else if (date >= 22 && date <= 28) {
+    startDay = 22; endDay = 28;
+  } else {
+    return { range: "Next rewards on 1st", countdownTarget: null };
+  }
+
+  const countdownTarget = new Date(Date.UTC(year, month, endDay + 1, 0, 0, 0) - 9 * 3600000); // JST to UTC
+  return { range: `Period: ${startDay}–${endDay} JST`, countdownTarget };
+}
+
+function updateCountdown() {
+  const { range, countdownTarget } = getPeriodAndEndDate();
+  document.getElementById("weekly-range").textContent = range;
+
+  if (!countdownTarget) {
+    document.getElementById("weekly-countdown").textContent = '';
+    return;
+  }
+
+  function tick() {
+    const now = new Date();
+    const diff = countdownTarget - now;
+
+    if (diff <= 0) {
+      document.getElementById("weekly-countdown").textContent = "Reward period ended";
+      return;
+    }
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("weekly-countdown").textContent = `⏳ Ends in: ${d}d ${h}h ${m}m ${s}s`;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+}
+
+// Fetch winner names
+async function fetchWinners() {
+  try {
+    const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
+    const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
+
+    const names1000 = await res1000.json();
+    const names5000 = await res5000.json();
+
+    const ul1000 = document.getElementById("names-1000");
+    const ul5000 = document.getElementById("names-5000");
+
+    names1000.forEach(name => {
+      const li = document.createElement("li");
+      li.textContent = name;
+      ul1000.appendChild(li);
+    });
+
+    names5000.forEach(name => {
+      const li = document.createElement("li");
+      li.textContent = name;
+      ul5000.appendChild(li);
+    });
+  } catch (err) {
+    console.error("Error fetching names:", err);
+  }
+}
+
+// Run on load
+updateCountdown();
+fetchWinners();
+</script>
+
 
 <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
   <span data-v-1d580398="" class="title">Our Socials!</span>
