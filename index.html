@@ -368,14 +368,14 @@
           <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" viewBox="0 0 24 24">
             <path d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
           </svg>
-          <p class="MuiTypography-root MuiTypography-body1">💰 $10,000 MONTHLY LEADERBOARD</p>
+          <p class="MuiTypography-root MuiTypography-body1">$10,000 MONTHLY LEADERBOARD</p>
         </div>
 
         <div class="description MuiBox-root css-0">
           <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" viewBox="0 0 24 24">
             <path d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
           </svg>
-          <p class="MuiTypography-root MuiTypography-body1">🎁 Weekly Wager Bonus</p>
+          <p class="MuiTypography-root MuiTypography-body1">Weekly Wager Bonus</p>
           <div id="weekly-bonus-timer" class="MuiTypography-root MuiTypography-body1" style="text-align:center; font-size: 16px; margin-top: 4px;"></div>
         </div>
 
@@ -411,37 +411,40 @@
 <script>
 function getPeriodAndEndDate() {
   const now = new Date();
-  const day = now.getUTCDate();
-  const month = now.getUTCMonth();
-  const year = now.getUTCFullYear();
+  // Convert to JST (UTC+9)
+  const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  const day = jstNow.getDate();
+  const month = jstNow.getMonth();
+  const year = jstNow.getFullYear();
 
   if (day >= 1 && day <= 7) {
     return {
       range: "1st–7th",
-      countdownTarget: new Date(Date.UTC(year, month, 8, 0, 0, 0))
+      countdownTarget: new Date(Date.UTC(year, month, 7, 15, 0, 0)) // 00:00 JST = 15:00 UTC prev day
     };
   } else if (day >= 8 && day <= 14) {
     return {
       range: "8th–14th",
-      countdownTarget: new Date(Date.UTC(year, month, 15, 0, 0, 0))
+      countdownTarget: new Date(Date.UTC(year, month, 14, 15, 0, 0))
     };
   } else if (day >= 15 && day <= 21) {
     return {
       range: "15th–21st",
-      countdownTarget: new Date(Date.UTC(year, month, 22, 0, 0, 0))
+      countdownTarget: new Date(Date.UTC(year, month, 21, 15, 0, 0))
     };
   } else if (day >= 22 && day <= 28) {
     return {
       range: "22nd–28th",
-      countdownTarget: new Date(Date.UTC(year, month, 29, 0, 0, 0))
+      countdownTarget: new Date(Date.UTC(year, month, 28, 15, 0, 0))
     };
   } else {
     return {
       range: "Next rewards on 1st",
-      countdownTarget: new Date(Date.UTC(year, month + 1, 1, 0, 0, 0))
+      countdownTarget: new Date(Date.UTC(year, month + 1, 1, 15, 0, 0))
     };
   }
 }
+
 
 function updateCountdown() {
   const { range, countdownTarget } = getPeriodAndEndDate();
