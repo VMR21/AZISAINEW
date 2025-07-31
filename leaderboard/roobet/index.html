@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
+  <!-- Default language set to Japanese -->
+
   <head>
     <title data-i18n="pageTitle">AZISAI | ルーベット リーダーボード</title>
     <meta charset="utf-8" />
@@ -175,11 +177,6 @@
         border-color: rgba(255, 255, 255, 0.4);
         text-decoration: none;
         color: black;
-      }
-
-      .prev-lb-btn:hover svg {
-        transform: scale(1.1);
-        stroke: black;
       }
 
       .prev-lb-btn:active {
@@ -408,6 +405,7 @@
       <span id="message"></span>
     </div>
 
+    <!-- Rules Modal -->
     <div id="rulesModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
@@ -428,6 +426,7 @@
       </div>
     </div>
 
+    <!-- Rewards Modal -->
     <div id="rewardsModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
@@ -468,6 +467,7 @@
       </div>
     </div>
 
+    <!-- Weekly Wager Bonus Modal -->
     <div
       id="weekly-modal"
       class="modal"
@@ -603,9 +603,9 @@
                 </svg>
                 <span data-i18n="showRewardsButton">報酬を見る</span>
               </button>
+              <!-- Weekly Wager Bonus Button -->
               <a
                 href="javascript:void(0)"
-                onclick="document.getElementById('weekly-modal').style.display='block'"
                 class="MuiButton-root signup-button"
                 data-lang-en="Weekly Wager Bonus"
                 data-lang-ja="週間賭け金ボーナス"
@@ -613,6 +613,7 @@
                 >週間賭け金ボーナス</a
               >
             </div>
+            <!-- Language Toggle Buttons -->
             <div class="language-toggle">
               <button class="lang-button active" data-lang="ja">日本語</button>
               <button class="lang-button" data-lang="en">English</button>
@@ -620,9 +621,12 @@
           </span>
           <div class="css-esk2ah">
             <div class="css-2w2ovy">
+              <!-- Top 3 Player Cards -->
               <div class="css-gqrafh" id="top3-cards">
-                </div>
+                <!-- Top 3 inserted via JS -->
+              </div>
 
+              <!-- Countdown Timer -->
               <div class="countdown">
                 <div>
                   <span class="title"
@@ -634,6 +638,7 @@
                 </div>
               </div>
             </div>
+            <!-- Player Rows (4-10) -->
             <div id="leaderboard-rows"></div>
           </div>
         </div>
@@ -960,11 +965,56 @@
     }
     // Weekly Wager Bonus Script End
 
+    // Main Leaderboard Countdown Script Start
+    function updateCountdown() {
+      const el = document.getElementById("countdown");
+      if (!el) return;
+
+      const now = new Date();
+      const nowUTC = now.getTime();
+
+      const year = now.getUTCFullYear();
+      const month = now.getUTCMonth(); // 0-based (June = 5)
+
+      let targetUTC;
+
+      // Special rule: If it's June 2025, extend to July 31st 15:00 UTC
+      if (year === 2025 && month === 5) {
+        targetUTC = Date.UTC(2025, 6, 31, 15, 0, 0); // July 31, 2025 15:00 UTC
+      } else {
+        // Regular: End of current month at 15:00 UTC
+        targetUTC = Date.UTC(year, month + 1, 0, 15, 0, 0);
+
+        // If already past this month's deadline, move to end of next month
+        if (nowUTC >= targetUTC) {
+          targetUTC = Date.UTC(year, month + 2, 0, 15, 0, 0);
+        }
+      }
+
+      const diff = targetUTC - nowUTC;
+
+      if (diff <= 0) {
+        el.textContent = "0d 00:00:00"; // Or a message like "Ended"
+        return;
+      }
+
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+
+      const formattedTime = `${d}d ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      el.textContent = formattedTime;
+    }
+    // Main Leaderboard Countdown Script End
+
     // Initial calls
     document.addEventListener("DOMContentLoaded", () => {
       applyTranslations(); // Apply initial translations
       updateCountdownWeekly(); // Start weekly countdown
       fetchWinners(); // Fetch and display weekly winners
+      updateCountdown(); // Start main leaderboard countdown immediately
+      setInterval(updateCountdown, 1000); // Update main leaderboard countdown every second
     });
   </script>
   <script src="/js/app.js"></script>
@@ -993,39 +1043,6 @@
         }
       }
       return 0; // No reward if wager is below all tiers
-    }
-
-    function updateCountdown() {
-      const el = document.getElementById("countdown");
-      if (!el) return;
-
-      const now = new Date();
-      const nowUTC = now.getTime();
-
-      const year = now.getUTCFullYear();
-      const month = now.getUTCMonth(); // 0-based (June = 5)
-
-      let targetUTC;
-
-      // Special rule: If it's June 2025, extend to July 31st 15:00 UTC
-      if (year === 2025 && month === 5) {
-        targetUTC = Date.UTC(2025, 6, 31, 15, 0, 0); // July 31, 2025 15:00 UTC
-      } else {
-        // Regular: End of current month at 15:00 UTC
-        targetUTC = Date.UTC(year, month + 1, 0, 15, 0, 0);
-
-        // If already past this month's deadline, move to end of next month
-        if (nowUTC >= targetUTC) {
-          targetUTC = Date.UTC(year, month + 2, 0, 15, 0, 0);
-        }
-      }
-
-      const diff = targetUTC - nowUTC;
-
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
     }
   </script>
 </html>
