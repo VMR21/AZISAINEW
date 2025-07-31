@@ -848,16 +848,22 @@
     };
 
     // Language button click handler
-    langButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        langButtons.forEach((btn) => btn.classList.remove("active"));
-        button.classList.add("active");
-        currentLang = button.dataset.lang;
-        applyTranslations();
-        // Re-load leaderboard to update "Wagered:" label if necessary
-        loadLeaderboard();
-      });
-    });
+langButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    langButtons.forEach((btn) => btn.classList.remove("active"));
+    button.classList.add("active");
+    currentLang = button.dataset.lang;
+    applyTranslations();
+    loadLeaderboard();
+
+    // ✅ Re-attach the click event after language switch
+    const newWeeklyButton = document.getElementById("weeklyWagerButton");
+    newWeeklyButton.onclick = function () {
+      openModal(document.getElementById("weekly-modal"));
+    };
+  });
+});
+
 
     // Weekly Wager Bonus Script Start
     function getPeriodAndEndDate() {
