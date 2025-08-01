@@ -387,20 +387,25 @@
     </div>
 
     <!-- Weekly Wager Bonus Modal -->
-    <div id="weekly-modal" style="display:none; padding:20px; background:#111; color:#fff; border-radius:12px; max-width:400px; margin:40px auto; text-align:center; box-shadow:0 0 25px #00ff99; position:relative;">
-        <button onclick="document.getElementById('weekly-modal').style.display='none'" style="position:absolute; top:10px; right:16px; background:none; color:#00ffcc; border:none; font-size:20px;">✖</button>
+    <div id="weekly-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" data-i18n="weeklyBonusModalTitle">週間賭け金ボーナス</h2>
+                <span class="close" data-modal-id="weekly-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p data-i18n="weeklyBonus10">💰 1000ドル賭けて10ドル獲得</p>
+                <p data-i18n="weeklyBonus50">🤑 5000ドル賭けて50ドル獲得</p>
+                <div id="weekly-range" style="margin-top:10px; font-weight:bold; color:#00ffcc;"></div>
+                <div id="weekly-countdown" style="font-size:18px; margin:10px 0;"></div>
 
-        <h2 style="color:#00ff99;" data-lang-en="Weekly Wager Bonus" data-lang-ja="週間復活ボーナス">週間復活ボーナス</h2>
-        <p data-lang-en="💰 $10 for $1000 wagered" data-lang-ja="💰 1000ドル賭けて10ドル獲得">💰 1000ドル賭けて10ドル獲得</p>
-        <p data-lang-en="🤑 $50 for $5000 wagered" data-lang-ja="🤑 5000ドル賭けて50ドル獲得">� 5000ドル賭けて50ドル獲得</p>
-        <div id="weekly-range" style="margin-top:10px; font-weight:bold; color:#00ffcc;"></div>
-        <div id="weekly-countdown" style="font-size:18px; margin:10px 0;"></div>
-
-        <div id="reward-names" style="margin-top:16px; text-align:left;">
-            <h3 style="color:#00ffaa;" data-lang-en="🎉 $10 Winners" data-lang-ja="🎉 10ドル当選者">🎉 10ドル当選者</h3>
-            <ul id="names-1000" style="padding-left:20px;"></ul>
-            <h3 style="color:#00ffaa;" data-lang-en="🎊 $50 Winners" data-lang-ja="🎊 50ドル当選者">🎊 50ドル当選者</h3>
-            <ul id="names-5000" style="padding-left:20px;"></ul>
+                <div id="reward-names" style="margin-top:16px; text-align:left;">
+                    <h3 style="color:#00ffaa;" data-i18n="weekly10WinnersTitle">🎉 10ドル当選者</h3>
+                    <ul id="names-1000" style="padding-left:20px;"></ul>
+                    <h3 style="color:#00ffaa;" data-i18n="weekly50WinnersTitle">🎊 50ドル当選者</h3>
+                    <ul id="names-5000" style="padding-left:20px;"></ul>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -431,8 +436,7 @@
     </div>
     <br>
     <div data-v-1d580398="" data-v-e4097664="" id="appContent">
-        <div data-v-1d580398="">
-            <div data-v-1d580398="" class="row text">
+        <div data-v-1d580398="" class="row text">
                 <span data-v-1d580398="" class="title">
                     <div data-v-1d580398="" class="price-wrapper glow" data-i18n="mainTitleWager">
                         ROOBET <!-- Added data-i18n attribute -->
@@ -545,9 +549,23 @@
             wager500K: "$500,000以上",
             wager300K: "$300,000以上",
             wager100K: "$100,000以上",
-            wagerLess100K: "Less than $100,000",
+            wagerLess100K: "$100,000未満",
             rewardsNote: "<i>報酬は合計加重ベット額に基づいています。</i>",
-            wageredLabel: "賭け額: "
+            wageredLabel: "賭け額: ",
+            weeklyBonusModalTitle: "週間賭け金ボーナス", // New translation
+            weeklyBonus10: "💰 1000ドル賭けて10ドル獲得", // New translation
+            weeklyBonus50: "🤑 5000ドル賭けて50ドル獲得", // New translation
+            weekly10WinnersTitle: "🎉 10ドル当選者", // New translation
+            weekly50WinnersTitle: "🎊 50ドル当選者", // New translation
+            weeklyRange1_7: "1日～7日", // New translation
+            weeklyRange8_14: "8日～14日", // New translation
+            weeklyRange15_21: "15日～21日", // New translation
+            weeklyRange22_28: "22日～28日", // New translation
+            weeklyRangeNext1st: "次回報酬は1日", // New translation
+            weeklyCountdownStarts: "🕒 開始まで", // New translation
+            weeklyCountdownEnds: "⏳ 終了まで", // New translation
+            weeklyRewardsAvailable: "報酬が利用可能です！", // New translation
+            weeklyRewardPeriodEnded: "報酬期間が終了しました" // New translation
         },
         en: {
             pageTitle: "AZISAI | Roobet Leaderboard",
@@ -577,7 +595,21 @@
             wager100K: "$100,000 or more",
             wagerLess100K: "Less than $100,000",
             rewardsNote: "<i>Rewards are based on your total weighted wager.</i>",
-            wageredLabel: "Wagered: "
+            wageredLabel: "Wagered: ",
+            weeklyBonusModalTitle: "Weekly Wager Bonus", // New translation
+            weeklyBonus10: "💰 $10 for $1000 wagered", // New translation
+            weeklyBonus50: "🤑 $50 for $5000 wagered", // New translation
+            weekly10WinnersTitle: "🎉 $10 Winners", // New translation
+            weekly50WinnersTitle: "🎊 $50 Winners", // New translation
+            weeklyRange1_7: "1st–7th", // New translation
+            weeklyRange8_14: "8th–14th", // New translation
+            weeklyRange15_21: "15th–21st", // New translation
+            weeklyRange22_28: "22nd–28th", // New translation
+            weeklyRangeNext1st: "Next rewards on 1st", // New translation
+            weeklyCountdownStarts: "🕒 Starts in", // New translation
+            weeklyCountdownEnds: "⏳ Ends in", // New translation
+            weeklyRewardsAvailable: "Rewards available now!", // New translation
+            weeklyRewardPeriodEnded: "Reward period ended" // New translation
         }
     };
 
@@ -599,6 +631,9 @@
         });
         // Update the html lang attribute
         document.documentElement.lang = currentLang;
+        // Re-run weekly countdown and winner fetch to update language-dependent text
+        updateCountdownWeekly();
+        fetchWeeklyWinners();
     }
 
     // Function to open a modal - Simplified for instant display
@@ -622,8 +657,7 @@
         openModal(rewardsModal);
     }
 
-    // New event listener for the weekly bonus button
-    weeklyBonusButton.onclick = function () {
+    weeklyBonusButton.onclick = function () { // Event listener for weekly bonus button
         openModal(weeklyModal);
     }
 
@@ -646,7 +680,7 @@
         if (event.target == rewardsModal) {
             closeModal(rewardsModal);
         }
-        if (event.target == weeklyModal) { // Now correctly handles closing for weeklyModal
+        if (event.target == weeklyModal) { // Close weekly modal
             closeModal(weeklyModal);
         }
     }
@@ -797,7 +831,7 @@
         applyTranslations(); // Re-apply translations after loading leaderboard data
     }
 
-    // --- Weekly Wager Bonus Script (from your original input) ---
+    // --- Weekly Wager Bonus Script ---
     function getPeriodAndEndDate() {
         const now = new Date();
         // Convert to JST (UTC+9)
@@ -819,23 +853,27 @@
         }
     }
 
-    function updateCountdownWeekly() { // Renamed to avoid conflict with main countdown
+    function updateCountdownWeekly() {
         const { range, countdownTarget } = getPeriodAndEndDate();
         const lang = document.documentElement.lang;
-        document.getElementById("weekly-range").textContent = range[lang];
+        const weeklyRangeEl = document.getElementById("weekly-range");
+        if (weeklyRangeEl) {
+            // Use translations object for range text
+            weeklyRangeEl.textContent = translations[lang][`weeklyRange${range.en.replace(/[^a-zA-Z0-9]/g, '')}`] || range[lang];
+        }
         const isStartCountdown = lang === 'en' ? range.en === "Next rewards on 1st" : range.ja === "次回報酬は1日";
 
         function tick() {
-            const lang = document.documentElement.lang; // ✅ move this inside tick
+            const currentLang = document.documentElement.lang;
             const now = new Date();
             const diff = countdownTarget - now;
             const el = document.getElementById("weekly-countdown");
-            const box = document.getElementById("weekly-bonus-timer"); // This element does not exist in the provided HTML, can be removed or ignored.
+
+            if (!el) return;
 
             if (diff <= 0) {
-                const msg = isStartCountdown ? (lang === 'en' ? "Rewards available now!" : "報酬が利用可能です！") : (lang === 'en' ? "Reward period ended" : "報酬期間が終了しました");
-                if (el) el.textContent = msg;
-                if (box) box.textContent = msg;
+                const msg = isStartCountdown ? (translations[currentLang].weeklyRewardsAvailable) : (translations[currentLang].weeklyRewardPeriodEnded);
+                el.textContent = msg;
                 return;
             }
 
@@ -843,18 +881,21 @@
             const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const m = Math.floor((diff / (1000 * 60)) % 60);
             const s = Math.floor((diff / 1000) % 60);
-            const label = isStartCountdown ? (lang === 'en' ? "🕒 Starts in" : "🕒 開始まで") : (lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで");
+            const label = isStartCountdown ? (translations[currentLang].weeklyCountdownStarts) : (translations[currentLang].weeklyCountdownEnds);
 
             const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
-            if (el) el.textContent = text;
-            if (box) box.textContent = text;
+            el.textContent = text;
         }
 
         tick();
-        setInterval(tick, 1000);
+        // Clear previous interval to prevent multiple timers running
+        if (window.weeklyCountdownInterval) {
+            clearInterval(window.weeklyCountdownInterval);
+        }
+        window.weeklyCountdownInterval = setInterval(tick, 1000);
     }
 
-    async function fetchWeeklyWinners() { // Renamed to avoid conflict
+    async function fetchWeeklyWinners() {
         try {
             const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
             const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
@@ -882,12 +923,12 @@
         }
     }
 
-    // Initial calls for weekly bonus (will be re-called by setLanguage for consistency)
+    // Initial calls for weekly bonus and leaderboard
     document.addEventListener('DOMContentLoaded', () => {
-        updateCountdownWeekly(); // Call the renamed function
-        fetchWeeklyWinners(); // Call the renamed function
-        loadLeaderboard(); // Ensure leaderboard also loads on DOMContentLoaded
+        loadLeaderboard();
+        // Initial call to update weekly countdown and fetch winners, will be re-called by applyTranslations
+        updateCountdownWeekly();
+        fetchWeeklyWinners();
     });
 
 </script>
-�
