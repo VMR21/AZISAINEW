@@ -1,1054 +1,893 @@
 <!DOCTYPE html>
-<html lang="ja">
-  <!-- Default language set to Japanese -->
+<html lang="ja"> <!-- Default language set to Japanese -->
 
-  <head>
+<head>
     <title data-i18n="pageTitle">AZISAI | ルーベット リーダーボード</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      data-i18n="metaDescription"
-      content="コードAZISAI07219のルーベット限定賭けレース！"
-    />
-    <meta
-      property="og:image"
-      content="https://ws.bma.gg/api/screenshot?url=https%3A%2F%2FErnTmz.gg%2Fleaderboard%2Froobet&w=1280&h=720&z=1&d=0&f=false&darkMode=false"
-    />
-    <link rel="icon" type="image/jpg" href="/assets/logo.png" />
-    <link rel="stylesheet" type="text/css" href="/css/app.css" />
-    <link rel="stylesheet" type="text/css" href="/css/lb.css" />
-    <link rel="stylesheet" type="text/css" href="/css/vendor.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" data-i18n="metaDescription" content="コードAZISAI07219のルーベット限定賭けレース！">
+    <meta property="og:image"
+        content="https://ws.bma.gg/api/screenshot?url=https%3A%2F%2FErnTmz.gg%2Fleaderboard%2Froobet&w=1280&h=720&z=1&d=0&f=false&darkMode=false">
+    <link rel="icon" type="image/jpg" href="/assets/logo.png">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+    <link rel="stylesheet" type="text/css" href="/css/lb.css">
+    <link rel="stylesheet" type="text/css" href="/css/vendor.css">
     <script src="/js/countdown-roobet.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/toast.css" />
+    <link rel="stylesheet" type="text/css" href="/css/toast.css">
     <style>
-      /* General Styles for the warning message */
-      .warning-message {
-        width: 90%;
-        max-width: 500px;
-        margin: 10px auto;
-        background-color: rgba(255, 0, 0, 0.1);
-        border: 2px solid #ff4444;
-        border-radius: 4px;
-        padding: 15px;
-        color: #ff4444;
-        font-weight: bold;
-        text-align: center;
-        box-sizing: border-box;
-      }
-
-      /* Responsive adjustments for warning message */
-      @media screen and (max-width: 768px) {
+        /* General Styles for the warning message */
         .warning-message {
-          width: 95%;
-          padding: 12px;
-          font-size: 14px;
-          margin: 10px auto;
-        }
-      }
-
-      /* Base Modal Styles - Removed opacity and transition for instant display */
-      .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1000; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
-      }
-
-      /* Modal Content Box - Removed transform and transition for instant display */
-      .modal-content {
-        background: linear-gradient(135deg, #1f2937, #111827); /* Gradient background */
-        margin: 10% auto; /* 10% from the top and centered horizontally */
-        padding: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
-        border-radius: 12px; /* Rounded corners */
-        width: 80%; /* Width of the modal */
-        max-width: 600px; /* Maximum width */
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Deep shadow */
-        position: relative;
-      }
-
-      /* Modal Header */
-      .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator line */
-        padding-bottom: 15px;
-        margin-bottom: 15px;
-      }
-
-      /* Modal Title */
-      .modal-title {
-        font-size: 24px;
-        font-weight: 700;
-        color: #fff;
-        margin: 0;
-      }
-
-      /* Close Button */
-      .close {
-        color: #aaa;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: color 0.2s ease;
-      }
-
-      .close:hover {
-        color: #fff;
-      }
-
-      /* Modal Body */
-      .modal-body {
-        color: #d1d5db;
-        font-size: 16px;
-        line-height: 1.6;
-      }
-
-      .modal-body li {
-        margin-bottom: 10px;
-        text-align: left;
-      }
-
-      .modal-body ul {
-        padding-left: 20px;
-      }
-
-      /* New styles for text-based rewards display */
-      .reward-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 15px;
-        margin-bottom: 8px;
-        background-color: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.2s ease;
-      }
-
-      .reward-item:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-
-      .reward-wager {
-        font-weight: bold;
-        color: #fff;
-        flex: 1; /* Allows wager text to take up available space */
-        text-align: left;
-      }
-
-      .reward-value {
-        font-weight: bold;
-        color: #4caf50; /* Green color for rewards */
-        text-align: right;
-        min-width: 80px; /* Ensure reward value has enough space */
-      }
-
-      /* Button Styles (reused for both RULES and SHOW REWARDS) */
-      .prev-lb-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgb(39, 117, 202); /* Default blue background */
-        color: #000;
-        padding: 12px 24px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 15px rgba(39, 117, 202, 0.2);
-        position: relative;
-        overflow: hidden;
-        margin: 5px; /* Added margin for spacing between buttons */
-      }
-
-      .prev-lb-btn:hover {
-        transform: translateY(-2px) scale(1.02);
-        background: rgb(39, 117, 202);
-        box-shadow: 0 6px 20px rgba(39, 117, 202, 0.4);
-        border-color: rgba(255, 255, 255, 0.4);
-        text-decoration: none;
-        color: black;
-      }
-
-      .prev-lb-btn:active {
-        transform: translateY(0) scale(0.98);
-      }
-
-      .prev-lb-btn svg {
-        width: 18px;
-        height: 18px;
-        transition: transform 0.2s ease;
-      }
-
-      /* Specific style for the RULES button (from original) */
-      #rulesButton {
-        background: #ff8e3c; /* Orange background for rules button */
-        cursor: pointer;
-        border: none;
-      }
-
-      #rulesButton:hover {
-        background: #ff8e3c;
-      }
-
-      /* Specific style for the SHOW REWARDS button */
-      #showRewardsButton {
-        background: #4caf50; /* Green background for rewards button */
-        cursor: pointer;
-        border: none;
-      }
-
-      #showRewardsButton:hover {
-        background: #4caf50;
-      }
-
-      /* Language toggle buttons */
-      .language-toggle {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-        gap: 10px;
-      }
-
-      .lang-button {
-        background-color: #333;
-        color: #fff;
-        border: 1px solid #555;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.2s, border-color 0.2s;
-      }
-
-      .lang-button:hover {
-        background-color: #555;
-        border-color: #777;
-      }
-
-      .lang-button.active {
-        background-color: #007bff;
-        border-color: #007bff;
-        font-weight: bold;
-      }
-
-      /* Coin animations (from original) */
-      @keyframes float {
-        0% {
-          transform: translateY(0px) scaleX(1) rotate(20deg);
+            width: 90%;
+            max-width: 500px;
+            margin: 10px auto;
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 2px solid #ff4444;
+            border-radius: 4px;
+            padding: 15px;
+            color: #ff4444;
+            font-weight: bold;
+            text-align: center;
+            box-sizing: border-box;
         }
 
-        50% {
-          transform: translateY(-10px) scaleX(1) rotate(20deg);
+        /* Responsive adjustments for warning message */
+        @media screen and (max-width: 768px) {
+            .warning-message {
+                width: 95%;
+                padding: 12px;
+                font-size: 14px;
+                margin: 10px auto;
+            }
         }
 
-        100% {
-          transform: translateY(0px) scaleX(1) rotate(20deg);
+        /* Base Modal Styles - Removed opacity and transition for instant display */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
         }
-      }
 
-      @keyframes floatLeft {
-        0% {
-          transform: translateY(0px) scaleX(-1) rotate(20deg);
+        /* Modal Content Box - Removed transform and transition for instant display */
+        .modal-content {
+            background: linear-gradient(135deg, #1f2937, #111827); /* Gradient background */
+            margin: 10% auto; /* 10% from the top and centered horizontally */
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            border-radius: 12px; /* Rounded corners */
+            width: 80%; /* Width of the modal */
+            max-width: 600px; /* Maximum width */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Deep shadow */
+            position: relative;
         }
 
-        50% {
-          transform: translateY(-10px) scaleX(-1) rotate(20deg);
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator line */
+            padding-bottom: 15px;
+            margin-bottom: 15px;
         }
 
-        100% {
-          transform: translateY(0px) scaleX(-1) rotate(20deg);
+        /* Modal Title */
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
         }
-      }
 
-      .coin-container {
-        position: relative;
-        height: 0;
-        margin: 0;
-      }
+        /* Close Button */
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
 
-      .coin-left,
-      .coin-right {
-        position: absolute;
-        height: 100px;
-        width: auto;
-        opacity: 0.7;
-        top: -50px;
-      }
+        .close:hover {
+            color: #fff;
+        }
 
-      .coin-left {
-        left: 22%;
-        animation: floatLeft 3s ease-in-out infinite;
-      }
+        /* Modal Body */
+        .modal-body {
+            color: #d1d5db;
+            font-size: 16px;
+            line-height: 1.6;
+        }
 
-      .coin-right {
-        right: 25%;
-        animation: float 3s ease-in-out infinite;
-      }
+        .modal-body li {
+            margin-bottom: 10px;
+            text-align: left;
+        }
 
-      @media screen and (max-width: 768px) {
+        .modal-body ul {
+            padding-left: 20px;
+        }
+
+        /* New styles for text-based rewards display */
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s ease;
+        }
+
+        .reward-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .reward-wager {
+            font-weight: bold;
+            color: #fff;
+            flex: 1; /* Allows wager text to take up available space */
+            text-align: left;
+        }
+
+        .reward-value {
+            font-weight: bold;
+            color: #4CAF50; /* Green color for rewards */
+            text-align: right;
+            min-width: 80px; /* Ensure reward value has enough space */
+        }
+
+        /* Button Styles (reused for both RULES and SHOW REWARDS) */
+        .prev-lb-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgb(39, 117, 202); /* Default blue background */
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(39, 117, 202, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin: 5px; /* Added margin for spacing between buttons */
+        }
+
+        .prev-lb-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: rgb(39, 117, 202);
+            box-shadow: 0 6px 20px rgba(39, 117, 202, 0.4);
+            border-color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            color: black;
+        }
+
+        .prev-lb-btn:hover svg {
+            transform: scale(1.1);
+            stroke: black;
+        }
+
+        .prev-lb-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .prev-lb-btn svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.2s ease;
+        }
+
+        /* Specific style for the RULES button (from original) */
+        #rulesButton {
+            background: #ff8e3c; /* Orange background for rules button */
+            cursor: pointer;
+            border: none;
+        }
+
+        #rulesButton:hover {
+            background: #ff8e3c;
+        }
+
+        /* Specific style for the SHOW REWARDS button */
+        #showRewardsButton {
+            background: #4CAF50; /* Green background for rewards button */
+            cursor: pointer;
+            border: none;
+        }
+
+        #showRewardsButton:hover {
+            background: #4CAF50;
+        }
+
+        /* Specific style for the WEEKLY WAGER BONUS button */
+        #weeklyBonusButton {
+            background: #8A2BE2; /* Purple background for weekly bonus button */
+            cursor: pointer;
+            border: none;
+        }
+
+        #weeklyBonusButton:hover {
+            background: #8A2BE2;
+        }
+
+        /* Language toggle buttons */
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .lang-button {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .lang-button:hover {
+            background-color: #555;
+            border-color: #777;
+        }
+
+        .lang-button.active {
+            background-color: #007bff;
+            border-color: #007bff;
+            font-weight: bold;
+        }
+
+        /* Coin animations (from original) */
+        @keyframes float {
+            0% {
+                transform: translateY(0px) scaleX(1) rotate(20deg);
+            }
+
+            50% {
+                transform: translateY(-10px) scaleX(1) rotate(20deg);
+            }
+
+            100% {
+                transform: translateY(0px) scaleX(1) rotate(20deg);
+            }
+        }
+
+        @keyframes floatLeft {
+            0% {
+                transform: translateY(0px) scaleX(-1) rotate(20deg);
+            }
+
+            50% {
+                transform: translateY(-10px) scaleX(-1) rotate(20deg);
+            }
+
+            100% {
+                transform: translateY(0px) scaleX(-1) rotate(20deg);
+            }
+        }
+
         .coin-container {
-          display: none;
+            position: relative;
+            height: 0;
+            margin: 0;
         }
-      }
 
-      /* Countdown timer styles (from original) */
-      #countdown {
-        font-size: 3rem;
-        font-weight: 800;
-        color: #ffffff;
-        text-shadow: 0 0 10px #00eaff, 0 0 20px #00eaff, 0 0 40px #00eaff;
-      }
+        .coin-left,
+        .coin-right {
+            position: absolute;
+            height: 100px;
+            width: auto;
+            opacity: 0.7;
+            top: -50px;
+        }
 
-      @media (max-width: 768px) {
+        .coin-left {
+            left: 22%;
+            animation: floatLeft 3s ease-in-out infinite;
+        }
+
+        .coin-right {
+            right: 25%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @media screen and (max-width: 768px) {
+            .coin-container {
+                display: none;
+            }
+        }
+
+        /* Countdown timer styles (from original) */
         #countdown {
-          font-size: 2rem;
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 10px #00eaff, 0 0 20px #00eaff, 0 0 40px #00eaff;
         }
-      }
 
-      /* Styles for Weekly Wager Bonus button and modal */
-      .signup-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background: #00ff99; /* Green background */
-        color: #111; /* Dark text for contrast */
-        padding: 12px 24px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 2px solid rgba(0, 255, 153, 0.5);
-        box-shadow: 0 4px 15px rgba(0, 255, 153, 0.3);
-        position: relative;
-        overflow: hidden;
-        margin: 5px;
-        cursor: pointer; /* Ensure it looks clickable */
-      }
-
-      .signup-button:hover {
-        transform: translateY(-2px) scale(1.02);
-        background: #00e68d;
-        box-shadow: 0 6px 20px rgba(0, 255, 153, 0.5);
-        border-color: rgba(0, 255, 153, 0.7);
-        color: #000;
-      }
-
-      .signup-button:active {
-        transform: translateY(0) scale(0.98);
-      }
-
-      #weekly-modal {
-        display: none;
-        padding: 20px;
-        background: #111;
-        color: #fff;
-        border-radius: 12px;
-        max-width: 400px;
-        margin: 40px auto;
-        text-align: center;
-        box-shadow: 0 0 25px #00ff99;
-        position: relative;
-      }
-
-      #weekly-modal button {
-        position: absolute;
-        top: 10px;
-        right: 16px;
-        background: none;
-        color: #00ffcc;
-        border: none;
-        font-size: 20px;
-        cursor: pointer;
-      }
-
-      #weekly-modal h2 {
-        color: #00ff99;
-      }
-
-      #weekly-range {
-        margin-top: 10px;
-        font-weight: bold;
-        color: #00ffcc;
-      }
-
-      #weekly-countdown {
-        font-size: 18px;
-        margin: 10px 0;
-      }
-
-      #reward-names h3 {
-        color: #00ffaa;
-        margin-top: 16px;
-        text-align: left;
-      }
-
-      #reward-names ul {
-        padding-left: 20px;
-        list-style: disc; /* Or none, based on preference */
-        text-align: left;
-      }
+        @media (max-width: 768px) {
+            #countdown {
+                font-size: 2rem;
+            }
+        }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
     <div id="toast">
-      <span id="message"></span>
+        <span id="message"></span>
     </div>
 
     <!-- Rules Modal -->
     <div id="rulesModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title" data-i18n="rulesModalTitle">
-            リーダーボードのルール
-          </h2>
-          <span class="close" data-modal-id="rulesModal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" data-i18n="rulesModalTitle">リーダーボードのルール</h2>
+                <span class="close" data-modal-id="rulesModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p data-i18n="rulesText1">このリーダーボードではRTPによってカウント率が変化します:</p>
+                <ul>
+                    <li data-i18n="rule1">- RTP97％以下のゲームは賭け額の100％が適応</li>
+                    <li data-i18n="rule2">- RTP97～98％のゲームは賭け額の50％が適応</li>
+                    <li data-i18n="rule3">- RTP98％以上のゲームは賭け額の10％が適応</li>
+                </ul>
+                <p data-i18n="rulesText2"><strong>※</strong> Diceは適応外 </p>
+            </div>
         </div>
-        <div class="modal-body">
-          <p data-i18n="rulesText1">このリーダーボードではRTPによってカウント率が変化します:</p>
-          <ul>
-            <li data-i18n="rule1">- RTP97％以下のゲームは賭け額の100％が適応</li>
-            <li data-i18n="rule2">- RTP97～98％のゲームは賭け額の50％が適応</li>
-            <li data-i18n="rule3">- RTP98％以上のゲームは賭け額の10％が適応</li>
-          </ul>
-          <p data-i18n="rulesText2"><strong>※</strong> Diceは適応外</p>
-        </div>
-      </div>
     </div>
 
     <!-- Rewards Modal -->
     <div id="rewardsModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title" data-i18n="rewardsModalTitle">賭け報酬</h2>
-          <span class="close" data-modal-id="rewardsModal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" data-i18n="rewardsModalTitle">賭け報酬</h2>
+                <span class="close" data-modal-id="rewardsModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="reward-item">
+                    <span class="reward-wager" data-i18n="wager2M">$2,000,000以上</span>
+                    <span class="reward-value">$10,000</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager" data-i18n="wager1M">$1,000,000以上</span>
+                    <span class="reward-value">$4,000</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager" data-i18n="wager500K">$500,000以上</span>
+                    <span class="reward-value">$2,000</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager" data-i18n="wager300K">$300,000以上</span>
+                    <span class="reward-value">$1,200</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager" data-i18n="wager100K">$100,000以上</span>
+                    <span class="reward-value">$500</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager" data-i18n="wagerLess100K">$100,000未満</span>
+                    <span class="reward-value">$0</span>
+                </div>
+                <p style="margin-top: 20px; text-align: center;" data-i18n="rewardsNote"><i>報酬は合計加重ベット額に基づいています。</i></p>
+            </div>
         </div>
-        <div class="modal-body">
-          <div class="reward-item">
-            <span class="reward-wager" data-i18n="wager2M">$2,000,000以上</span>
-            <span class="reward-value">$10,000</span>
-          </div>
-          <div class="reward-item">
-            <span class="reward-wager" data-i18n="wager1M">$1,000,000以上</span>
-            <span class="reward-value">$4,000</span>
-          </div>
-          <div class="reward-item">
-            <span class="reward-wager" data-i18n="wager500K">$500,000以上</span>
-            <span class="reward-value">$2,000</span>
-          </div>
-          <div class="reward-item">
-            <span class="reward-wager" data-i18n="wager300K">$300,000以上</span>
-            <span class="reward-value">$1,200</span>
-          </div>
-          <div class="reward-item">
-            <span class="reward-wager" data-i18n="wager100K">$100,000以上</span>
-            <span class="reward-value">$500</span>
-          </div>
-          <div class="reward-item">
-            <span class="reward-wager" data-i18n="wagerLess100K"
-              >$100,000未満</span
-            >
-            <span class="reward-value">$0</span>
-          </div>
-          <p style="margin-top: 20px; text-align: center;" data-i18n="rewardsNote">
-            <i>報酬は合計加重ベット額に基づいています。</i>
-          </p>
-        </div>
-      </div>
     </div>
 
     <!-- Weekly Wager Bonus Modal -->
-    <div
-      id="weekly-modal"
-      class="modal"
-      style="
-        display: none;
-        padding: 20px;
-        background: #111;
-        color: #fff;
-        border-radius: 12px;
-        max-width: 400px;
-        margin: 40px auto;
-        text-align: center;
-        box-shadow: 0 0 25px #00ff99;
-        position: relative;
-      "
-    >
-      <button
-        onclick="document.getElementById('weekly-modal').style.display='none'"
-        style="
-          position: absolute;
-          top: 10px;
-          right: 16px;
-          background: none;
-          color: #00ffcc;
-          border: none;
-          font-size: 20px;
-        "
-      >
-        ✖
-      </button>
-      <h2 style="color: #00ff99;" data-lang-en="Weekly Wager Bonus" data-lang-ja="週間賭け金ボーナス">
-        週間賭け金ボーナス
-      </h2>
-      <p data-lang-en="💰 $10 for $1000 wagered" data-lang-ja="💰 1000ドル賭けて10ドル獲得">
-        💰 1000ドル賭けて10ドル獲得
-      </p>
-      <p data-lang-en="🤑 $50 for $5000 wagered" data-lang-ja="🤑 5000ドル賭けて50ドル獲得">
-        🤑 5000ドル賭けて50ドル獲得
-      </p>
-      <div id="weekly-range" style="margin-top: 10px; font-weight: bold; color: #00ffcc;"></div>
-      <div id="weekly-countdown" style="font-size: 18px; margin: 10px 0;"></div>
+    <div id="weekly-modal" style="display:none; padding:20px; background:#111; color:#fff; border-radius:12px; max-width:400px; margin:40px auto; text-align:center; box-shadow:0 0 25px #00ff99; position:relative;">
+        <button onclick="document.getElementById('weekly-modal').style.display='none'" style="position:absolute; top:10px; right:16px; background:none; color:#00ffcc; border:none; font-size:20px;">✖</button>
 
-      <div id="reward-names" style="margin-top: 16px; text-align: left;">
-        <h3 style="color: #00ffaa;" data-lang-en="🎉 $10 Winners" data-lang-ja="🎉 10ドル当選者">
-          🎉 10ドル当選者
-        </h3>
-        <ul id="names-1000" style="padding-left: 20px;"></ul>
-        <h3 style="color: #00ffaa;" data-lang-en="🎊 $50 Winners" data-lang-ja="🎊 50ドル当選者">
-          🎊 50ドル当選者
-        </h3>
-        <ul id="names-5000" style="padding-left: 20px;"></ul>
-      </div>
+        <h2 style="color:#00ff99;" data-lang-en="Weekly Wager Bonus" data-lang-ja="週間復活ボーナス">週間復活ボーナス</h2>
+        <p data-lang-en="💰 $10 for $1000 wagered" data-lang-ja="💰 1000ドル賭けて10ドル獲得">💰 1000ドル賭けて10ドル獲得</p>
+        <p data-lang-en="🤑 $50 for $5000 wagered" data-lang-ja="🤑 5000ドル賭けて50ドル獲得">� 5000ドル賭けて50ドル獲得</p>
+        <div id="weekly-range" style="margin-top:10px; font-weight:bold; color:#00ffcc;"></div>
+        <div id="weekly-countdown" style="font-size:18px; margin:10px 0;"></div>
+
+        <div id="reward-names" style="margin-top:16px; text-align:left;">
+            <h3 style="color:#00ffaa;" data-lang-en="🎉 $10 Winners" data-lang-ja="🎉 10ドル当選者">🎉 10ドル当選者</h3>
+            <ul id="names-1000" style="padding-left:20px;"></ul>
+            <h3 style="color:#00ffaa;" data-lang-en="🎊 $50 Winners" data-lang-ja="🎊 50ドル当選者">🎊 50ドル当選者</h3>
+            <ul id="names-5000" style="padding-left:20px;"></ul>
+        </div>
     </div>
+
 
     <canvas id="particleCanvas"></canvas>
     <div class="glow-container">
-      <div class="left-glow"></div>
-      <div class="right-glow"></div>
+        <div class="left-glow"></div>
+        <div class="right-glow"></div>
     </div>
     <object type="image/png" data="/assets/left.png" id="leftsvg" height="100%">
     </object>
     <object type="image/png" data="/assets/right1.png" id="rightsvg" height="100%">
     </object>
     <header>
-      <nav>
-        <div class="logo-title">
-          <img src="/assets/logo.png" alt="サイトロゴ" class="logo" />
-          <h1 class="title">AZISAI</h1>
-        </div>
-        <ul class="nav-links">
-          <li><a href="/" data-i18n="homeLink">ホーム</a></li>
-        </ul>
-      </nav>
+        <nav>
+            <div class="logo-title">
+                <img src="/assets/logo.png" alt="サイトロゴ" class="logo">
+                <h1 class="title">AZISAI</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/" data-i18n="homeLink">ホーム</a></li>
+            </ul>
+        </nav>
     </header>
     <div class="toggle-images" style="margin-top: 50px;">
-      <img
-        class="game-image roobet-image"
-        id="roobetImage"
-        src="/assets/monthly1.png"
-        style="cursor: pointer; opacity: 1;"
-        onclick="window.location.href='/leaderboard/roobet'"
-      />
+        <img class="game-image roobet-image" id="roobetImage" src="/assets/monthly1.png"
+            style="cursor: pointer;opacity: 1;" onclick="window.location.href='/leaderboard/roobet'">
     </div>
-    <br />
+    <br>
     <div data-v-1d580398="" data-v-e4097664="" id="appContent">
-      <div data-v-1d580398="">
-        <div data-v-1d580398="" class="row text">
-          <span data-v-1d580398="" class="title">
-            <div data-v-1d580398="" class="price-wrapper glow" data-i18n="mainTitleWager">
-              ROOBET
-            </div>
-            <span data-i18n="leaderboardTitlePart1">リーダーボード</span>
-            <span class="glow"></span> <span data-i18n="leaderboardTitlePart2"></span>
-          </span>
-          <span data-v-1d580398="" class="subtitle" style="color: #fff;">
-            <span data-i18n="subtitlePart1"></span>
-            <b></b><span data-i18n="subtitlePart2">賭け金に応じて最大＄10000まで獲得可能</span><br />
-            <i data-i18n="updateFrequency"
-              >最低報酬は500ドルです。達成したユーザーは下記で確認できます。!</i
-            ><br />
-            <div style="display: flex; justify-content: center; flex-wrap: wrap;">
-              <button id="rulesButton" class="prev-lb-btn">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                <span data-i18n="rulesButton">ルール</span>
-              </button>
-              <button id="showRewardsButton" class="prev-lb-btn">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                  <path d="M2 17l10 5 10-5"></path>
-                  <path d="M2 12l10 5 10-5"></path>
-                </svg>
-                <span data-i18n="showRewardsButton">報酬を見る</span>
-              </button>
-              <!-- Weekly Wager Bonus Button -->
-              <a
-                href="javascript:void(0)"
-                class="MuiButton-root signup-button"
-                data-lang-en="Weekly Wager Bonus"
-                data-lang-ja="週間賭け金ボーナス"
-                id="weeklyWagerButton"
-                >週間賭け金ボーナス</a
-              >
-            </div>
-            <!-- Language Toggle Buttons -->
-            <div class="language-toggle">
-              <button class="lang-button active" data-lang="ja">日本語</button>
-              <button class="lang-button" data-lang="en">English</button>
-            </div>
-          </span>
-          <div class="css-esk2ah">
-            <div class="css-2w2ovy">
-              <!-- Top 3 Player Cards -->
-              <div class="css-gqrafh" id="top3-cards">
-                <!-- Top 3 inserted via JS -->
-              </div>
+        <div data-v-1d580398="">
+            <div data-v-1d580398="" class="row text">
+                <span data-v-1d580398="" class="title">
+                    <div data-v-1d580398="" class="price-wrapper glow" data-i18n="mainTitleWager">
+                        ROOBET <!-- Added data-i18n attribute -->
+                    </div> <span data-i18n="leaderboardTitlePart1">リーダーボード</span> <span class="glow"></span> <span data-i18n="leaderboardTitlePart2"></span>
+                </span>
+                <span data-v-1d580398="" class="subtitle" style="color: #FFF;">
+                    <span data-i18n="subtitlePart1"></span>
+                    <b></b><span data-i18n="subtitlePart2">賭け金に応じて最大＄10000まで獲得可能</span><br>
+                    <i data-i18n="updateFrequency">最低報酬は500ドルです。達成したユーザーは下記で確認できます。!</i><br>
+                    <div style="display: flex; justify-content: center; flex-wrap: wrap;">
+                        <button id="rulesButton" class="prev-lb-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span data-i18n="rulesButton">ルール</span>
+                        </button>
+                        <button id="showRewardsButton" class="prev-lb-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                            <span data-i18n="showRewardsButton">報酬を見る</span>
+                        </button>
+                        <button id="weeklyBonusButton" class="prev-lb-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span data-i18n="weeklyBonusButton">週間賭け金ボーナス</span>
+                        </button>
+                    </div>
+                    <!-- Language Toggle Buttons -->
+                    <div class="language-toggle">
+                        <button class="lang-button active" data-lang="ja">日本語</button>
+                        <button class="lang-button" data-lang="en">English</button>
+                    </div>
+                </span>
+                <div class="css-esk2ah">
+                    <div class="css-2w2ovy">
+                        <!-- Top 3 Player Cards -->
+                        <div class="css-gqrafh" id="top3-cards">
+                            <!-- Top 3 inserted via JS -->
+                        </div>
 
-              <!-- Countdown Timer -->
-              <div class="countdown">
-                <div>
-                  <span class="title"
-                    ><span class="glow" style="color: #fff" data-i18n="endingIn"
-                      >終了まで</span
-                    >
-                  </span>
-                  <span class="subtitle" id="countdown">X Days XX:XX:XX</span>
+                        <!-- Countdown Timer -->
+                        <div class="countdown">
+                            <div>
+                                <span class="title"><span class="glow" style="color: #FFF" data-i18n="endingIn">終了まで</span> </span>
+                                <span class="subtitle" id="countdown">X Days XX:XX:XX</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Player Rows (4-10) -->
+                    <div id="leaderboard-rows"></div>
                 </div>
-              </div>
             </div>
-            <!-- Player Rows (4-10) -->
-            <div id="leaderboard-rows"></div>
-          </div>
         </div>
-      </div>
     </div>
 
-    <script
-      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-      xintegrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-      crossorigin="anonymous"
-    ></script>
-  </body>
-  <script>
+    <script src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        xintegrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        crossorigin="anonymous"></script>
+</body>
+<script>
     // Get the modals and buttons
     var rulesModal = document.getElementById("rulesModal");
     var rulesButton = document.getElementById("rulesButton");
     var rewardsModal = document.getElementById("rewardsModal");
     var showRewardsButton = document.getElementById("showRewardsButton");
-    var weeklyModal = document.getElementById("weekly-modal");
-    var weeklyWagerButton = document.getElementById("weeklyWagerButton");
+    var weeklyModal = document.getElementById("weekly-modal"); // Get the weekly modal
+    var weeklyBonusButton = document.getElementById("weeklyBonusButton"); // Get the weekly bonus button
 
     // Get all close buttons
     var closeButtons = document.querySelectorAll(".close");
 
     // Language buttons
-    const langButtons = document.querySelectorAll(".lang-button");
+    const langButtons = document.querySelectorAll('.lang-button');
 
     // Translation content
     const translations = {
-      ja: {
-        pageTitle: "AZISAI | ルーベット リーダーボード",
-        metaDescription: "コードAZISAI07219のルーベット限定賭けレース！",
-        homeLink: "ホーム",
-        mainTitleWager: "ROOBET", // Added Japanese translation for WAGER
-        leaderboardTitlePart1: "リーダーボード",
-        leaderboardTitlePart2: "",
-        subtitlePart1: "",
-        subtitlePart2: "賭け金に応じて最大＄10000まで獲得可能",
-        updateFrequency: "最低報酬は＄500 『報酬を見る』から達成したユーザーが全員貰えます",
-        rulesButton: "ルール",
-        showRewardsButton: "報酬を見る",
-        endingIn: "終了まで",
-        rulesModalTitle: "リーダーボードのルール",
-        rulesText1: "このリーダーボードではRTPによってカウント率が変化します:",
-        rule1: "- RTP97％以下のゲームは賭け額の100％が適応",
-        rule2: "- RTP97～98％のゲームは賭け額の50％が適応",
-        rule3: "- RTP98％以上のゲームは賭け額の10％が適応",
-        rulesText2: "<strong>※</strong> Diceは適応外 ",
-        rewardsModalTitle: "賭け報酬",
-        wager2M: "$2,000,000以上",
-        wager1M: "$1,000,000以上",
-        wager500K: "$500,000以上",
-        wager300K: "$300,000以上",
-        wager100K: "$100,000以上",
-        wagerLess100K: "$100,000未満",
-        rewardsNote: "<i>報酬は合計加重ベット額に基づいています。</i>",
-        wageredLabel: "賭け額: ",
-        // Weekly Wager Bonus translations
-        weeklyWagerBonus: "週間賭け金ボーナス",
-        weeklyWager10: "💰 1000ドル賭けて10ドル獲得",
-        weeklyWager50: "🤑 5000ドル賭けて50ドル獲得",
-        weeklyWinners10: "🎉 10ドル当選者",
-        weeklyWinners50: "🎊 50ドル当選者",
-        range1_7: "1日～7日",
-        range8_14: "8日～14日",
-        range15_21: "15日～21日",
-        range22_28: "22日～28日",
-        nextRewards1st: "次回報酬は1日",
-        startsIn: "🕒 開始まで",
-        endsIn: "⏳ 終了まで",
-        rewardsAvailable: "報酬が利用可能です！",
-        rewardPeriodEnded: "報酬期間が終了しました",
-      },
-      en: {
-        pageTitle: "AZISAI | Roobet Leaderboard",
-        metaDescription: "Exclusive wager races on Roobet for code AZISAI07219!",
-        homeLink: "HOME",
-        mainTitleWager: "ROOBET", // Added English translation for WAGER
-        leaderboardTitlePart1: "MONTHLY",
-        leaderboardTitlePart2: "REWARDS!",
-        subtitlePart1: "",
-        subtitlePart2: "Adopts an unlimited system that allows you to earn up to $10,000 depending on your bet",
-        updateFrequency: "Minimum reward is $500. All users who achieve are visible below!",
-        rulesButton: "RULES",
-        showRewardsButton: "SHOW REWARDS",
-        endingIn: "ENDING IN",
-        rulesModalTitle: "Leaderboard Rules",
-        rulesText1: "In this leaderboard, the count rate changes based on RTP:",
-        rule1: "- Games with RTP below 97% apply 100% of wager",
-        rule2: "- Games with RTP between 97-98% apply 50% of wager",
-        rule3: "- Games with RTP above 98% apply 10% of wager",
-        rulesText2: "<strong>※</strong> Dice is not applicable",
-        rewardsModalTitle: "Wager Rewards",
-        wager2M: "$2,000,000 or more",
-        wager1M: "$1,000,000 or more",
-        wager500K: "$500,000 or more",
-        wager300K: "$300,000 or more",
-        wager100K: "$100,000 or more",
-        wagerLess100K: "Less than $100,000",
-        rewardsNote: "<i>Rewards are based on your total weighted wager.</i>",
-        wageredLabel: "Wagered: ",
-        // Weekly Wager Bonus translations
-        weeklyWagerBonus: "Weekly Wager Bonus",
-        weeklyWager10: "💰 $10 for $1000 wagered",
-        weeklyWager50: "🤑 $50 for $5000 wagered",
-        weeklyWinners10: "🎉 $10 Winners",
-        weeklyWinners50: "🎊 $50 Winners",
-        range1_7: "1st–7th",
-        range8_14: "8th–14th",
-        range15_21: "15th–21st",
-        range22_28: "22nd–28th",
-        nextRewards1st: "Next rewards on 1st",
-        startsIn: "🕒 Starts in",
-        endsIn: "⏳ Ends in",
-        rewardsAvailable: "Rewards available now!",
-        rewardPeriodEnded: "Reward period ended",
-      },
+        ja: {
+            pageTitle: "AZISAI | ルーベット リーダーボード",
+            metaDescription: "コードAZISAI07219のルーベット限定賭けレース！",
+            homeLink: "ホーム",
+            mainTitleWager: "ROOBET", // Added Japanese translation for WAGER
+            leaderboardTitlePart1: "リーダーボード",
+            leaderboardTitlePart2: "",
+            subtitlePart1: "",
+            subtitlePart2: "賭け金に応じて最大＄10000まで獲得可能",
+            updateFrequency: "最低報酬は＄500 『報酬を見る』から達成したユーザーが全員貰えます",
+            rulesButton: "ルール",
+            showRewardsButton: "報酬を見る",
+            weeklyBonusButton: "週間賭け金ボーナス", // New translation for the button
+            endingIn: "終了まで",
+            rulesModalTitle: "リーダーボードのルール",
+            rulesText1: "このリーダーボードではRTPによってカウント率が変化します:",
+            rule1: "- RTP97％以下のゲームは賭け額の100％が適応",
+            rule2: "- RTP97～98％のゲームは賭け額の50％が適応",
+            rule3: "- RTP98％以上のゲームは賭け額の10％が適応",
+            rulesText2: "<strong>※</strong> Diceは適応外 ",
+            rewardsModalTitle: "賭け報酬",
+            wager2M: "$2,000,000以上",
+            wager1M: "$1,000,000以上",
+            wager500K: "$500,000以上",
+            wager300K: "$300,000以上",
+            wager100K: "$100,000以上",
+            wagerLess100K: "Less than $100,000",
+            rewardsNote: "<i>報酬は合計加重ベット額に基づいています。</i>",
+            wageredLabel: "賭け額: "
+        },
+        en: {
+            pageTitle: "AZISAI | Roobet Leaderboard",
+            metaDescription: "Exclusive wager races on Roobet for code AZISAI07219!",
+            homeLink: "HOME",
+            mainTitleWager: "ROOBET", // Added English translation for WAGER
+            leaderboardTitlePart1: "MONTHLY",
+            leaderboardTitlePart2: "REWARDS!",
+            subtitlePart1: "",
+            subtitlePart2: "Adopts an unlimited system that allows you to earn up to $10,000 depending on your bet",
+            updateFrequency: "Minimum reward is $500. All users who achieve are visible below!",
+            rulesButton: "RULES",
+            showRewardsButton: "SHOW REWARDS",
+            weeklyBonusButton: "WEEKLY WAGER BONUS", // New translation for the button
+            endingIn: "ENDING IN",
+            rulesModalTitle: "Leaderboard Rules",
+            rulesText1: "In this leaderboard, the count rate changes based on RTP:",
+            rule1: "- Games with RTP below 97% apply 100% of wager",
+            rule2: "- Games with RTP between 97-98% apply 50% of wager",
+            rule3: "- Games with RTP above 98% apply 10% of wager",
+            rulesText2: "<strong>※</strong> Dice is not applicable",
+            rewardsModalTitle: "Wager Rewards",
+            wager2M: "$2,000,000 or more",
+            wager1M: "$1,000,000 or more",
+            wager500K: "$500,000 or more",
+            wager300K: "$300,000 or more",
+            wager100K: "$100,000 or more",
+            wagerLess100K: "Less than $100,000",
+            rewardsNote: "<i>Rewards are based on your total weighted wager.</i>",
+            wageredLabel: "Wagered: "
+        }
     };
 
-    let currentLang = "ja"; // Default language
+    let currentLang = 'ja'; // Default language
 
     // Function to apply translations
     function applyTranslations() {
-      document.querySelectorAll("[data-i18n]").forEach((element) => {
-        const key = element.getAttribute("data-i18n");
-        if (translations[currentLang][key]) {
-          if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
-            element.placeholder = translations[currentLang][key];
-          } else if (element.tagName === "META" && element.name === "description") {
-            element.content = translations[currentLang][key];
-          } else {
-            element.innerHTML = translations[currentLang][key];
-          }
-        }
-      });
-
-      // Apply translations for data-lang-en/ja attributes on weekly bonus modal elements
-      document.querySelectorAll("[data-lang-en], [data-lang-ja]").forEach((element) => {
-        const enText = element.getAttribute("data-lang-en");
-        const jaText = element.getAttribute("data-lang-ja");
-        if (currentLang === "en" && enText) {
-          element.textContent = enText;
-        } else if (currentLang === "ja" && jaText) {
-          element.textContent = jaText;
-        }
-      });
-
-      // Update the html lang attribute
-      document.documentElement.lang = currentLang;
-      // Re-run weekly countdown and fetch winners to update language-specific text
-      updateCountdownWeekly();
-      fetchWinners();
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[currentLang][key]) {
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.placeholder = translations[currentLang][key];
+                } else if (element.tagName === 'META' && element.name === 'description') {
+                    element.content = translations[currentLang][key];
+                } else {
+                    element.innerHTML = translations[currentLang][key];
+                }
+            }
+        });
+        // Update the html lang attribute
+        document.documentElement.lang = currentLang;
     }
 
     // Function to open a modal - Simplified for instant display
     function openModal(modalElement) {
-      modalElement.style.display = "block";
-      document.body.style.overflow = "hidden"; // Prevent scrolling behind modal
+        modalElement.style.display = "block";
+        document.body.style.overflow = "hidden"; // Prevent scrolling behind modal
     }
 
     // Function to close a modal - Simplified for instant display
     function closeModal(modalElement) {
-      modalElement.style.display = "none";
-      document.body.style.overflow = "auto"; // Re-enable scrolling
+        modalElement.style.display = "none";
+        document.body.style.overflow = "auto"; // Re-enable scrolling
     }
 
     // Event listeners for opening modals
     rulesButton.onclick = function () {
-      openModal(rulesModal);
-    };
+        openModal(rulesModal);
+    }
 
     showRewardsButton.onclick = function () {
-      openModal(rewardsModal);
-    };
+        openModal(rewardsModal);
+    }
 
-    weeklyWagerButton.onclick = function () {
-      openModal(weeklyModal);
-    };
+    // New event listener for the weekly bonus button
+    weeklyBonusButton.onclick = function () {
+        openModal(weeklyModal);
+    }
 
     // Event listeners for closing modals using the 'x' button
     closeButtons.forEach(function (span) {
-      span.onclick = function () {
-        const modalId = this.getAttribute("data-modal-id");
-        const modalElement = document.getElementById(modalId);
-        if (modalElement) {
-          closeModal(modalElement);
-        }
-      };
+        span.onclick = function () {
+            const modalId = this.getAttribute('data-modal-id');
+            const modalElement = document.getElementById(modalId);
+            if (modalElement) {
+                closeModal(modalElement);
+            }
+        };
     });
-
-    // Event listener for closing weekly modal specifically
-    document.getElementById("weekly-modal").querySelector("button").onclick = function () {
-      closeModal(weeklyModal);
-    };
 
     // Event listener for closing modals when clicking outside
     window.onclick = function (event) {
-      if (event.target == rulesModal) {
-        closeModal(rulesModal);
-      }
-      if (event.target == rewardsModal) {
-        closeModal(rewardsModal);
-      }
-      if (event.target == weeklyModal) {
-        closeModal(weeklyModal);
-      }
-    };
-
-    // Language button click handler
-langButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    langButtons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
-    currentLang = button.dataset.lang;
-    applyTranslations();
-    loadLeaderboard();
-
-    // ✅ Re-attach the click event after language switch
-    const newWeeklyButton = document.getElementById("weeklyWagerButton");
-    newWeeklyButton.onclick = function () {
-      openModal(document.getElementById("weekly-modal"));
-    };
-  });
-});
-
-
-    // Weekly Wager Bonus Script Start
-    function getPeriodAndEndDate() {
-      const now = new Date();
-      // Convert to JST (UTC+9)
-      const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-      const day = jstNow.getDate();
-      const month = jstNow.getMonth();
-      const year = jstNow.getFullYear();
-
-      if (day >= 1 && day <= 7) {
-        return {
-          range: { en: translations.en.range1_7, ja: translations.ja.range1_7 },
-          countdownTarget: new Date(Date.UTC(year, month, 7, 15, 0, 0)), // 00:00 JST = 15:00 UTC prev day
-        };
-      } else if (day >= 8 && day <= 14) {
-        return {
-          range: { en: translations.en.range8_14, ja: translations.ja.range8_14 },
-          countdownTarget: new Date(Date.UTC(year, month, 14, 15, 0, 0)),
-        };
-      } else if (day >= 15 && day <= 21) {
-        return {
-          range: { en: translations.en.range15_21, ja: translations.ja.range15_21 },
-          countdownTarget: new Date(Date.UTC(year, month, 21, 15, 0, 0)),
-        };
-      } else if (day >= 22 && day <= 28) {
-        return {
-          range: { en: translations.en.range22_28, ja: translations.ja.range22_28 },
-          countdownTarget: new Date(Date.UTC(year, month, 28, 15, 0, 0)),
-        };
-      } else {
-        return {
-          range: { en: translations.en.nextRewards1st, ja: translations.ja.nextRewards1st },
-          countdownTarget: new Date(Date.UTC(year, month + 1, 1, 15, 0, 0)),
-        };
-      }
+        if (event.target == rulesModal) {
+            closeModal(rulesModal);
+        }
+        if (event.target == rewardsModal) {
+            closeModal(rewardsModal);
+        }
+        if (event.target == weeklyModal) { // Now correctly handles closing for weeklyModal
+            closeModal(weeklyModal);
+        }
     }
 
-    function updateCountdownWeekly() {
-      const { range, countdownTarget } = getPeriodAndEndDate();
-      document.getElementById("weekly-range").textContent = range[currentLang];
-      const isStartCountdown =
-        currentLang === "en"
-          ? range.en === translations.en.nextRewards1st
-          : range.ja === translations.ja.nextRewards1st;
+    // Language button click handler
+    langButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            langButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            currentLang = button.dataset.lang;
+            applyTranslations();
+            // Re-load leaderboard to update "Wagered:" label if necessary
+            loadLeaderboard();
+        });
+    });
 
-      function tick() {
-        const now = new Date();
-        const diff = countdownTarget - now;
-        const el = document.getElementById("weekly-countdown");
-        const box = document.getElementById("weekly-bonus-timer"); // This ID does not exist in the provided HTML.
+    // Apply translations on initial load
+    document.addEventListener('DOMContentLoaded', applyTranslations);
 
-        if (diff <= 0) {
-          const msg = isStartCountdown
-            ? translations[currentLang].rewardsAvailable
-            : translations[currentLang].rewardPeriodEnded;
-          el.textContent = msg;
-          if (box) box.textContent = msg;
-          return;
+
+</script>
+<script src="/js/app.js"></script>
+<script src="/js/particles.js"></script>
+<script src="/js/toast.js"></script>
+<script>
+    const API_URL = 'https://azisailbdata-q469.onrender.com/leaderboard/top14';
+    const roobetLogo = '/assets/roobetlogo.png';
+
+    // Define the reward tiers based on wager amount
+    const wagerRewards = [
+        { wager: 2000000, reward: 10000 },
+        { wager: 1000000, reward: 4000 },
+        { wager: 500000, reward: 2000 },
+        { wager: 300000, reward: 1200 },
+        { wager: 100000, reward: 500 }
+    ];
+
+    const top3Glows = ['0 0 40px #C0C0C0', '0 0 40px #FFD700', '0 0 40px #CD7F32'];
+
+    // Function to calculate reward based on wager
+    function getRewardByWager(wager) {
+        for (const tier of wagerRewards) {
+            if (wager >= tier.wager) {
+                return tier.reward;
+            }
         }
+        return 0; // No reward if wager is below all tiers
+    }
+
+    function updateCountdown() {
+        const el = document.getElementById("countdown");
+        if (!el) return;
+
+        const now = new Date();
+        const nowUTC = now.getTime();
+
+        const year = now.getUTCFullYear();
+        const month = now.getUTCMonth(); // 0-based (June = 5)
+
+        let targetUTC;
+
+        // Special rule: If it's June 2025, extend to July 31st 15:00 UTC
+        if (year === 2025 && month === 5) {
+            targetUTC = Date.UTC(2025, 6, 31, 15, 0, 0); // July 31, 2025 15:00 UTC
+        } else {
+            // Regular: End of current month at 15:00 UTC
+            targetUTC = Date.UTC(year, month + 1, 0, 15, 0, 0);
+
+            // If already past this month's deadline, move to end of next month
+            if (nowUTC >= targetUTC) {
+                targetUTC = Date.UTC(year, month + 2, 0, 15, 0, 0);
+            }
+        }
+
+        const diff = targetUTC - nowUTC;
 
         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
         const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const m = Math.floor((diff / (1000 * 60)) % 60);
         const s = Math.floor((diff / 1000) % 60);
-        const label = isStartCountdown
-          ? translations[currentLang].startsIn
-          : translations[currentLang].endsIn;
 
-        const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
-        el.textContent = text;
-        if (box) box.textContent = text;
-      }
-
-      tick();
-      setInterval(tick, 1000);
+        el.textContent = `${d}d ${h}h ${m}m ${s}s`;
     }
 
-    async function fetchWinners() {
-      try {
-        const res1000 = await fetch("https://azisaiweekly-upnb.onrender.com/1000");
-        const res5000 = await fetch("https://azisaiweekly-upnb.onrender.com/5000");
-        const names1000 = await res1000.json();
-        const names5000 = await res5000.json();
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
-        const ul1000 = document.getElementById("names-1000");
-        const ul5000 = document.getElementById("names-5000");
-        ul1000.innerHTML = "";
-        ul5000.innerHTML = "";
 
-        names1000.forEach((obj) => {
-          const li = document.createElement("li");
-          li.textContent = obj.name || obj.username || String(obj);
-          ul1000.appendChild(li);
+    async function loadLeaderboard() {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+
+        const top3Container = document.querySelector(".css-gqrafh");
+        const rowsContainer = document.getElementById("leaderboard-rows");
+
+        // Clear previous data
+        top3Container.innerHTML = '';
+        rowsContainer.innerHTML = '';
+
+        data.forEach((entry, index) => {
+            const place = index + 1;
+            const weightedWager = Number(entry.weightedWager);
+            // Calculate reward based on the weighted wager
+            const reward = getRewardByWager(weightedWager);
+            const formattedReward = `$ ${reward.toLocaleString()}`;
+            const formattedWagered = `$ ${weightedWager.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            const username = entry.username;
+
+            if (index < 3) {
+                const card = document.createElement('div');
+                card.className = 'css-jehefp';
+                card.style.boxShadow = top3Glows[index];
+                card.style.position = 'relative';
+                if (index === 1) { // Second place
+                    card.style.transformOrigin = 'center center';
+                    card.style.transform = 'translateY(25px) scale(1.2)';
+                } else if (index === 2) { // Third place
+                    card.style.transform = 'translateY(25px)';
+                }
+                card.innerHTML = `
+                    <img src="${roobetLogo}" style="width: 96px; height: auto; border-radius: 12px;">
+                    <div class="css-hca0vm"><span class="css-15a1lq3" style="font-weight:bold;">${username}</span></div>
+                    <div class="css-7ahevu ejrykqo0"><span class="css-1vqddgv" data-i18n="wageredLabel">賭け額: </span>
+                        <span class="css-18icuxn">${formattedWagered}</span>
+                    </div>
+                    <div class="css-1g5qf3x"><span class="css-1vqddgv">報酬: </span>
+                        <span class="css-18icuxn">${formattedReward}</span>
+                    </div>
+                    <div class="css-g50z2h"><span class="css-13v2v7m">${place}</span></div>
+                `;
+                top3Container.appendChild(card);
+            } else {
+                const row = document.createElement('div');
+                row.className = 'css-1n972w';
+                row.innerHTML = `
+                    <div class="css-15a1lq3">${place}</div>
+                    <div class="css-hca0vm"><span class="css-15a1lq3" style="font-weight:bold;">${username}</span></div>
+                    <div class="css-7ahevu ejrykqo0"><span class="css-1vqddgv" data-i18n="wageredLabel">賭け額: </span>
+                        <span class="css-18icuxn">${formattedWagered}</span>
+                    </div>
+                    <div class="css-1g5qf3x"><span class="css-1vqddgv">報酬: </span>
+                        <span class="css-18icuxn">${formattedReward}</span>
+                    </div>
+                `;
+                rowsContainer.appendChild(row);
+            }
         });
-
-        names5000.forEach((obj) => {
-          const li = document.createElement("li");
-          li.textContent = obj.name || obj.username || String(obj);
-          ul5000.appendChild(li);
-        });
-      } catch (err) {
-        console.error("Error fetching winners:", err);
-      }
+        applyTranslations(); // Re-apply translations after loading leaderboard data
     }
-    // Weekly Wager Bonus Script End
 
-    // Main Leaderboard Countdown Script Start
-    function updateCountdown() {
-      const el = document.getElementById("countdown");
-      if (!el) return;
+    // --- Weekly Wager Bonus Script (from your original input) ---
+    function getPeriodAndEndDate() {
+        const now = new Date();
+        // Convert to JST (UTC+9)
+        const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+        const day = jstNow.getDate();
+        const month = jstNow.getMonth();
+        const year = jstNow.getFullYear();
 
-      const now = new Date();
-      const nowUTC = now.getTime();
-
-      const year = now.getUTCFullYear();
-      const month = now.getUTCMonth(); // 0-based (June = 5)
-
-      let targetUTC;
-
-      // Special rule: If it's June 2025, extend to July 31st 15:00 UTC
-      if (year === 2025 && month === 5) {
-        targetUTC = Date.UTC(2025, 6, 31, 15, 0, 0); // July 31, 2025 15:00 UTC
-      } else {
-        // Regular: End of current month at 15:00 UTC
-        targetUTC = Date.UTC(year, month + 1, 0, 15, 0, 0);
-
-        // If already past this month's deadline, move to end of next month
-        if (nowUTC >= targetUTC) {
-          targetUTC = Date.UTC(year, month + 2, 0, 15, 0, 0);
+        if (day >= 1 && day <= 7) {
+            return { range: { en: "1st–7th", ja: "1日～7日" }, countdownTarget: new Date(Date.UTC(year, month, 7, 15, 0, 0)) }; // 00:00 JST = 15:00 UTC prev day
+        } else if (day >= 8 && day <= 14) {
+            return { range: { en: "8th–14th", ja: "8日～14日" }, countdownTarget: new Date(Date.UTC(year, month, 14, 15, 0, 0)) };
+        } else if (day >= 15 && day <= 21) {
+            return { range: { en: "15th–21st", ja: "15日～21日" }, countdownTarget: new Date(Date.UTC(year, month, 21, 15, 0, 0)) };
+        } else if (day >= 22 && day <= 28) {
+            return { range: { en: "22nd–28th", ja: "22日～28日" }, countdownTarget: new Date(Date.UTC(year, month, 28, 15, 0, 0)) };
+        } else {
+            return { range: { en: "Next rewards on 1st", ja: "次回報酬は1日" }, countdownTarget: new Date(Date.UTC(year, month + 1, 1, 15, 0, 0)) };
         }
-      }
-
-      const diff = targetUTC - nowUTC;
-
-      if (diff <= 0) {
-        el.textContent = "0d 00:00:00"; // Or a message like "Ended"
-        return;
-      }
-
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-
-      const formattedTime = `${d}d ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-      el.textContent = formattedTime;
     }
-    // Main Leaderboard Countdown Script End
 
-    // Initial calls
-    document.addEventListener("DOMContentLoaded", () => {
-      applyTranslations(); // Apply initial translations
-      updateCountdownWeekly(); // Start weekly countdown
-      fetchWinners(); // Fetch and display weekly winners
-      updateCountdown(); // Start main leaderboard countdown immediately
-      setInterval(updateCountdown, 1000); // Update main leaderboard countdown every second
+    function updateCountdownWeekly() { // Renamed to avoid conflict with main countdown
+        const { range, countdownTarget } = getPeriodAndEndDate();
+        const lang = document.documentElement.lang;
+        document.getElementById("weekly-range").textContent = range[lang];
+        const isStartCountdown = lang === 'en' ? range.en === "Next rewards on 1st" : range.ja === "次回報酬は1日";
+
+        function tick() {
+            const lang = document.documentElement.lang; // ✅ move this inside tick
+            const now = new Date();
+            const diff = countdownTarget - now;
+            const el = document.getElementById("weekly-countdown");
+            const box = document.getElementById("weekly-bonus-timer"); // This element does not exist in the provided HTML, can be removed or ignored.
+
+            if (diff <= 0) {
+                const msg = isStartCountdown ? (lang === 'en' ? "Rewards available now!" : "報酬が利用可能です！") : (lang === 'en' ? "Reward period ended" : "報酬期間が終了しました");
+                if (el) el.textContent = msg;
+                if (box) box.textContent = msg;
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / (1000 * 60)) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            const label = isStartCountdown ? (lang === 'en' ? "🕒 Starts in" : "🕒 開始まで") : (lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで");
+
+            const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
+            if (el) el.textContent = text;
+            if (box) box.textContent = text;
+        }
+
+        tick();
+        setInterval(tick, 1000);
+    }
+
+    async function fetchWeeklyWinners() { // Renamed to avoid conflict
+        try {
+            const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
+            const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
+            const names1000 = await res1000.json();
+            const names5000 = await res5000.json();
+
+            const ul1000 = document.getElementById("names-1000");
+            const ul5000 = document.getElementById("names-5000");
+            if (ul1000) ul1000.innerHTML = "";
+            if (ul5000) ul5000.innerHTML = "";
+
+            names1000.forEach(obj => {
+                const li = document.createElement("li");
+                li.textContent = obj.name || obj.username || String(obj);
+                if (ul1000) ul1000.appendChild(li);
+            });
+
+            names5000.forEach(obj => {
+                const li = document.createElement("li");
+                li.textContent = obj.name || obj.username || String(obj);
+                if (ul5000) ul5000.appendChild(li);
+            });
+        } catch (err) {
+            console.error("Error fetching weekly winners:", err);
+        }
+    }
+
+    // Initial calls for weekly bonus (will be re-called by setLanguage for consistency)
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCountdownWeekly(); // Call the renamed function
+        fetchWeeklyWinners(); // Call the renamed function
+        loadLeaderboard(); // Ensure leaderboard also loads on DOMContentLoaded
     });
-  </script>
-  <script src="/js/app.js"></script>
-  <script src="/js/particles.js"></script>
-  <script src="/js/toast.js"></script>
-  <script>
-    const API_URL = "https://azisailbdata-q469.onrender.com/leaderboard/top14";
-    const roobetLogo = "/assets/roobetlogo.png";
 
-    // Define the reward tiers based on wager amount
-    const wagerRewards = [
-      { wager: 2000000, reward: 10000 },
-      { wager: 1000000, reward: 4000 },
-      { wager: 500000, reward: 2000 },
-      { wager: 300000, reward: 1200 },
-      { wager: 100000, reward: 500 },
-    ];
-
-    const top3Glows = ["0 0 40px #C0C0C0", "0 0 40px #FFD700", "0 0 40px #CD7F32"];
-
-    // Function to calculate reward based on wager
-    function getRewardByWager(wager) {
-      for (const tier of wagerRewards) {
-        if (wager >= tier.wager) {
-          return tier.reward;
-        }
-      }
-      return 0; // No reward if wager is below all tiers
-    }
-  </script>
-</html>
+</script>
+�
