@@ -467,106 +467,111 @@
                 </div>
             </div>
 
-<script>
-function getNextResetJST() {
+            <script>
+                function getPeriodAndEndDate() {
+                    const now = new Date();
+                    // Convert to JST (UTC+9)
+                    const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+                    const day = jstNow.getDate();
+                    const month = jstNow.getMonth();
+                    const year = jstNow.getFullYear();
+
+                    if (day >= 1 && day <= 7) {
+                        return {
+                            range: { en: "1st–7th", ja: "1日～7日" },
+                            countdownTarget: new Date(Date.UTC(year, month, 7, 15, 0, 0)) // 00:00 JST = 15:00 UTC prev day
+                        };
+                    } else if (day >= 8 && day <= 14) {
+                        return {
+                            range: { en: "8th–14th", ja: "8日～14日" },
+                            countdownTarget: new Date(Date.UTC(year, month, 14, 15, 0, 0))
+                        };
+                    } else if (day >= 15 && day <= 21) {
+                        return {
+                            range: { en: "15th–21st", ja: "15日～21日" },
+                            countdownTarget: new Date(Date.UTC(year, month, 21, 15, 0, 0))
+                        };
+                    } else if (day >= 22 && day <= 28) {
+                        return {
+                            range: { en: "22nd–28th", ja: "22日～28日" },
+                            countdownTarget: new Date(Date.UTC(year, month, 28, 15, 0, 0))
+                        };
+                    } else {
+                        return {
+                            range: { en: "Next rewards on 1st", ja: "次回報酬は1日" },
+                            countdownTarget: new Date(Date.UTC(year, month + 1, 1, 15, 0, 0))
+                        };
+                    }
+                }
+
+                function updateCountdown() {
+                    const { range, countdownTarget } = getPeriodAndEndDate();
+                    const lang = document.documentElement.lang;
+                    document.getElementById("weekly-range").textContent = range[lang];
+                    const isStartCountdown = lang === 'en' ? range.en === "Next rewards on 1st" : range.ja === "次回報酬は1日";
+
+function tick() {
+    const lang = document.documentElement.lang; // ✅ move this inside tick
     const now = new Date();
-    const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000); // Convert to JST
+    const diff = countdownTarget - now;
+    const el = document.getElementById("weekly-countdown");
+    const box = document.getElementById("weekly-bonus-timer");
 
-    const day = jstNow.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    const currentHour = jstNow.getHours();
-    const currentMinute = jstNow.getMinutes();
-    const currentSecond = jstNow.getSeconds();
-
-    let daysUntilReset = (1 - day + 7) % 7; // Days until next Monday
-
-    // If it's already Monday and past 23:59:59, go to next Monday
-    if (day === 1 && (currentHour > 23 || (currentHour === 23 && currentMinute === 59 && currentSecond >= 59))) {
-        daysUntilReset = 7;
+    if (diff <= 0) {
+        const msg = isStartCountdown ? (lang === 'en' ? "Rewards available now!" : "報酬が利用可能です！") : (lang === 'en' ? "Reward period ended" : "報酬期間が終了しました");
+        el.textContent = msg;
+        if (box) box.textContent = msg;
+        return;
     }
 
-    // Set reset time to Monday 23:59:59 JST (i.e. 14:59:59 UTC)
-    const resetDate = new Date(Date.UTC(
-        jstNow.getUTCFullYear(),
-        jstNow.getUTCMonth(),
-        jstNow.getUTCDate() + daysUntilReset,
-        14, 59, 59 // JST 23:59:59
-    ));
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+    const label = isStartCountdown ? (lang === 'en' ? "🕒 Starts in" : "🕒 開始まで") : (lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで");
 
-    return {
-        range: {
-            en: "Resets every Monday night",
-            ja: "毎週月曜の夜にリセットされます"
-        },
-        countdownTarget: resetDate
-    };
+    const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
+    el.textContent = text;
+    if (box) box.textContent = text;
 }
 
 
-    function updateCountdown() {
-        const { range, countdownTarget } = getNextResetJST();
-        const lang = document.documentElement.lang;
-        document.getElementById("weekly-range").textContent = range[lang];
+                    tick();
+                    setInterval(tick, 1000);
+                }
 
-        function tick() {
-            const now = new Date();
-            const diff = countdownTarget - now;
-            const el = document.getElementById("weekly-countdown");
-            const box = document.getElementById("weekly-bonus-timer");
+                async function fetchWinners() {
+                    try {
+                        const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
+                        const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
+                        const names1000 = await res1000.json();
+                        const names5000 = await res5000.json();
 
-            if (diff <= 0) {
-                const msg = lang === 'en' ? "Rewards available now!" : "報酬が利用可能です！";
-                el.textContent = msg;
-                if (box) box.textContent = msg;
-                return;
-            }
+                        const ul1000 = document.getElementById("names-1000");
+                        const ul5000 = document.getElementById("names-5000");
+                        ul1000.innerHTML = "";
+                        ul5000.innerHTML = "";
 
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const m = Math.floor((diff / (1000 * 60)) % 60);
-            const s = Math.floor((diff / 1000) % 60);
+                        names1000.forEach(obj => {
+                            const li = document.createElement("li");
+                            li.textContent = obj.name || obj.username || String(obj);
+                            ul1000.appendChild(li);
+                        });
 
-            const label = lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで";
-            const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
-            el.textContent = text;
-            if (box) box.textContent = text;
-        }
+                        names5000.forEach(obj => {
+                            const li = document.createElement("li");
+                            li.textContent = obj.name || obj.username || String(obj);
+                            ul5000.appendChild(li);
+                        });
+                    } catch (err) {
+                        console.error("Error fetching winners:", err);
+                    }
+                }
 
-        tick();
-        setInterval(tick, 1000);
-    }
-
-    async function fetchWinners() {
-        try {
-            const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
-            const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
-            const names1000 = await res1000.json();
-            const names5000 = await res5000.json();
-
-            const ul1000 = document.getElementById("names-1000");
-            const ul5000 = document.getElementById("names-5000");
-            ul1000.innerHTML = "";
-            ul5000.innerHTML = "";
-
-            names1000.forEach(obj => {
-                const li = document.createElement("li");
-                li.textContent = obj.name || obj.username || String(obj);
-                ul1000.appendChild(li);
-            });
-
-            names5000.forEach(obj => {
-                const li = document.createElement("li");
-                li.textContent = obj.name || obj.username || String(obj);
-                ul5000.appendChild(li);
-            });
-        } catch (err) {
-            console.error("Error fetching winners:", err);
-        }
-    }
-
-    updateCountdown();
-    fetchWinners();
-</script>
-
+                // Initial calls (will be re-called by setLanguage for consistency)
+                updateCountdown();
+                fetchWinners();
+            </script>
             <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
                 <span data-v-1d580398="" class="title" data-lang-en="Our Socials!"
                     data-lang-ja="私たちのソーシャルメディア！">私たちのソーシャルメディア！</span>
