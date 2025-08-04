@@ -475,48 +475,50 @@
 
   // Compute current JST weekly period info
 function getWeeklyPeriodISO() {
-  const nowUTC = new Date();
+  const now = new Date();
   const jstOffsetHours = 9;
-  const jstOffsetMs = jstOffsetHours * 60 * 60 * 1000;
 
-  // --- Calculate the Start Date (Tuesday 00:00:01 JST) ---
-  const currentJST = new Date(nowUTC.getTime() + jstOffsetMs);
-
-  // Get the current day of the week in JST (0=Sunday, 1=Monday, ..., 6=Saturday)
-  const jstDayOfWeek = currentJST.getDay();
+  // Calculate the current time in JST
+  const nowJST = new Date(now.getTime() + jstOffsetHours * 60 * 60 * 1000);
   
-  // Calculate how many days to go back to the previous Tuesday (2)
+  // Get the current day of the week in JST (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+  const jstDayOfWeek = nowJST.getDay();
+  
+  // Calculate how many days to subtract to get to the most recent Tuesday (day 2)
   const daysSinceTuesday = (jstDayOfWeek + 7 - 2) % 7;
 
-  // Create a Date object for the start of the week (Tuesday at 00:00:01 JST)
-  // We use UTC methods to create the date, then adjust the UTC hours to reflect 00:00:01 JST
-  const startOfWeek = new Date(nowUTC.getFullYear(), nowUTC.getMonth(), nowUTC.getDate());
-  startOfWeek.setDate(startOfWeek.getDate() - daysSinceTuesday);
+  // Calculate the start date of the week (Tuesday)
+  const startOfWeek = new Date(nowJST);
+  startOfWeek.setDate(nowJST.getDate() - daysSinceTuesday);
   
-  // Set the precise time for 00:00:01 JST using UTC hours (00:00:01 JST is 15:00:01 UTC)
-  startOfWeek.setUTCHours(24 - jstOffsetHours, 0, 1, 0);
+  // Set the precise start time for 00:00:01 JST
+  startOfWeek.setHours(0, 0, 1, 0);
 
-  // --- Calculate the End Date (Monday 23:59:59 JST) ---
-  // Add exactly 6 days to the start of the week
-  const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+  // Calculate the end date of the week (Monday)
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  
+  // Set the precise end time for 23:59:59 JST
+  endOfWeek.setHours(23, 59, 59, 999);
 
-  // Set the precise time for 23:59:59 JST using UTC hours (23:59:59 JST is 14:59:59 UTC on the next day)
-  endOfWeek.setUTCHours(24 - jstOffsetHours + 23, 59, 59, 999);
+  // Convert the JST dates to UTC ISO strings by subtracting the JST offset
+  const startISO = new Date(startOfWeek.getTime() - jstOffsetHours * 60 * 60 * 1000).toISOString();
+  const endISO = new Date(endOfWeek.getTime() - jstOffsetHours * 60 * 60 * 1000).toISOString();
 
-  // --- Format the Final Output ---
+  // Format the display strings
   const pad = (n) => (n < 10 ? '0' + n : n);
-  const startMonth = pad(startOfWeek.getUTCMonth() + 1);
-  const startDay = pad(startOfWeek.getUTCDate());
-  const endMonth = pad(endOfWeek.getUTCMonth() + 1);
-  const endDay = pad(endOfWeek.getUTCDate());
+  const startMonth = pad(startOfWeek.getMonth() + 1);
+  const startDay = pad(startOfWeek.getDate());
+  const endMonth = pad(endOfWeek.getMonth() + 1);
+  const endDay = pad(endOfWeek.getDate());
 
   return {
-    startISO: startOfWeek.toISOString(),
-    endISO: endOfWeek.toISOString(),
+    startISO,
+    endISO,
     rangeText: {
       en: `Weekly (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
-      ja: `週間 (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`
-    }
+      ja: `週間 (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
+    },
   };
 }
   // Store current period data globally
