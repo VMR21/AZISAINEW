@@ -475,51 +475,45 @@
 
   // Compute current JST weekly period info
 function getWeeklyPeriodISO() {
-  const nowUTC = new Date();
-  const jstOffsetMs = 9 * 60 * 60 * 1000;
+  const now = new Date();
+  const jstOffsetMinutes = 9 * 60;
 
-  // Get the current time in JST timezone by adding 9h to UTC
-  const nowJST = new Date(nowUTC.getTime() + jstOffsetMs);
+  // Get the current day of the week in JST (0=Sunday, 1=Monday... 6=Saturday)
+  // This is done by getting the UTC day and adjusting for the JST offset
+  const nowUtcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+  const nowJstMinutes = nowUtcMinutes + jstOffsetMinutes;
+  const daysAdjustment = Math.floor(nowJstMinutes / (24 * 60));
+  const jstDayOfWeek = (now.getUTCDay() + daysAdjustment + 7) % 7;
 
-  // Extract JST components (local to JST)
-  const year = nowJST.getFullYear();
-  const month = nowJST.getMonth(); // 0-based
-  const date = nowJST.getDate();
-  const dayOfWeek = nowJST.getDay(); // 0=Sun,1=Mon,...6=Sat
+  // Calculate the difference in days to get to the most recent Tuesday
+  // 2 represents Tuesday
+  const daysSinceTuesday = (jstDayOfWeek + 7 - 2) % 7;
 
-  // Calculate how many days to subtract to get the most recent Tuesday (2)
-  // If today is Tuesday, daysSinceTuesday=0, else number of days since last Tuesday
-  const daysSinceTuesday = (dayOfWeek + 7 - 2) % 7;
+  // Calculate the JST Tuesday date.
+  const tuesdayJST = new Date(now.getTime());
+  tuesdayJST.setUTCDate(tuesdayJST.getUTCDate() - daysSinceTuesday);
+  tuesdayJST.setUTCHours(24 - 9, 0, 1, 0); // Correctly set to 00:00:01 JST in UTC
 
-  // Compute JST Tuesday date (year, month, date - daysSinceTuesday)
-  const tuesdayDate = new Date(year, month, date - daysSinceTuesday);
-  tuesdayDate.setHours(0, 0, 1, 0); // Set time to 00:00:01 JST
+  // Calculate the JST Monday date (6 days after Tuesday)
+  const mondayJST = new Date(tuesdayJST.getTime() + 6 * 24 * 60 * 60 * 1000);
+  mondayJST.setUTCHours(24 - 9 + 23, 59, 59, 999); // Correctly set to 23:59:59 JST in UTC
 
-  // Compute JST Monday date = Tuesday + 6 days, at 23:59:59
-  const mondayDate = new Date(tuesdayDate.getTime() + 6 * 24 * 60 * 60 * 1000);
-  mondayDate.setHours(23, 59, 59, 999); // Set time to 23:59:59 JST
-
-  // Convert JST Tuesday and Monday times to UTC ISO strings for API
-  // by subtracting the JST offset.
-  const startISO = new Date(tuesdayDate.getTime() - jstOffsetMs).toISOString();
-  const endISO = new Date(mondayDate.getTime() - jstOffsetMs).toISOString();
-
-  // Format display strings from JST dates
+  // Format display strings from the JST dates
   const pad = (n) => (n < 10 ? '0' + n : n);
-  const startStr = `${pad(tuesdayDate.getMonth() + 1)}/${pad(tuesdayDate.getDate())}`;
-  const endStr = `${pad(mondayDate.getMonth() + 1)}/${pad(mondayDate.getDate())}`;
+  const startMonth = pad((tuesdayJST.getUTCMonth() + 1));
+  const startDate = pad(tuesdayJST.getUTCDate());
+  const endMonth = pad((mondayJST.getUTCMonth() + 1));
+  const endDate = pad(mondayJST.getUTCDate());
 
   return {
-    startISO,
-    endISO,
+    startISO: tuesdayJST.toISOString(),
+    endISO: mondayJST.toISOString(),
     rangeText: {
-      en: `Weekly (${startStr} – ${endStr} JST)`,
-      ja: `週間 (${startStr} – ${endStr} JST)`
+      en: `Weekly (${startMonth}/${startDate} – ${endMonth}/${endDate} JST)`,
+      ja: `週間 (${startMonth}/${startDate} – ${endMonth}/${endDate} JST)`
     }
   };
 }
-
-
   // Store current period data globally
   let currentPeriodData = getWeeklyPeriodISO();
 
