@@ -468,28 +468,39 @@
             </div>
 
 <script>
-    function getNextResetJST() {
-        const now = new Date();
-        const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000); // JST
+function getNextResetJST() {
+    const now = new Date();
+    const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000); // Convert to JST
 
-        const day = jstNow.getUTCDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
-        const diffToNextMonday = (8 - day) % 7 || 7; // Days until next Monday
+    const day = jstNow.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    const currentHour = jstNow.getHours();
+    const currentMinute = jstNow.getMinutes();
+    const currentSecond = jstNow.getSeconds();
 
-        const nextMonday = new Date(Date.UTC(
-            jstNow.getUTCFullYear(),
-            jstNow.getUTCMonth(),
-            jstNow.getUTCDate() + diffToNextMonday,
-            14, 59, 59 // 23:59:59 JST = 14:59:59 UTC
-        ));
+    let daysUntilReset = (1 - day + 7) % 7; // Days until next Monday
 
-        return {
-            range: {
-                en: "Resets every Monday night",
-                ja: "毎週月曜の夜にリセットされます"
-            },
-            countdownTarget: nextMonday
-        };
+    // If it's already Monday and past 23:59:59, go to next Monday
+    if (day === 1 && (currentHour > 23 || (currentHour === 23 && currentMinute === 59 && currentSecond >= 59))) {
+        daysUntilReset = 7;
     }
+
+    // Set reset time to Monday 23:59:59 JST (i.e. 14:59:59 UTC)
+    const resetDate = new Date(Date.UTC(
+        jstNow.getUTCFullYear(),
+        jstNow.getUTCMonth(),
+        jstNow.getUTCDate() + daysUntilReset,
+        14, 59, 59 // JST 23:59:59
+    ));
+
+    return {
+        range: {
+            en: "Resets every Monday night",
+            ja: "毎週月曜の夜にリセットされます"
+        },
+        countdownTarget: resetDate
+    };
+}
+
 
     function updateCountdown() {
         const { range, countdownTarget } = getNextResetJST();
