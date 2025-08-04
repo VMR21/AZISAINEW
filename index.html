@@ -468,111 +468,119 @@
             </div>
 
 <script>
-    // Pad number with leading zero
-    function pad(num) {
-        return num < 10 ? '0' + num : num;
+  let serverNowUTC = null;       // holds the last server UTC timestamp
+  let offsetToJST = 9 * 60 * 60 * 1000;  // JST = UTC + 9h
+
+  // Pad numbers with leading zero
+  function pad(n) { return n < 10 ? '0' + n : n; }
+
+  // Calculate weekly period start (Tuesday 00:00:01 JST) and end (Monday 23:59:59 JST)
+  function getWeeklyPeriodJST(serverNow) {
+    // serverNow is a Date object with server UTC time
+    // Convert to JST ms:
+    let jstNowMs = serverNow.getTime() + offsetToJST;
+    let jstNow = new Date(jstNowMs);
+
+    let jstDay = jstNow.getUTCDay(); // 0=Sun ...6=Sat (treat UTCDay on shifted time)
+    // Find days since last Tuesday (2)
+    let distToTuesday = (jstDay - 2 + 7) % 7;
+
+    // Calculate start and end JST in UTC ms:
+    // Start: Tuesday 00:00:01 JST -> UTC = JST time - 9 hours
+    let startJSTDate = new Date(Date.UTC(
+      jstNow.getUTCFullYear(),
+      jstNow.getUTCMonth(),
+      jstNow.getUTCDate() - distToTuesday,
+      0, 0, 1));
+
+    // End: Monday 23:59:59 JST = start + 6 days + 23:59:59 hours, then convert to UTC by subtracting 9h
+    let endJSTDate = new Date(Date.UTC(
+      jstNow.getUTCFullYear(),
+      jstNow.getUTCMonth(),
+      jstNow.getUTCDate() - distToTuesday + 6,
+      23, 59, 59));
+
+    // For display adjust to JST by adding 9h to those UTC dates:
+    let displayStartJST = new Date(startJSTDate.getTime() + offsetToJST);
+    let displayEndJST = new Date(endJSTDate.getTime() + offsetToJST);
+
+    // Labels (MM/DD)
+    let startStr = `${pad(displayStartJST.getMonth()+1)}/${pad(displayStartJST.getDate())}`;
+    let endStr = `${pad(displayEndJST.getMonth()+1)}/${pad(displayEndJST.getDate())}`;
+
+    return {
+      startUTC: startJSTDate,
+      endUTC: endJSTDate,
+      displayRange: {
+        en: `Weekly (${startStr} – ${endStr} JST)`,
+        ja: `週間 (${startStr} – ${endStr} JST)`
+      }
+    };
+  }
+
+  // Update countdown text using serverNow + interval increments
+  function startCountdown(serverNow) {
+    const lang = document.documentElement.lang || "ja";
+    
+    let period = getWeeklyPeriodJST(serverNow);
+    document.getElementById('weekly-range').textContent = period.displayRange[lang];
+
+    // Use serverNow as baseline, increment by 1 second intervals locally
+    let baseline = serverNow.getTime();
+
+    function update() {
+      baseline += 1000; // advance one second
+      let now = new Date(baseline);
+
+      // Calculate remaining time = endUTC - now (both UTC)
+      let diff = period.endUTC.getTime() - now.getTime();
+
+      const el = document.getElementById('weekly-countdown');
+      const box = document.getElementById('weekly-bonus-timer');
+
+      if(diff <= 0) {
+        const msg = lang === 'en' ? "Reward period ended" : "報酬期間が終了しました";
+        el.textContent = msg;
+        if(box) box.textContent = msg;
+        clearInterval(intervalId);
+        return;
+      }
+      let d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      let h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      let m = Math.floor((diff / (1000 * 60)) % 60);
+      let s = Math.floor((diff / 1000) % 60);
+      const label = lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで";
+
+      el.textContent = `${label}: ${d}d ${h}h ${m}m ${s}s`;
+      if(box) box.textContent = el.textContent;
     }
 
-    // Return current JST week: start = this week's Tuesday JST, end = next Monday JST
-    function getWeeklyPeriodAndEndDateJST() {
-        // Current time in UTC, add 9 hours for JST
-        const utcNow = new Date();
-        const jstNow = new Date(utcNow.getTime() + 9 * 60 * 60 * 1000);
+    update(); // initial call
+    const intervalId = setInterval(update, 1000);
+  }
 
-        // 0: Sunday ... 1: Monday ... 2: Tuesday ... 6: Saturday
-        const jstDay = jstNow.getDay();
+  // Periodically fetch server UTC time and start countdown fresh
+  async function refreshServerTimeAndStart() {
+    try {
+      const res = await fetch('https://azisaiweekly-upnb.onrender.com/time'); // Your server endpoint returning current UTC time ISO string
+      const json = await res.json();
+      if(!json.utcNow) throw new Error("No utcNow property");
 
-        // Find current week's Tuesday (start) and following Monday (end)
-        // If today is Tuesday (2), week starts today; if Monday (1), week started 6 days ago
-        let distToTuesday = (jstDay - 2 + 7) % 7; // Days since last Tuesday
-
-        // Start: this week's Tuesday (00:00:01 JST)
-        const start = new Date(jstNow);
-        start.setDate(jstNow.getDate() - distToTuesday);
-        start.setHours(0, 0, 1, 0);
-
-        // End: following Monday (23:59:59 JST)
-        const end = new Date(start);
-        end.setDate(start.getDate() + 6); // add 6 days to Tuesday to get Monday
-        end.setHours(23, 59, 59, 0);
-
-        // For display
-        const startStr = `${pad(start.getMonth() + 1)}/${pad(start.getDate())}`;
-        const endStr = `${pad(end.getMonth() + 1)}/${pad(end.getDate())}`;
-
-        return {
-            range: {
-                en: `Weekly (${startStr} – ${endStr} JST)`,
-                ja: `週間 (${startStr} – ${endStr} JST)`
-            },
-            countdownTargetJST: end // in JST (local time!)
-        };
+      let serverNow = new Date(json.utcNow);
+      startCountdown(serverNow);
+    } catch(err) {
+      console.error("Failed to fetch accurate server time:", err);
+      // fallback: use local time if server unavailable, not recommended
+      startCountdown(new Date()); 
     }
+  }
 
-    function updateCountdown() {
-        const { range, countdownTargetJST } = getWeeklyPeriodAndEndDateJST();
-        const lang = document.documentElement.lang || "ja";
-        document.getElementById("weekly-range").textContent = range[lang];
-
-        function tick() {
-            const nowUtc = new Date();
-            const nowJST = new Date(nowUtc.getTime() + 9 * 60 * 60 * 1000); // Real JST
-            const diff = countdownTargetJST - nowJST;
-            const el = document.getElementById("weekly-countdown");
-            const box = document.getElementById("weekly-bonus-timer");
-
-            if (diff <= 0) {
-                const msg = lang === 'en' ? "Reward period ended" : "報酬期間が終了しました";
-                el.textContent = msg;
-                if (box) box.textContent = msg;
-                return;
-            }
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const m = Math.floor((diff / (1000 * 60)) % 60);
-            const s = Math.floor((diff / 1000) % 60);
-            const label = lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで";
-            const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
-            el.textContent = text;
-            if (box) box.textContent = text;
-        }
-
-        tick();
-        setInterval(tick, 1000);
-    }
-
-    async function fetchWinners() {
-        try {
-            const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
-            const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
-            const names1000 = await res1000.json();
-            const names5000 = await res5000.json();
-
-            const ul1000 = document.getElementById("names-1000");
-            const ul5000 = document.getElementById("names-5000");
-            ul1000.innerHTML = "";
-            ul5000.innerHTML = "";
-
-            names1000.forEach(obj => {
-                const li = document.createElement("li");
-                li.textContent = obj.name || obj.username || String(obj);
-                ul1000.appendChild(li);
-            });
-
-            names5000.forEach(obj => {
-                const li = document.createElement("li");
-                li.textContent = obj.name || obj.username || String(obj);
-                ul5000.appendChild(li);
-            });
-        } catch (err) {
-            console.error("Error fetching winners:", err);
-        }
-    }
-
-    // Initial calls
-    updateCountdown();
-    fetchWinners();
+  // Initial fetch and start
+  refreshServerTimeAndStart();
+  // Optional: re-sync every 5 mins to avoid drifting from server time
+  setInterval(refreshServerTimeAndStart, 5 * 60 * 1000);
 </script>
+
 
 
             <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
