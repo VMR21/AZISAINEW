@@ -467,111 +467,114 @@
                 </div>
             </div>
 
-            <script>
-                function getPeriodAndEndDate() {
-                    const now = new Date();
-                    // Convert to JST (UTC+9)
-                    const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-                    const day = jstNow.getDate();
-                    const month = jstNow.getMonth();
-                    const year = jstNow.getFullYear();
-
-                    if (day >= 1 && day <= 7) {
-                        return {
-                            range: { en: "1st–7th", ja: "1日～7日" },
-                            countdownTarget: new Date(Date.UTC(year, month, 7, 15, 0, 0)) // 00:00 JST = 15:00 UTC prev day
-                        };
-                    } else if (day >= 8 && day <= 14) {
-                        return {
-                            range: { en: "8th–14th", ja: "8日～14日" },
-                            countdownTarget: new Date(Date.UTC(year, month, 14, 15, 0, 0))
-                        };
-                    } else if (day >= 15 && day <= 21) {
-                        return {
-                            range: { en: "15th–21st", ja: "15日～21日" },
-                            countdownTarget: new Date(Date.UTC(year, month, 21, 15, 0, 0))
-                        };
-                    } else if (day >= 22 && day <= 28) {
-                        return {
-                            range: { en: "22nd–28th", ja: "22日～28日" },
-                            countdownTarget: new Date(Date.UTC(year, month, 28, 15, 0, 0))
-                        };
-                    } else {
-                        return {
-                            range: { en: "Next rewards on 1st", ja: "次回報酬は1日" },
-                            countdownTarget: new Date(Date.UTC(year, month + 1, 1, 15, 0, 0))
-                        };
-                    }
-                }
-
-                function updateCountdown() {
-                    const { range, countdownTarget } = getPeriodAndEndDate();
-                    const lang = document.documentElement.lang;
-                    document.getElementById("weekly-range").textContent = range[lang];
-                    const isStartCountdown = lang === 'en' ? range.en === "Next rewards on 1st" : range.ja === "次回報酬は1日";
-
-function tick() {
-    const lang = document.documentElement.lang; // ✅ move this inside tick
-    const now = new Date();
-    const diff = countdownTarget - now;
-    const el = document.getElementById("weekly-countdown");
-    const box = document.getElementById("weekly-bonus-timer");
-
-    if (diff <= 0) {
-        const msg = isStartCountdown ? (lang === 'en' ? "Rewards available now!" : "報酬が利用可能です！") : (lang === 'en' ? "Reward period ended" : "報酬期間が終了しました");
-        el.textContent = msg;
-        if (box) box.textContent = msg;
-        return;
+<script>
+    // Helper: Pad numbers
+    function pad(num) {
+        return num < 10 ? '0' + num : num;
     }
 
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-    const label = isStartCountdown ? (lang === 'en' ? "🕒 Starts in" : "🕒 開始まで") : (lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで");
+    // Get current JST Weekly Window: Tuesday 00:00:01 JST to next Monday 23:59:59 JST, and its label
+    function getWeeklyPeriodAndEndDate() {
+        // Now in UTC+9 (JST)
+        const now = new Date();
+        const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
 
-    const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
-    el.textContent = text;
-    if (box) box.textContent = text;
-}
+        const year = jstNow.getFullYear();
+        const month = jstNow.getMonth();
+        const date = jstNow.getDate();
+        const dayOfWeek = jstNow.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 
+        // Calculate how many days since Monday (Monday=1)
+        const diffToMonday = (dayOfWeek + 6) % 7;
+        // This week's Monday (JST) at 23:59:59
+        const endDate = new Date(jstNow);
+        endDate.setDate(jstNow.getDate() - diffToMonday + 1);
+        endDate.setHours(23, 59, 59, 0);
 
-                    tick();
-                    setInterval(tick, 1000);
-                }
+        // Start: Previous Tuesday 00:00:01 JST
+        const startDate = new Date(endDate);
+        startDate.setDate(endDate.getDate() - 6);
+        startDate.setHours(0, 0, 1, 0);
 
-                async function fetchWinners() {
-                    try {
-                        const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
-                        const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
-                        const names1000 = await res1000.json();
-                        const names5000 = await res5000.json();
+        // Label (e.g., "Jul 2–8")
+        const startStr = `${pad(startDate.getMonth() + 1)}/${pad(startDate.getDate())}`;
+        const endStr = `${pad(endDate.getMonth() + 1)}/${pad(endDate.getDate())}`;
 
-                        const ul1000 = document.getElementById("names-1000");
-                        const ul5000 = document.getElementById("names-5000");
-                        ul1000.innerHTML = "";
-                        ul5000.innerHTML = "";
+        return {
+            range: {
+                en: `Weekly (${startStr} – ${endStr})`,
+                ja: `週間 (${startStr} – ${endStr})`
+            },
+            countdownTarget: new Date(endDate.getTime() - 9 * 60 * 60 * 1000) // convert end to UTC for countdown
+        };
+    }
 
-                        names1000.forEach(obj => {
-                            const li = document.createElement("li");
-                            li.textContent = obj.name || obj.username || String(obj);
-                            ul1000.appendChild(li);
-                        });
+    function updateCountdown() {
+        const { range, countdownTarget } = getWeeklyPeriodAndEndDate();
+        const lang = document.documentElement.lang || "ja"; // fallback ja
+        document.getElementById("weekly-range").textContent = range[lang];
 
-                        names5000.forEach(obj => {
-                            const li = document.createElement("li");
-                            li.textContent = obj.name || obj.username || String(obj);
-                            ul5000.appendChild(li);
-                        });
-                    } catch (err) {
-                        console.error("Error fetching winners:", err);
-                    }
-                }
+        function tick() {
+            const lang = document.documentElement.lang || "ja";
+            const now = new Date();
+            const diff = countdownTarget - now;
+            const el = document.getElementById("weekly-countdown");
+            const box = document.getElementById("weekly-bonus-timer");
 
-                // Initial calls (will be re-called by setLanguage for consistency)
-                updateCountdown();
-                fetchWinners();
-            </script>
+            if (diff <= 0) {
+                const msg = lang === 'en' ? "Reward period ended" : "報酬期間が終了しました";
+                el.textContent = msg;
+                if (box) box.textContent = msg;
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / (1000 * 60)) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            const label = lang === 'en' ? "⏳ Ends in" : "⏳ 終了まで";
+            const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
+            el.textContent = text;
+            if (box) box.textContent = text;
+        }
+
+        tick();
+        setInterval(tick, 1000);
+    }
+
+    async function fetchWinners() {
+        try {
+            const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
+            const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
+            const names1000 = await res1000.json();
+            const names5000 = await res5000.json();
+
+            const ul1000 = document.getElementById("names-1000");
+            const ul5000 = document.getElementById("names-5000");
+            ul1000.innerHTML = "";
+            ul5000.innerHTML = "";
+
+            names1000.forEach(obj => {
+                const li = document.createElement("li");
+                li.textContent = obj.name || obj.username || String(obj);
+                ul1000.appendChild(li);
+            });
+
+            names5000.forEach(obj => {
+                const li = document.createElement("li");
+                li.textContent = obj.name || obj.username || String(obj);
+                ul5000.appendChild(li);
+            });
+        } catch (err) {
+            console.error("Error fetching winners:", err);
+        }
+    }
+
+    // Initial calls (will be re-called by setLanguage for consistency)
+    updateCountdown();
+    fetchWinners();
+</script>
+
             <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
                 <span data-v-1d580398="" class="title" data-lang-en="Our Socials!"
                     data-lang-ja="私たちのソーシャルメディア！">私たちのソーシャルメディア！</span>
