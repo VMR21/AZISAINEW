@@ -835,51 +835,89 @@
 </script>
 <script>
     // --- Weekly Wager Bonus Script ---
-    function getPeriodAndEndDate() {
-        const now = new Date();
-        // Convert to JST (UTC+9)
-        const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-        const day = jstNow.getDate();
-        const month = jstNow.getMonth();
-        const year = jstNow.getFullYear();
 
-        if (day >= 1 && day <= 7) {
-            return { range: { en: "1st–7th", ja: "1日～7日" }, countdownTarget: new Date(Date.UTC(year, month, 7, 15, 0, 0)) }; // 00:00 JST = 15:00 UTC prev day
-        } else if (day >= 8 && day <= 14) {
-            return { range: { en: "8th–14th", ja: "8日～14日" }, countdownTarget: new Date(Date.UTC(year, month, 14, 15, 0, 0)) };
-        } else if (day >= 15 && day <= 21) {
-            return { range: { en: "15th–21st", ja: "15日～21日" }, countdownTarget: new Date(Date.UTC(year, month, 21, 15, 0, 0)) };
-        } else if (day >= 22 && day <= 28) {
-            return { range: { en: "22nd–28th", ja: "22日～28日" }, countdownTarget: new Date(Date.UTC(year, month, 28, 15, 0, 0)) };
-        } else {
-            return { range: { en: "Next rewards on 1st", ja: "次回報酬は1日" }, countdownTarget: new Date(Date.UTC(year, month + 1, 1, 15, 0, 0)) };
+    /**
+     * Calculates the current weekly period (Monday to Sunday) in JST (UTC+9)
+     * and returns the start/end dates and formatted range text.
+     */
+    function getWeeklyPeriodInfo() {
+        const now = new Date();
+        const jstOffset = 9 * 60 * 60 * 1000; // 9 hours in milliseconds
+        const jstNow = new Date(now.getTime() + jstOffset);
+
+        // Get the current day of the week in JST (0=Sunday, 1=Monday, ..., 6=Saturday)
+        const jstDayOfWeek = jstNow.getUTCDay();
+
+        // Calculate the number of days to subtract to get to the most recent Monday
+        const daysSinceMonday = (jstDayOfWeek + 6) % 7;
+
+        // --- Calculate the Start Date (Monday 00:00:01 JST) ---
+        const startJST = new Date(jstNow.getTime());
+        startJST.setUTCDate(jstNow.getUTCDate() - daysSinceMonday);
+        startJST.setUTCHours(15, 0, 1, 0); // 00:00:01 JST is 15:00:01 UTC the previous day
+
+        // --- Calculate the End Date (Sunday 23:59:59 JST) ---
+        const endJST = new Date(startJST.getTime() + 6 * 24 * 60 * 60 * 1000);
+        endJST.setUTCHours(14, 59, 59, 999); // 23:59:59 JST is 14:59:59 UTC on the next day
+
+        const pad = (n) => (n < 10 ? '0' + n : n);
+        const startMonth = pad(startJST.getUTCMonth() + 1);
+        const startDay = pad(startJST.getUTCDate());
+        const endMonth = pad(endJST.getUTCMonth() + 1);
+        const endDay = pad(endJST.getUTCDate());
+
+        return {
+            startISO: startJST.toISOString(),
+            endISO: endJST.toISOString(),
+            rangeText: {
+                en: `Weekly (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
+                ja: `週間 (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
+            },
+        };
+    }
+
+    // Store the current period data and countdown interval ID globally
+    let currentPeriodData = getWeeklyPeriodInfo();
+    let countdownIntervalId = null;
+
+    /**
+     * Updates the text for the weekly range based on the current language.
+     */
+    function setWeeklyRangeText() {
+        const lang = document.documentElement.lang || "ja";
+        const weeklyRangeEl = document.getElementById("weekly-range");
+        if (weeklyRangeEl && currentPeriodData) {
+            weeklyRangeEl.textContent = currentPeriodData.rangeText[lang];
         }
     }
 
-    function updateCountdownWeekly() {
-        const { range, countdownTarget } = getPeriodAndEndDate();
-        const lang = document.documentElement.lang;
-        const weeklyRangeEl = document.getElementById("weekly-range");
-        if (weeklyRangeEl) {
-            // Use translations object for range text
-            weeklyRangeEl.textContent = translations[lang][`weeklyRange${range.en.replace(/[^a-zA-Z0-9]/g, '')}`] || range[lang];
-        }
-        const isStartCountdown = lang === 'en' ? range.en === "Next rewards on 1st" : range.ja === "次回報酬は1日";
+    /**
+     * Starts or restarts the countdown timer to the end of the current period.
+     */
+    function startWeeklyCountdown() {
+        if (!currentPeriodData) return;
 
-        function tick() {
-            const currentLang = document.documentElement.lang;
-            const now = new Date();
-            const diff = countdownTarget - now;
+        const lang = document.documentElement.lang || "ja";
+        const endTime = new Date(currentPeriodData.endISO).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = endTime - now;
             const el = document.getElementById("weekly-countdown");
-            
-            // Removed reference to 'box' and 'weekly-bonus-timer' as it's not in the HTML structure
-            // if (box) box.textContent = msg; // This was in user's snippet.
 
-            if (!el) return;
+            if (!el) {
+                clearInterval(countdownIntervalId);
+                countdownIntervalId = null;
+                return;
+            }
 
             if (diff <= 0) {
-                const msg = isStartCountdown ? (translations[currentLang].weeklyRewardsAvailable) : (translations[currentLang].weeklyRewardPeriodEnded);
+                const msg = lang === "en" ? "Reward period ended" : "報酬期間が終了しました";
                 el.textContent = msg;
+                if (countdownIntervalId) {
+                    clearInterval(countdownIntervalId);
+                    countdownIntervalId = null;
+                }
                 return;
             }
 
@@ -887,20 +925,24 @@
             const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const m = Math.floor((diff / (1000 * 60)) % 60);
             const s = Math.floor((diff / 1000) % 60);
-            const label = isStartCountdown ? (translations[currentLang].weeklyCountdownStarts) : (translations[currentLang].weeklyCountdownEnds);
 
-            const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
-            el.textContent = text;
+            const label = lang === "en" ? "⏳ Ends in" : "⏳ 終了まで";
+            el.textContent = `${label}: ${d}d ${h}h ${m}m ${s}s`;
         }
 
-        tick();
-        // Clear previous interval to prevent multiple timers running
-        if (window.weeklyCountdownInterval) {
-            clearInterval(window.weeklyCountdownInterval);
+        // Clear any existing timer before starting a new one
+        if (countdownIntervalId) {
+            clearInterval(countdownIntervalId);
         }
-        window.weeklyCountdownInterval = setInterval(tick, 1000);
+
+        // Run immediately and then every second
+        updateCountdown();
+        countdownIntervalId = setInterval(updateCountdown, 1000);
     }
 
+    /**
+     * Fetches and displays the weekly winners from the API endpoints.
+     */
     async function fetchWeeklyWinners() {
         try {
             const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
@@ -910,9 +952,12 @@
 
             const ul1000 = document.getElementById("names-1000");
             const ul5000 = document.getElementById("names-5000");
+
+            // Clear previous lists
             if (ul1000) ul1000.innerHTML = "";
             if (ul5000) ul5000.innerHTML = "";
 
+            // Populate the lists
             names1000.forEach(obj => {
                 const li = document.createElement("li");
                 li.textContent = obj.name || obj.username || String(obj);
@@ -929,12 +974,34 @@
         }
     }
 
-    // Initial calls for weekly bonus and leaderboard
-    document.addEventListener('DOMContentLoaded', () => {
-        loadLeaderboard();
-        // Initial call to update weekly countdown and fetch winners, will be re-called by applyTranslations
-        updateCountdownWeekly();
-        fetchWeeklyWinners();
-    });
+    /**
+     * The main function to call all the necessary updates.
+     * This will be run on page load and can be triggered on language change.
+     */
+    function initializeWeeklyBonus() {
+        // Recalculate the period and get the latest data
+        currentPeriodData = getWeeklyPeriodInfo();
 
+        // Update the displayed date range
+        setWeeklyRangeText();
+
+        // Start the countdown timer
+        startWeeklyCountdown();
+
+        // Fetch the winners
+        fetchWeeklyWinners();
+    }
+
+    // Initial setup when the document is fully loaded
+    document.addEventListener('DOMContentLoaded', initializeWeeklyBonus);
+
+    // Optional: Add a listener for language changes if your site supports it
+    // For example, if you have a button that changes the `lang` attribute on the `<html>` tag
+    // const langSwitchButton = document.getElementById('lang-switch');
+    // if (langSwitchButton) {
+    //     langSwitchButton.addEventListener('click', () => {
+    //         setWeeklyRangeText();
+    //         // The countdown interval doesn't need to be restarted, as it checks the language on each tick.
+    //     });
+    // }
 </script>
