@@ -478,43 +478,36 @@ function getWeeklyPeriodISO() {
   const now = new Date();
   const jstOffsetHours = 9;
 
-  // Calculate the current time in JST
-  const nowJST = new Date(now.getTime() + jstOffsetHours * 60 * 60 * 1000);
-  
-  // Get the current day of the week in JST (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-  const jstDayOfWeek = nowJST.getDay();
-  
-  // Calculate how many days to subtract to get to the most recent Tuesday (day 2)
+  // Get the current day of the week in UTC (0=Sunday, 1=Monday, ..., 6=Saturday)
+  const utcDayOfWeek = now.getUTCDay();
+
+  // Get the current day of the week in JST
+  // JST day is simply UTC day + 9 hours
+  const jstDayOfWeek = (utcDayOfWeek + Math.floor((now.getUTCHours() + jstOffsetHours) / 24)) % 7;
+
+  // Calculate the number of days to subtract to get to the most recent Tuesday
+  // Tuesday is day 2. We add 7 to handle wrapping from Monday (1) to Tuesday (2)
   const daysSinceTuesday = (jstDayOfWeek + 7 - 2) % 7;
 
-  // Calculate the start date of the week (Tuesday)
-  const startOfWeek = new Date(nowJST);
-  startOfWeek.setDate(nowJST.getDate() - daysSinceTuesday);
-  
-  // Set the precise start time for 00:00:01 JST
-  startOfWeek.setHours(0, 0, 1, 0);
+  // --- Calculate the Start Date (Tuesday 00:00:01 JST) ---
+  const tuesdayJST = new Date(now.getTime());
+  tuesdayJST.setUTCDate(tuesdayJST.getUTCDate() - daysSinceTuesday);
+  tuesdayJST.setUTCHours(15, 0, 1, 0); // 00:00:01 JST is 15:00:01 UTC
 
-  // Calculate the end date of the week (Monday)
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
-  
-  // Set the precise end time for 23:59:59 JST
-  endOfWeek.setHours(23, 59, 59, 999);
+  // --- Calculate the End Date (Monday 23:59:59 JST) ---
+  const mondayJST = new Date(tuesdayJST.getTime() + 6 * 24 * 60 * 60 * 1000);
+  mondayJST.setUTCHours(14, 59, 59, 999); // 23:59:59 JST is 14:59:59 UTC on the next day
 
-  // Convert the JST dates to UTC ISO strings by subtracting the JST offset
-  const startISO = new Date(startOfWeek.getTime() - jstOffsetHours * 60 * 60 * 1000).toISOString();
-  const endISO = new Date(endOfWeek.getTime() - jstOffsetHours * 60 * 60 * 1000).toISOString();
-
-  // Format the display strings
+  // Format the display strings from the JST dates
   const pad = (n) => (n < 10 ? '0' + n : n);
-  const startMonth = pad(startOfWeek.getMonth() + 1);
-  const startDay = pad(startOfWeek.getDate());
-  const endMonth = pad(endOfWeek.getMonth() + 1);
-  const endDay = pad(endOfWeek.getDate());
+  const startMonth = pad(tuesdayJST.getUTCMonth() + 1);
+  const startDay = pad(tuesdayJST.getUTCDate());
+  const endMonth = pad(mondayJST.getUTCMonth() + 1);
+  const endDay = pad(mondayJST.getUTCDate());
 
   return {
-    startISO,
-    endISO,
+    startISO: tuesdayJST.toISOString(),
+    endISO: mondayJST.toISOString(),
     rangeText: {
       en: `Weekly (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
       ja: `週間 (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
