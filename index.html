@@ -478,12 +478,12 @@ function getWeeklyPeriodISO() {
   const nowUTC = new Date();
   const jstOffsetMs = 9 * 60 * 60 * 1000;
 
-  // Get the current time in JST timezone by adding 9h
+  // Get the current time in JST timezone by adding 9h to UTC
   const nowJST = new Date(nowUTC.getTime() + jstOffsetMs);
 
   // Extract JST components (local to JST)
   const year = nowJST.getFullYear();
-  const month = nowJST.getMonth();  // 0-based
+  const month = nowJST.getMonth(); // 0-based
   const date = nowJST.getDate();
   const dayOfWeek = nowJST.getDay(); // 0=Sun,1=Mon,...6=Sat
 
@@ -492,12 +492,15 @@ function getWeeklyPeriodISO() {
   const daysSinceTuesday = (dayOfWeek + 7 - 2) % 7;
 
   // Compute JST Tuesday date (year, month, date - daysSinceTuesday)
-  const tuesdayDate = new Date(year, month, date - daysSinceTuesday, 0, 0, 1);
+  const tuesdayDate = new Date(year, month, date - daysSinceTuesday);
+  tuesdayDate.setHours(0, 0, 1, 0); // Set time to 00:00:01 JST
 
   // Compute JST Monday date = Tuesday + 6 days, at 23:59:59
-  const mondayDate = new Date(year, month, date - daysSinceTuesday + 6, 23, 59, 59);
+  const mondayDate = new Date(tuesdayDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+  mondayDate.setHours(23, 59, 59, 999); // Set time to 23:59:59 JST
 
   // Convert JST Tuesday and Monday times to UTC ISO strings for API
+  // by subtracting the JST offset.
   const startISO = new Date(tuesdayDate.getTime() - jstOffsetMs).toISOString();
   const endISO = new Date(mondayDate.getTime() - jstOffsetMs).toISOString();
 
