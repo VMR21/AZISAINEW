@@ -468,56 +468,56 @@
             </div>
 
 <script>
-    // Helper: Pad numbers
+    // Pad number with leading zero
     function pad(num) {
         return num < 10 ? '0' + num : num;
     }
 
-    // Get current JST Weekly Window: Tuesday 00:00:01 JST to next Monday 23:59:59 JST, and its label
-    function getWeeklyPeriodAndEndDate() {
-        // Now in UTC+9 (JST)
-        const now = new Date();
-        const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    // Return current JST week: start = this week's Tuesday JST, end = next Monday JST
+    function getWeeklyPeriodAndEndDateJST() {
+        // Current time in UTC, add 9 hours for JST
+        const utcNow = new Date();
+        const jstNow = new Date(utcNow.getTime() + 9 * 60 * 60 * 1000);
 
-        const year = jstNow.getFullYear();
-        const month = jstNow.getMonth();
-        const date = jstNow.getDate();
-        const dayOfWeek = jstNow.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
+        // 0: Sunday ... 1: Monday ... 2: Tuesday ... 6: Saturday
+        const jstDay = jstNow.getDay();
 
-        // Calculate how many days since Monday (Monday=1)
-        const diffToMonday = (dayOfWeek + 6) % 7;
-        // This week's Monday (JST) at 23:59:59
-        const endDate = new Date(jstNow);
-        endDate.setDate(jstNow.getDate() - diffToMonday + 1);
-        endDate.setHours(23, 59, 59, 0);
+        // Find current week's Tuesday (start) and following Monday (end)
+        // If today is Tuesday (2), week starts today; if Monday (1), week started 6 days ago
+        let distToTuesday = (jstDay - 2 + 7) % 7; // Days since last Tuesday
 
-        // Start: Previous Tuesday 00:00:01 JST
-        const startDate = new Date(endDate);
-        startDate.setDate(endDate.getDate() - 6);
-        startDate.setHours(0, 0, 1, 0);
+        // Start: this week's Tuesday (00:00:01 JST)
+        const start = new Date(jstNow);
+        start.setDate(jstNow.getDate() - distToTuesday);
+        start.setHours(0, 0, 1, 0);
 
-        // Label (e.g., "Jul 2–8")
-        const startStr = `${pad(startDate.getMonth() + 1)}/${pad(startDate.getDate())}`;
-        const endStr = `${pad(endDate.getMonth() + 1)}/${pad(endDate.getDate())}`;
+        // End: following Monday (23:59:59 JST)
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6); // add 6 days to Tuesday to get Monday
+        end.setHours(23, 59, 59, 0);
+
+        // For display
+        const startStr = `${pad(start.getMonth() + 1)}/${pad(start.getDate())}`;
+        const endStr = `${pad(end.getMonth() + 1)}/${pad(end.getDate())}`;
 
         return {
             range: {
-                en: `Weekly (${startStr} – ${endStr})`,
-                ja: `週間 (${startStr} – ${endStr})`
+                en: `Weekly (${startStr} – ${endStr} JST)`,
+                ja: `週間 (${startStr} – ${endStr} JST)`
             },
-            countdownTarget: new Date(endDate.getTime() - 9 * 60 * 60 * 1000) // convert end to UTC for countdown
+            countdownTargetJST: end // in JST (local time!)
         };
     }
 
     function updateCountdown() {
-        const { range, countdownTarget } = getWeeklyPeriodAndEndDate();
-        const lang = document.documentElement.lang || "ja"; // fallback ja
+        const { range, countdownTargetJST } = getWeeklyPeriodAndEndDateJST();
+        const lang = document.documentElement.lang || "ja";
         document.getElementById("weekly-range").textContent = range[lang];
 
         function tick() {
-            const lang = document.documentElement.lang || "ja";
-            const now = new Date();
-            const diff = countdownTarget - now;
+            const nowUtc = new Date();
+            const nowJST = new Date(nowUtc.getTime() + 9 * 60 * 60 * 1000); // Real JST
+            const diff = countdownTargetJST - nowJST;
             const el = document.getElementById("weekly-countdown");
             const box = document.getElementById("weekly-bonus-timer");
 
@@ -527,7 +527,6 @@
                 if (box) box.textContent = msg;
                 return;
             }
-
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
             const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const m = Math.floor((diff / (1000 * 60)) % 60);
@@ -570,10 +569,11 @@
         }
     }
 
-    // Initial calls (will be re-called by setLanguage for consistency)
+    // Initial calls
     updateCountdown();
     fetchWinners();
 </script>
+
 
             <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
                 <span data-v-1d580398="" class="title" data-lang-en="Our Socials!"
