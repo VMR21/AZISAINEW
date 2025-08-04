@@ -834,107 +834,170 @@
     loadLeaderboard();
 </script>
 <script>
-    // --- Weekly Wager Bonus Script ---
-    function getPeriodAndEndDate() {
+function getPeriodAndEndDate() {
+    const now = new Date();
+    // Convert to JST (UTC+9)
+    const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    const day = jstNow.getDate();
+    const month = jstNow.getMonth();
+    const year = jstNow.getFullYear();
+
+    if (day >= 1 && day <= 7) {
+        // End of period is the 7th of the month at 00:00 JST, which is 15:00 UTC on the 6th
+        return {
+            range: { en: "1st–7th", ja: "1日～7日" },
+            countdownTarget: new Date(Date.UTC(year, month, 7, 15, 0, 0))
+        };
+    } else if (day >= 8 && day <= 14) {
+        // End of period is the 14th of the month at 00:00 JST, which is 15:00 UTC on the 13th
+        return {
+            range: { en: "8th–14th", ja: "8日～14日" },
+            countdownTarget: new Date(Date.UTC(year, month, 14, 15, 0, 0))
+        };
+    } else if (day >= 15 && day <= 21) {
+        // End of period is the 21st of the month at 00:00 JST, which is 15:00 UTC on the 20th
+        return {
+            range: { en: "15th–21st", ja: "15日～21日" },
+            countdownTarget: new Date(Date.UTC(year, month, 21, 15, 0, 0))
+        };
+    } else if (day >= 22 && day <= 28) {
+        // End of period is the 28th of the month at 00:00 JST, which is 15:00 UTC on the 27th
+        return {
+            range: { en: "22nd–28th", ja: "22日～28日" },
+            countdownTarget: new Date(Date.UTC(year, month, 28, 15, 0, 0))
+        };
+    } else {
+        // This period is from the 29th to the end of the month.
+        // The "next rewards" message is displayed, and the countdown targets the 1st of the next month.
+        return {
+            range: { en: "Next rewards on 1st", ja: "次回報酬は1日" },
+            countdownTarget: new Date(Date.UTC(year, month + 1, 1, 15, 0, 0))
+        };
+    }
+}
+
+/**
+ * Updates the countdown timer and date range for the weekly bonus modal.
+ */
+function updateCountdownWeekly() {
+    const { range, countdownTarget } = getPeriodAndEndDate();
+    const lang = document.documentElement.lang;
+    const weeklyRangeEl = document.getElementById("weekly-range");
+
+    if (weeklyRangeEl) {
+        // Use translations object for range text
+        weeklyRangeEl.textContent = translations[lang][`weeklyRange${range.en.replace(/[^a-zA-Z0-9]/g, '')}`] || range[lang];
+    }
+    const isStartCountdown = lang === 'en' ? range.en === "Next rewards on 1st" : range.ja === "次回報酬は1日";
+
+    function tick() {
+        const currentLang = document.documentElement.lang;
         const now = new Date();
-        // Convert to JST (UTC+9)
-        const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-        const day = jstNow.getDate();
-        const month = jstNow.getMonth();
-        const year = jstNow.getFullYear();
+        const diff = countdownTarget - now;
+        const el = document.getElementById("weekly-countdown");
 
-        if (day >= 1 && day <= 7) {
-            return { range: { en: "1st–7th", ja: "1日～7日" }, countdownTarget: new Date(Date.UTC(year, month, 7, 15, 0, 0)) }; // 00:00 JST = 15:00 UTC prev day
-        } else if (day >= 8 && day <= 14) {
-            return { range: { en: "8th–14th", ja: "8日～14日" }, countdownTarget: new Date(Date.UTC(year, month, 14, 15, 0, 0)) };
-        } else if (day >= 15 && day <= 21) {
-            return { range: { en: "15th–21st", ja: "15日～21日" }, countdownTarget: new Date(Date.UTC(year, month, 21, 15, 0, 0)) };
-        } else if (day >= 22 && day <= 28) {
-            return { range: { en: "22nd–28th", ja: "22日～28日" }, countdownTarget: new Date(Date.UTC(year, month, 28, 15, 0, 0)) };
-        } else {
-            return { range: { en: "Next rewards on 1st", ja: "次回報酬は1日" }, countdownTarget: new Date(Date.UTC(year, month + 1, 1, 15, 0, 0)) };
+        if (!el) return;
+
+        if (diff <= 0) {
+            const msg = isStartCountdown ? (translations[currentLang].weeklyRewardsAvailable) : (translations[currentLang].weeklyRewardPeriodEnded);
+            el.textContent = msg;
+            return;
         }
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+        const label = isStartCountdown ? (translations[currentLang].weeklyCountdownStarts) : (translations[currentLang].weeklyCountdownEnds);
+
+        const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
+        el.textContent = text;
     }
 
-    function updateCountdownWeekly() {
-        const { range, countdownTarget } = getPeriodAndEndDate();
-        const lang = document.documentElement.lang;
-        const weeklyRangeEl = document.getElementById("weekly-range");
-        if (weeklyRangeEl) {
-            // Use translations object for range text
-            weeklyRangeEl.textContent = translations[lang][`weeklyRange${range.en.replace(/[^a-zA-Z0-9]/g, '')}`] || range[lang];
-        }
-        const isStartCountdown = lang === 'en' ? range.en === "Next rewards on 1st" : range.ja === "次回報酬は1日";
-
-        function tick() {
-            const currentLang = document.documentElement.lang;
-            const now = new Date();
-            const diff = countdownTarget - now;
-            const el = document.getElementById("weekly-countdown");
-            
-            // Removed reference to 'box' and 'weekly-bonus-timer' as it's not in the HTML structure
-            // if (box) box.textContent = msg; // This was in user's snippet.
-
-            if (!el) return;
-
-            if (diff <= 0) {
-                const msg = isStartCountdown ? (translations[currentLang].weeklyRewardsAvailable) : (translations[currentLang].weeklyRewardPeriodEnded);
-                el.textContent = msg;
-                return;
-            }
-
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const m = Math.floor((diff / (1000 * 60)) % 60);
-            const s = Math.floor((diff / 1000) % 60);
-            const label = isStartCountdown ? (translations[currentLang].weeklyCountdownStarts) : (translations[currentLang].weeklyCountdownEnds);
-
-            const text = `${label}: ${d}d ${h}h ${m}m ${s}s`;
-            el.textContent = text;
-        }
-
-        tick();
-        // Clear previous interval to prevent multiple timers running
-        if (window.weeklyCountdownInterval) {
-            clearInterval(window.weeklyCountdownInterval);
-        }
-        window.weeklyCountdownInterval = setInterval(tick, 1000);
+    tick();
+    // Clear previous interval to prevent multiple timers running
+    if (window.weeklyCountdownInterval) {
+        clearInterval(window.weeklyCountdownInterval);
     }
+    window.weeklyCountdownInterval = setInterval(tick, 1000);
+}
 
-    async function fetchWeeklyWinners() {
-        try {
-            const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
-            const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
-            const names1000 = await res1000.json();
-            const names5000 = await res5000.json();
+/**
+ * Fetches and displays the list of weekly winners from the specified API endpoints.
+ */
+async function fetchWeeklyWinners() {
+    try {
+        const res1000 = await fetch('https://azisaiweekly-upnb.onrender.com/1000');
+        const res5000 = await fetch('https://azisaiweekly-upnb.onrender.com/5000');
+        const names1000 = await res1000.json();
+        const names5000 = await res5000.json();
 
-            const ul1000 = document.getElementById("names-1000");
-            const ul5000 = document.getElementById("names-5000");
-            if (ul1000) ul1000.innerHTML = "";
-            if (ul5000) ul5000.innerHTML = "";
+        const ul1000 = document.getElementById("names-1000");
+        const ul5000 = document.getElementById("names-5000");
+        if (ul1000) ul1000.innerHTML = "";
+        if (ul5000) ul5000.innerHTML = "";
 
-            names1000.forEach(obj => {
-                const li = document.createElement("li");
-                li.textContent = obj.name || obj.username || String(obj);
-                if (ul1000) ul1000.appendChild(li);
-            });
+        names1000.forEach(obj => {
+            const li = document.createElement("li");
+            li.textContent = obj.name || obj.username || String(obj);
+            if (ul1000) ul1000.appendChild(li);
+        });
 
-            names5000.forEach(obj => {
-                const li = document.createElement("li");
-                li.textContent = obj.name || obj.username || String(obj);
-                if (ul5000) ul5000.appendChild(li);
-            });
-        } catch (err) {
-            console.error("Error fetching weekly winners:", err);
-        }
+        names5000.forEach(obj => {
+            const li = document.createElement("li");
+            li.textContent = obj.name || obj.username || String(obj);
+            if (ul5000) ul5000.appendChild(li);
+        });
+    } catch (err) {
+        console.error("Error fetching weekly winners:", err);
     }
+}
 
-    // Initial calls for weekly bonus and leaderboard
-    document.addEventListener('DOMContentLoaded', () => {
-        loadLeaderboard();
-        // Initial call to update weekly countdown and fetch winners, will be re-called by applyTranslations
-        updateCountdownWeekly();
-        fetchWeeklyWinners();
-    });
+// Update the translations object with new strings for the weekly bonus modal
+Object.assign(translations.ja, {
+    weeklyBonusModalTitle: "週間賭け金ボーナス",
+    weeklyBonus10: "💰 $1000賭けて$10獲得",
+    weeklyBonus50: "🤑 $5000賭けて$50獲得",
+    weekly10WinnersTitle: "🎉 $10当選者",
+    weekly50WinnersTitle: "🎊 $50当選者",
+    weeklyRange1_7: "1日～7日",
+    weeklyRange8_14: "8日～14日",
+    weeklyRange15_21: "15日～21日",
+    weeklyRange22_28: "22日～28日",
+    weeklyRangeNext1st: "次回報酬は1日",
+    weeklyCountdownStarts: "🕒 開始まで",
+    weeklyCountdownEnds: "⏳ 終了まで",
+    weeklyRewardsAvailable: "報酬が利用可能です！",
+    weeklyRewardPeriodEnded: "報酬期間が終了しました"
+});
 
-</script>
+Object.assign(translations.en, {
+    weeklyBonusModalTitle: "Weekly Wager Bonus",
+    weeklyBonus10: "💰 Get $10 for $1000 wagered",
+    weeklyBonus50: "🤑 Get $50 for $5000 wagered",
+    weekly10WinnersTitle: "🎉 $10 Winners",
+    weekly50WinnersTitle: "🎊 $50 Winners",
+    weeklyRange1_7: "1st–7th",
+    weeklyRange8_14: "8th–14th",
+    weeklyRange15_21: "15th–21st",
+    weeklyRange22_28: "22nd–28th",
+    weeklyRangeNext1st: "Next rewards on 1st",
+    weeklyCountdownStarts: "🕒 Starts in",
+    weeklyCountdownEnds: "⏳ Ends in",
+    weeklyRewardsAvailable: "Rewards available now!",
+    weeklyRewardPeriodEnded: "Reward period ended"
+});
+
+// Update the weekly bonus button's click event to ensure it fetches and updates data
+weeklyBonusButton.onclick = function () {
+    openModal(weeklyModal);
+    updateCountdownWeekly();
+    fetchWeeklyWinners();
+}
+
+// Add these new functions to the initial page load to ensure data is ready.
+document.addEventListener('DOMContentLoaded', () => {
+    // Other initialization code here...
+    updateCountdownWeekly();
+    fetchWeeklyWinners();
+});
