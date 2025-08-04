@@ -837,7 +837,7 @@
     // --- Weekly Wager Bonus Script ---
 
     /**
-     * Calculates the current weekly period (Monday to Sunday) in JST (UTC+9)
+     * Calculates the current weekly period (Tuesday to Monday) in JST (UTC+9)
      * and returns the start/end dates and formatted range text.
      */
     function getWeeklyPeriodInfo() {
@@ -846,17 +846,18 @@
         const jstNow = new Date(now.getTime() + jstOffset);
 
         // Get the current day of the week in JST (0=Sunday, 1=Monday, ..., 6=Saturday)
-        const jstDayOfWeek = jstNow.getUTCDay();
+        const jstDayOfWeek = jstNow.getUTCDay(); // 0 is Sunday, 1 is Monday, 2 is Tuesday
 
-        // Calculate the number of days to subtract to get to the most recent Monday
-        const daysSinceMonday = (jstDayOfWeek + 6) % 7;
+        // Calculate the number of days to subtract to get to the most recent Tuesday
+        // Tuesday is day 2. (jstDayOfWeek + 7 - 2) % 7 will correctly handle wrapping from Monday to Tuesday.
+        const daysSinceTuesday = (jstDayOfWeek + 7 - 2) % 7;
 
-        // --- Calculate the Start Date (Monday 00:00:01 JST) ---
+        // --- Calculate the Start Date (Tuesday 00:00:01 JST) ---
         const startJST = new Date(jstNow.getTime());
-        startJST.setUTCDate(jstNow.getUTCDate() - daysSinceMonday);
+        startJST.setUTCDate(jstNow.getUTCDate() - daysSinceTuesday);
         startJST.setUTCHours(15, 0, 1, 0); // 00:00:01 JST is 15:00:01 UTC the previous day
 
-        // --- Calculate the End Date (Sunday 23:59:59 JST) ---
+        // --- Calculate the End Date (Monday 23:59:59 JST) ---
         const endJST = new Date(startJST.getTime() + 6 * 24 * 60 * 60 * 1000);
         endJST.setUTCHours(14, 59, 59, 999); // 23:59:59 JST is 14:59:59 UTC on the next day
 
@@ -994,14 +995,4 @@
 
     // Initial setup when the document is fully loaded
     document.addEventListener('DOMContentLoaded', initializeWeeklyBonus);
-
-    // Optional: Add a listener for language changes if your site supports it
-    // For example, if you have a button that changes the `lang` attribute on the `<html>` tag
-    // const langSwitchButton = document.getElementById('lang-switch');
-    // if (langSwitchButton) {
-    //     langSwitchButton.addEventListener('click', () => {
-    //         setWeeklyRangeText();
-    //         // The countdown interval doesn't need to be restarted, as it checks the language on each tick.
-    //     });
-    // }
 </script>
