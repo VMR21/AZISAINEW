@@ -448,182 +448,150 @@
                 </a>
             </div>
 
-            <div id="weekly-modal"
-                style="display:none; padding:20px; background:#111; color:#fff; border-radius:12px; max-width:400px; margin:40px auto; text-align:center; box-shadow:0 0 25px #00ff99; position:relative;">
-                <button onclick="document.getElementById('weekly-modal').style.display='none'"
-                    style="position:absolute; top:10px; right:16px; background:none; color:#00ffcc; border:none; font-size:20px;">✖</button>
+<!-- 🪙 Weekly Bonus Modal -->
+<div id="weekly-modal"
+    style="display:none; padding:20px; background:#111; color:#fff; border-radius:12px; max-width:400px; margin:40px auto; text-align:center; box-shadow:0 0 25px #00ff99; position:relative;">
+    <button onclick="document.getElementById('weekly-modal').style.display='none'"
+        style="position:absolute; top:10px; right:16px; background:none; color:#00ffcc; border:none; font-size:20px;">✖</button>
 
-                <h2 style="color:#00ff99;" data-lang-en="Weekly Wager Bonus"
-                    data-lang-ja="週間復活ボーナス">週間復活ボーナス</h2>
-                <p data-lang-en="💰 $10 for $1000 wagered" data-lang-ja="💰 1000ドル賭けて10ドル獲得">💰 1000ドル賭けて10ドル獲得</p>
-                <p data-lang-en="🤑 $50 for $5000 wagered" data-lang-ja="🤑 5000ドル賭けて50ドル獲得">🤑 5000ドル賭けて50ドル獲得</p>
-                <div id="weekly-range" style="margin-top:10px; font-weight:bold; color:#00ffcc;"></div>
-                <div id="weekly-countdown" style="font-size:18px; margin:10px 0;"></div>
+    <h2 style="color:#00ff99;" data-lang-en="Weekly Wager Bonus" data-lang-ja="週間復活ボーナス">週間復活ボーナス</h2>
+    <p data-lang-en="💰 $10 for $1000 wagered" data-lang-ja="💰 1000ドル賭けて10ドル獲得">💰 1000ドル賭けて10ドル獲得</p>
+    <p data-lang-en="🤑 $50 for $5000 wagered" data-lang-ja="🤑 5000ドル賭けて50ドル獲得">🤑 5000ドル賭けて50ドル獲得</p>
 
-                <div id="reward-names" style="margin-top:16px; text-align:left;">
-                    <h3 style="color:#00ffaa;" data-lang-en="🎉 $10 Winners" data-lang-ja="🎉 10ドル当選者">🎉 10ドル当選者</h3>
-                    <ul id="names-1000" style="padding-left:20px;"></ul>
-                    <h3 style="color:#00ffaa;" data-lang-en="🎊 $50 Winners" data-lang-ja="🎊 50ドル当選者">🎊 50ドル当選者</h3>
-                    <ul id="names-5000" style="padding-left:20px;"></ul>
-                </div>
-            </div>
+    <div id="weekly-range" style="margin-top:10px; font-weight:bold; color:#00ffcc;"></div>
+    <div id="weekly-countdown" style="font-size:18px; margin:10px 0;"></div>
+
+    <div id="reward-names" style="margin-top:16px; text-align:left;">
+        <h3 style="color:#00ffaa;" data-lang-en="🎉 $10 Winners" data-lang-ja="🎉 10ドル当選者">🎉 10ドル当選者</h3>
+        <ul id="names-1000" style="padding-left:20px;"></ul>
+        <h3 style="color:#00ffaa;" data-lang-en="🎊 $50 Winners" data-lang-ja="🎊 50ドル当選者">🎊 50ドル当選者</h3>
+        <ul id="names-5000" style="padding-left:20px;"></ul>
+    </div>
+</div>
 
 <script>
-  // Utility: pad single digit with leading zero
-  function pad(n) {
-    return n < 10 ? "0" + n : n;
-  }
-
-  // Compute current JST weekly period info
-function getWeeklyPeriodISO() {
-  const now = new Date();
-  const jstOffsetHours = 9;
-
-  // Get the current day of the week in UTC (0=Sunday, 1=Monday, ..., 6=Saturday)
-  const utcDayOfWeek = now.getUTCDay();
-
-  // Get the current day of the week in JST
-  // JST day is simply UTC day + 9 hours
-  const jstDayOfWeek = (utcDayOfWeek + Math.floor((now.getUTCHours() + jstOffsetHours) / 24)) % 7;
-
-  // Calculate the number of days to subtract to get to the most recent Tuesday
-  // Tuesday is day 2. We add 7 to handle wrapping from Monday (1) to Tuesday (2)
-  const daysSinceTuesday = (jstDayOfWeek + 7 - 2) % 7;
-
-  // --- Calculate the Start Date (Tuesday 00:00:01 JST) ---
-  const tuesdayJST = new Date(now.getTime());
-  tuesdayJST.setUTCDate(tuesdayJST.getUTCDate() - daysSinceTuesday);
-  tuesdayJST.setUTCHours(15, 0, 1, 0); // 00:00:01 JST is 15:00:01 UTC
-
-  // --- Calculate the End Date (Monday 23:59:59 JST) ---
-  const mondayJST = new Date(tuesdayJST.getTime() + 6 * 24 * 60 * 60 * 1000);
-  mondayJST.setUTCHours(14, 59, 59, 999); // 23:59:59 JST is 14:59:59 UTC on the next day
-
-  // Format the display strings from the JST dates
-  const pad = (n) => (n < 10 ? '0' + n : n);
-  const startMonth = pad(tuesdayJST.getUTCMonth() + 1);
-  const startDay = pad(tuesdayJST.getUTCDate());
-  const endMonth = pad(mondayJST.getUTCMonth() + 1);
-  const endDay = pad(mondayJST.getUTCDate());
-
-  return {
-    startISO: tuesdayJST.toISOString(),
-    endISO: mondayJST.toISOString(),
-    rangeText: {
-      en: `Weekly (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
-      ja: `週間 (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
-    },
-  };
-}
-  // Store current period data globally
-  let currentPeriodData = getWeeklyPeriodISO();
-
-  // Set the weekly range label text based on current language
-  function setWeeklyRangeLang() {
-    const lang = document.documentElement.lang || "ja";
-    if (!currentPeriodData) return;
-    document.getElementById("weekly-range").textContent = currentPeriodData.rangeText[lang];
-  }
-
-  // Countdown timer interval id for clearing on language switch
   let countdownIntervalId = null;
+  let currentPeriodData = null;
 
-  // Start or restart countdown timer
+  function getWeeklyPeriodData() {
+    const now = new Date();
+    const jstOffset = 9 * 60 * 60 * 1000;
+    const jstNow = new Date(now.getTime() + jstOffset);
+    const jstDay = jstNow.getUTCDay();
+    const daysSinceTuesday = (jstDay + 7 - 2) % 7;
+
+    const start = new Date(jstNow.getTime());
+    start.setUTCDate(jstNow.getUTCDate() - daysSinceTuesday);
+    start.setUTCHours(15, 0, 1, 0); // Tuesday 00:00:01 JST
+
+    const end = new Date(start.getTime() + 6 * 86400000);
+    end.setUTCHours(14, 59, 59, 999); // Monday 23:59:59 JST
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const startMonth = pad(start.getUTCMonth() + 1);
+    const startDay = pad(start.getUTCDate());
+    const endMonth = pad(end.getUTCMonth() + 1);
+    const endDay = pad(end.getUTCDate());
+
+    return {
+      startISO: start.toISOString(),
+      endISO: end.toISOString(),
+      rangeText: {
+        en: `Weekly (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`,
+        ja: `週間 (${startMonth}/${startDay} – ${endMonth}/${endDay} JST)`
+      }
+    };
+  }
+
+  function setWeeklyRangeText() {
+    const lang = document.documentElement.lang || "ja";
+    const el = document.getElementById("weekly-range");
+    if (el && currentPeriodData) {
+      el.textContent = currentPeriodData.rangeText[lang] || currentPeriodData.rangeText["ja"];
+    }
+  }
+
   function startCountdown() {
     if (!currentPeriodData) return;
-
-    const lang = document.documentElement.lang || "ja";
+    const el = document.getElementById("weekly-countdown");
     const endTime = new Date(currentPeriodData.endISO).getTime();
+    const lang = document.documentElement.lang || "ja";
 
     function updateCountdown() {
-      const now = new Date().getTime(); // current UTC ms from client clock
+      if (!el) return clearInterval(countdownIntervalId);
+      const now = Date.now();
       const diff = endTime - now;
 
-      const el = document.getElementById("weekly-countdown");
-      const box = document.getElementById("weekly-bonus-timer");
-
       if (diff <= 0) {
-        const msg = lang === "en" ? "Reward period ended" : "報酬期間が終了しました";
-        el.textContent = msg;
-        if (box) box.textContent = msg;
-        if (countdownIntervalId) {
-          clearInterval(countdownIntervalId);
-          countdownIntervalId = null;
-        }
+        el.textContent = lang === "en" ? "Reward period ended" : "報酬期間が終了しました";
+        clearInterval(countdownIntervalId);
+        countdownIntervalId = null;
         return;
       }
 
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff / 3600000) % 24);
+      const m = Math.floor((diff / 60000) % 60);
       const s = Math.floor((diff / 1000) % 60);
-
       const label = lang === "en" ? "⏳ Ends in" : "⏳ 終了まで";
       el.textContent = `${label}: ${d}d ${h}h ${m}m ${s}s`;
-      if (box) box.textContent = el.textContent;
     }
 
-    updateCountdown();
     if (countdownIntervalId) clearInterval(countdownIntervalId);
+    updateCountdown();
     countdownIntervalId = setInterval(updateCountdown, 1000);
   }
 
-  // Call this once initially and also after language changes
-  function refreshUI() {
-    currentPeriodData = getWeeklyPeriodISO();
-    setWeeklyRangeLang();
-    startCountdown();
-    fetchWinners(); // optionally refresh winners if needed
-  }
-
-  // Fetch and display winners
   async function fetchWinners() {
     try {
       const [res1000, res5000] = await Promise.all([
         fetch("https://azisaiweekly-upnb.onrender.com/1000"),
-        fetch("https://azisaiweekly-upnb.onrender.com/5000"),
+        fetch("https://azisaiweekly-upnb.onrender.com/5000")
       ]);
       const names1000 = await res1000.json();
       const names5000 = await res5000.json();
 
       const ul1000 = document.getElementById("names-1000");
       const ul5000 = document.getElementById("names-5000");
+      if (!ul1000 || !ul5000) return;
 
       ul1000.innerHTML = "";
       ul5000.innerHTML = "";
 
-      names1000.forEach((obj) => {
+      names1000.forEach(user => {
         const li = document.createElement("li");
-        li.textContent = obj.name || obj.username || String(obj);
+        li.textContent = user.name || user.username || String(user);
         ul1000.appendChild(li);
       });
 
-      names5000.forEach((obj) => {
+      names5000.forEach(user => {
         const li = document.createElement("li");
-        li.textContent = obj.name || obj.username || String(obj);
+        li.textContent = user.name || user.username || String(user);
         ul5000.appendChild(li);
       });
     } catch (err) {
-      console.error("Error fetching winners:", err);
+      console.error("Failed to fetch winners:", err);
     }
   }
 
-  // Initialize on page load
-  refreshUI();
+  function refreshWeeklyModalUI() {
+    currentPeriodData = getWeeklyPeriodData();
+    setWeeklyRangeText();
+    startCountdown();
+    fetchWinners();
+  }
 
-  // Example language switch handler, call this on your actual language toggle
-  // Usage: onLanguageSwitch('en') or onLanguageSwitch('ja')
   function onLanguageSwitch(newLang) {
     if (document.documentElement.lang === newLang) return;
     document.documentElement.lang = newLang;
-    setWeeklyRangeLang();
-    startCountdown();
-    // Update any other language-sensitive UI here if needed
+    refreshWeeklyModalUI();
   }
 
-  // Optionally expose onLanguageSwitch globally so you can call it from your language toggle buttons
   window.onLanguageSwitch = onLanguageSwitch;
+
+  document.addEventListener("DOMContentLoaded", refreshWeeklyModalUI);
 </script>
+
 
             <div data-v-1d580398="" class="row text" style="margin-top: 50px;">
                 <span data-v-1d580398="" class="title" data-lang-en="Our Socials!"
