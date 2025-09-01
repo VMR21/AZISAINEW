@@ -378,7 +378,11 @@
                     <span class="reward-value">$500</span>
                 </div>
                 <div class="reward-item">
-                    <span class="reward-wager" data-i18n="wagerLess100K">$100,000未満</span>
+                    <span class="reward-wager" data-i18n="wager50K">$50,000以上</span>
+                    <span class="reward-value">$200</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-wager" data-i18n="wagerLess50K">$50,000未満</span>
                     <span class="reward-value">$0</span>
                 </div>
                 <p style="margin-top: 20px; text-align: center;" data-i18n="rewardsNote"><i>報酬は合計加重ベット額に基づいています。</i></p>
@@ -549,8 +553,9 @@
             wager1M: "$1,000,000以上",
             wager500K: "$500,000以上",
             wager300K: "$300,000以上",
-            wager100K: "$100,000以上",
-            wagerLess100K: "$100,000未満",
+            wager100K: "$100,000以上"
+            wager50K: "$50,000以上",
+            wagerLess50K: "$50,000未満",
             rewardsNote: "<i>報酬は合計加重ベット額に基づいています。</i>",
             wageredLabel: "賭け額: ",
             weeklyBonusModalTitle: "週間賭け金ボーナス", // New translation for modal title
@@ -594,7 +599,8 @@
             wager500K: "$500,000 or more",
             wager300K: "$300,000 or more",
             wager100K: "$100,000 or more",
-            wagerLess100K: "Less than $100,000",
+            wager50K: "$50,000 or more",
+            wagerLess50K: "Less than $50,000",
             rewardsNote: "<i>Rewards are based on your total weighted wager.</i>",
             wageredLabel: "Wagered: ",
             weeklyBonusModalTitle: "週間賭け金ボーナス", // New translation for modal title
@@ -716,7 +722,8 @@
         { wager: 1000000, reward: 4000 },
         { wager: 500000, reward: 2000 },
         { wager: 300000, reward: 1200 },
-        { wager: 100000, reward: 500 }
+        { wager: 100000, reward: 500 },
+        { wager: 50000, reward: 200 }
     ];
 
     const top3Glows = ['0 0 40px #C0C0C0', '0 0 40px #FFD700', '0 0 40px #CD7F32'];
